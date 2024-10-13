@@ -1,13 +1,129 @@
+import { useEffect, useState } from 'react';
+import userAuthStore from '../stores/UserAuthStore';
+import Logo from '../assets/logo.png';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  return (
-    <div>
-       {/* LOGO */}
-           <div>
-            <img src="../assets/logo.png" alt="Logo" />
-           </div>
-    </div>
-  )
-}
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { checkAuth, logout, isAuthenticated, user } = userAuthStore();
+  const navigate = useNavigate();
 
-export default Navbar
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    toggleModal();
+  };
+
+  const handleLogin = () => {
+    toggleModal();
+    navigate('/login');
+  };
+
+  return (
+    <nav className="navbar flex flex-col md:flex-row justify-between px-6 py-4 bg-white shadow-lg max-h-[80px]">
+      {/* Logo */}
+      <div className="logo flex items-center mb-4 md:mb-0">
+        <img src={Logo} alt="Company Logo" className="w-40 h-auto" />
+      </div>
+
+      {/* Search Bar */}
+      <div className="search-bar flex flex-col md:flex-row items-center gap-2 shadow-xl rounded-full border border-gray-300 bg-white p-2 max-w-[450px]">
+        {/* Where to search */}
+        <div className="flex items-center gap-2 px-4 border-r border-gray-300">
+          <input
+            type="text"
+            className="h-10 w-full focus:outline-none focus:ring-0 text-gray-700 placeholder-gray-400 transition duration-300 ease-in-out"
+            placeholder="Where to?"
+            aria-label="Where to search"
+          />
+          <i className="fas fa-map-marker-alt text-gray-500" aria-hidden="true"></i>
+        </div>
+
+        {/* When to search */}
+        <div className="flex items-center gap-2 px-4 border-r border-gray-300">
+          <input
+            type="text"
+            className="h-10 w-full focus:outline-none focus:ring-0 text-gray-700 placeholder-gray-400 transition duration-300 ease-in-out"
+            placeholder="When?"
+            aria-label="When to search"
+          />
+          <i className="fas fa-calendar-alt text-gray-500" aria-hidden="true"></i>
+        </div>
+
+        {/* Guests */}
+        <div className="flex items-center gap-2 px-4">
+          <input
+            type="text"
+            className="h-10 w-full focus:outline-none focus:ring-0 text-gray-700 placeholder-gray-400 transition duration-300 ease-in-out"
+            placeholder="Guests?"
+            aria-label="Number of guests"
+          />
+          <i className="fas fa-user text-gray-500" aria-hidden="true"></i>
+        </div>
+
+        {/* Search Button */}
+        <button className="bg-[#50087b] text-white rounded-full px-6 py-2 hover:bg-[#6a0dad] transition transform duration-300 hover:scale-105">
+          <i className="fas fa-search"></i>
+        </button>
+      </div>
+
+      {/* User Profile */}
+      <div className="relative flex items-center gap-4">
+        <button className="text-sm font-medium text-gray-700 hover:text-[#50087b] transition">
+          Add your home
+        </button>
+
+        {/* Profile Button */}
+        <div className="relative">
+          <div
+            onClick={toggleModal}
+            className={`flex items-center cursor-pointer border border-gray-300 rounded-full px-4 py-2 hover:shadow-md transition transform duration-300 ${isModalOpen ? 'scale-105' : ''}`}
+          >
+            <i className="fas fa-bars text-gray-600 transition-transform duration-300" aria-hidden="true"></i>
+            {isAuthenticated ? (
+              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#50087b] text-white text-lg ml-2 font-bold">
+                {user?.name ? user.name.charAt(0).toUpperCase() : ''}
+              </div>
+            ) : (
+              <i className="fas fa-user-circle text-gray-600 ml-2 text-3xl" aria-hidden="true"></i>
+            )}
+          </div>
+
+          {/* Modal */}
+          {isModalOpen && (
+            <div className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-transform duration-300 transform ${isModalOpen ? 'scale-100' : 'scale-0'}`}>
+              <ul className="py-2">
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogin}>
+                  Login
+                </li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Sign Up</li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
+                  Logout
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Overlay to close modal when clicking outside */}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-25 z-40"
+          onClick={toggleModal}
+        ></div>
+      )}
+    </nav>
+  );
+};
+
+export default Navbar;
