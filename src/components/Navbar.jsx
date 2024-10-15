@@ -78,7 +78,17 @@ const Navbar = () => {
       <div className="relative flex items-center gap-4">
       <button
           className="text-sm font-medium text-gray-700 hover:text-[#50087b] transition"
-          onClick={() => navigate('/add-listing')}
+          onClick={() =>{
+            if (isAuthenticated) {
+              if (user?.isHomeOwner === 1) {
+                navigate('/add-listing');
+              } else {
+                navigate('/add-host-info');
+              }
+            } else {
+              navigate('/login');
+            }
+        }}
         >
           Add your home
         </button>

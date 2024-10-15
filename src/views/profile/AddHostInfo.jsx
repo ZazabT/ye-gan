@@ -3,12 +3,14 @@
 import { useState } from 'react';
 import axios from 'axios'; 
 import userAuthStore from '../../stores/UserAuthStore';
+import { useNavigate } from 'react-router-dom';
 
 const AddHostInfo = () => {
   const [hostDescription, setHostDescription] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
   const [errors, setErrors] = useState([]);
   const { isAuthenticated, token } = userAuthStore();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,12 +31,19 @@ const AddHostInfo = () => {
       });
       alert(response.data.message); // Display success message
       // Optionally, redirect or reset form here
+
+      // Reset form fields
+      setHostDescription('');
+      setProfilePicture(null);
+      if(response.status === 201){
+         navigate('/add-listing');
+      }
     } catch (error) {
       // Handle validation errors
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors);
       } else {
-        alert('An error occurred while creating the host profile.');
+        alert('An error occurred. Please try again.' + error);
       }
     }
   };

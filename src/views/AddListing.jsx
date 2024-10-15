@@ -48,7 +48,7 @@ const AddListing = () => {
     });
 
     try {
-      const response = await axios.post('http://localhost:8000/api/listings', formData, {
+      const response = await axios.post('http://localhost:8000/api/listings/add', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,
@@ -226,7 +226,7 @@ const AddListing = () => {
             multiple
             onChange={handleImageChange}
             className="w-full p-2 border rounded-md"
-            required
+            
           />
         </div>
 
