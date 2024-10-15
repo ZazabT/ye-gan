@@ -29,7 +29,7 @@ const userAuthStore = create((set) => ({
     },
 
     // Register
-    register: async (firstName, lastName, email, password, password_confirmation, age, currentLocation) => {
+    register: async (firstName, lastName, email, password, password_confirmation, age) => {
         set({ loading: true });
 
         try {
@@ -40,10 +40,9 @@ const userAuthStore = create((set) => ({
                 password,
                 password_confirmation,
                 age,
-                currentLocation
             });
 
-            if (response.data.status === 200) {
+            if (response.data.status === 201) {
                 localStorage.setItem('token', response.data.access_token);
                 set({ user: response.data.user, token: response.data.access_token, isAuthenticated: true });
                 console.log('Registration successful:', response.data.user); // Debugging log

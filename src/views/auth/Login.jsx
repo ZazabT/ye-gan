@@ -3,16 +3,11 @@ import userAuthStore from "../../stores/UserAuthStore";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const { login, error, loading, isAuthenticated } = userAuthStore();
+    const { login, error, loading, } = userAuthStore();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/');  // Navigate to home when authenticated
-        }
-    }, [isAuthenticated, navigate]); // Run effect when isAuthenticated changes
+ // Run effect when isAuthenticated changes
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,7 +19,10 @@ const Login = () => {
 
         try {
             await login(email, password);
-            // The navigation will happen in the useEffect if isAuthenticated changes
+
+            if (!error) {
+                navigate("/");
+            }
         } catch (err) {
             console.error("Login failed:", err);
         }

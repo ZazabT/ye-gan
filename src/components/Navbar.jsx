@@ -76,9 +76,13 @@ const Navbar = () => {
 
       {/* User Profile */}
       <div className="relative flex items-center gap-4">
-        <button className="text-sm font-medium text-gray-700 hover:text-[#50087b] transition">
+      <button
+          className="text-sm font-medium text-gray-700 hover:text-[#50087b] transition"
+          onClick={() => navigate('/add-listing')}
+        >
           Add your home
         </button>
+
 
         {/* Profile Button */}
         <div className="relative">
@@ -89,7 +93,7 @@ const Navbar = () => {
             <i className="fas fa-bars text-gray-600 transition-transform duration-300" aria-hidden="true"></i>
             {isAuthenticated ? (
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#50087b] text-white text-lg ml-2 font-bold">
-                {user?.name ? user.name.charAt(0).toUpperCase() : ''}
+                {user?.firstName ? user.firstName.charAt(0).toUpperCase() : ''}
               </div>
             ) : (
               <i className="fas fa-user-circle text-gray-600 ml-2 text-3xl" aria-hidden="true"></i>
