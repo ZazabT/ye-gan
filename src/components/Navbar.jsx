@@ -26,6 +26,11 @@ const Navbar = () => {
     navigate('/login');
   };
 
+  const handleSignin = () =>{
+    toggleModal();
+    navigate('/register')
+  }
+
   return (
     <nav className="navbar flex flex-col md:flex-row justify-between px-6 py-4 bg-white shadow-lg max-h-[80px]">
       {/* Logo */}
@@ -114,15 +119,35 @@ const Navbar = () => {
           {isModalOpen && (
             <div className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-transform duration-300 transform ${isModalOpen ? 'scale-100' : 'scale-0'}`}>
               <ul className="py-2">
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogin}>
-                  Login
-                </li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Sign Up</li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
+                {
+                  !isAuthenticated && (
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogin}>
+                      Login
+                    </li>
+                    
+                  )
+                }
+                 {
+                  !isAuthenticated && (
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleSignin}>
+                      Signin
+                    </li>
+                    
+                  )
+                }
+                {
+                  isAuthenticated && (
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
+                  )
+                }
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
-                  Logout
-                </li>
+                {
+                  isAuthenticated && (
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
+                      Logout
+                    </li>
+                  )
+                 }
               </ul>
             </div>
           )}
