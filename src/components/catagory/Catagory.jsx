@@ -39,7 +39,7 @@ const Catagory = () => {
           </button>
           <div
             id="slider"
-            className="flex w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide mx-2"
+            className="flex w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide mx-2 p-2" // Added padding here
           >
             {catagories?.map((catagory) => (
               <div key={catagory.id} className="inline-block p-2">
@@ -57,8 +57,8 @@ const Catagory = () => {
         </div>
       </div>
 
-      {/* Filter Part */}
-      <div className="flex items-center border border-gray-300 pl-4 pr-4 ml-4 p-2 rounded-xl hover:cursor-pointer hover:bg-gray-100">
+      {/* Filter Part - positioned next to the slider */}
+      <div className="flex items-center border border-gray-300 pl-4 pr-4 p-2 rounded-xl hover:cursor-pointer hover:bg-gray-100 ml-2"> {/* Adjusted margin for spacing */}
         <VscSettings size={20} className="text-gray-600" />
         <h3 className="ml-2 text-lg font-medium text-gray-800">Filters</h3>
       </div>
