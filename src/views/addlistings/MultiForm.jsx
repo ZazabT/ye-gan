@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import useListingStore from '../../stores/ListingStore';
 
 function MultiForm() {
     const { formData, setFormData, clearFormData } = useListingStore();
-    const [step, setStep] = useState(2);
+    const [step, setStep] = useState(1);
     const totalSteps = 6;
     const categoriesList = [
         { label: "Apartment", value: "apartment" },
@@ -19,31 +19,42 @@ function MultiForm() {
 
 
     const handleChange = (e) => {
-        const { name, value, type } = e.target;
-        
-        const newValue = type === 'checkbox' 
-            ? e.target.checked 
-                ? [...formData.categories, value] 
-                : formData.categories.filter(cat => cat !== value) 
-            : value;
+        const { name, value, type, checked } = e.target;
+    
+        if (type === 'checkbox') {
+            setFormData({
+                ...formData,
+                categories: checked
+                    ? [...formData.categories, value]
+                    : formData.categories.filter(cat => cat !== value)
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value
+            });
+        }
 
-        setFormData({ ...formData, [name]: newValue });
+        console.log(formData);
     };
+    
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
         setFormData({ ...formData, images: files });
     };
 
-    const handleCategoryChange = (value) => {
-        console.log("Category clicked:", value); // Add this line
-        setFormData((prev) => {
-            const categories = prev.categories.includes(value)
-                ? prev.categories.filter((category) => category !== value) 
-                : [...prev.categories, value]; 
-            return { ...prev, categories };
-        });
-    };
+    // const handleCategoryChange = (value) => {
+    
+    
+    //     setFormData((prevFormData) => {
+    //         const categories = prevFormData.categories.includes(value)
+    //             ? prevFormData.categories.filter((category) => category !== value)  // Remove if exists
+    //             : [...prevFormData.categories, value];  // Add if not exists
+    
+    //         return { categories };
+    //     });
+    // };
     
     const nextStep = () => {
         if (validateStep()) {
@@ -132,10 +143,16 @@ function MultiForm() {
                                     return (
                                         <div
                                             key={index}
-                                            onClick={() => handleCategoryChange(category.value)}
-                                            className={`p-4 border rounded-lg shadow-md flex items-center cursor-pointer ${isSelected ? 'bg-gray-300' : 'bg-white'}`}
+                                            onClick={() => {
+                                                const newCategories = isSelected 
+                                                    ? formData.categories.filter(cat => cat !== category.value) 
+                                                    : [...formData.categories, category.value];
+                                                setFormData({ ...formData, categories: newCategories });
+                                                localStorage.setItem('multiFormData', JSON.stringify({ ...formData, categories: newCategories }));
+                                            }}
+                                            className={`p-4 border rounded-lg shadow-md flex items-center cursor-pointer transition-colors duration-200 ${isSelected ? 'bg-green-500 text-white' : 'bg-white hover:bg-gray-100'}`}
                                         >
-                                            <span className="text-center">{category.label}</span>
+                                            <span className={`text-xl text-center ${isSelected ? 'font-bold' : ''}`}>{category.label}</span>
                                         </div>
                                     );
                                 })}
@@ -144,7 +161,7 @@ function MultiForm() {
                                 <button
                                     type="button"
                                     onClick={nextStep}
-                                    className="bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-800 transition"
+                                    className={`bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-800 transition ${!validateStep() ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     disabled={!validateStep()}
                                 >
                                     Next
@@ -152,6 +169,7 @@ function MultiForm() {
                             </div>
                         </motion.div>
                     )}
+
 
                     {step === 2 && (
                         <motion.div

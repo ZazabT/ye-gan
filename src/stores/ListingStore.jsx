@@ -8,7 +8,7 @@ const listingStore = create((set) => ({
     error: null,
     loading: false,
     formData: {
-        categories: [],
+        categories: [], 
         title: '',
         description: '',
         images: [],
