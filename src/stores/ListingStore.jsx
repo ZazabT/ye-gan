@@ -13,14 +13,14 @@ const listingStore = create((set) => ({
         description: '',
         images: [],
         beds: '',
-        maxGuests: '',
+        max_guest: '',
         bedrooms: '',
         bathrooms: '',
         location: '',
         rules: '',
-        price: '',
-        startDate: '',
-        endDate: '',
+        price_per_night: '',
+        start_date: '',
+        end_date: '',
 
     },
     
