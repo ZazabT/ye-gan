@@ -232,7 +232,7 @@ function MultiForm() {
                                 placeholder="Describe your property: Experience the perfect blend of comfort and luxury in our beautifully appointed [Type of Property: e.g., apartment, villa, cottage]. Nestled in the heart of [Location], our space is designed to be your tranquil retreat while providing easy access to the vibrant local culture."
                                 name="description"
                                 className="mt-4 border border-gray-400 w-full rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black transition"
-                                rows={6}
+                                rows={20}
                                 value={formData.description}
                                 onChange={handleChange}
                             />
@@ -515,12 +515,12 @@ function MultiForm() {
                                     Home Rules Description
                                 </label>
                                 <textarea
-                                    id="homeRules"
-                                    name="homeRules"
+                                    id="rules"
+                                    name="rules"
                                     placeholder="Add a brief description of the rules you want your guests to follow."
                                     className="w-full border border-gray-300 rounded p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
-                                    rows={5}
-                                    value={formData.homeRules}
+                                    rows={9}
+                                    value={formData.rules}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -549,37 +549,87 @@ function MultiForm() {
                   
 
                     {step === 8 && (
-                        <motion.div key={step} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }} className="py-8">
-                            <div className="text-base font-light text-center">Step 8/8</div>
-                            <div className="mt-4 text-3xl text-center">Review Your Listing</div>
-                            <div className="mt-6 text-left">
-                                <div><strong>Category:</strong> {formData.categories.join(', ')}</div>
-                                <div><strong>Title:</strong> {formData.title}</div>
-                                <div><strong>Description:</strong> {formData.description}</div>
-                                <div><strong>Number of Beds:</strong> {formData.beds}</div>
-                                <div><strong>Max Guests:</strong> {formData.maxGuests}</div>
-                                <div><strong>Price:</strong> ${formData.price}</div>
+                        <motion.div
+                            key={step}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                            className="py-8 px-4 md:px-8 lg:px-16 bg-white shadow-lg rounded-lg"
+                        >
+                            <div className="text-base font-light text-center text-gray-500">Step 8/8</div>
+                            <div className="mt-4 text-3xl font-semibold text-center text-gray-800">Review Your Listing</div>
+                            
+                            <div className="mt-6 text-left space-y-4">
+                                <div className="p-4 border border-gray-200 rounded-lg shadow-sm">
+                                    <div className="font-medium text-lg text-gray-700"><strong>Category:</strong> {formData.categories.join(', ')}</div>
+                                </div>
+                                <div className="p-4 border border-gray-200 rounded-lg shadow-sm">
+                                    <div className="font-medium text-lg text-gray-700"><strong>Title:</strong> {formData.title}</div>
+                                </div>
+                                <div className="p-4 border border-gray-200 rounded-lg shadow-sm">
+                                    <div className="font-medium text-lg text-gray-700"><strong>Description:</strong> {formData.description}</div>
+                                </div>
+                                <div className="p-4 border border-gray-200 rounded-lg shadow-sm">
+                                    <div className="font-medium text-lg text-gray-700"><strong>Number of Beds:</strong> {formData.beds}</div>
+                                </div>
+                                <div className="p-4 border border-gray-200 rounded-lg shadow-sm">
+                                    <div className="font-medium text-lg text-gray-700"><strong>Max Guests:</strong> {formData.maxGuests}</div>
+                                </div>
+                                <div className="p-4 border border-gray-200 rounded-lg shadow-sm">
+                                    <div className="font-medium text-lg text-gray-700"><strong>Price:</strong> ${formData.price}</div>
+                                </div>
+                                
                                 <div className="mt-4"><strong>Images:</strong></div>
-                                <div className="grid grid-cols-3 gap-2">
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
                                     {formData.images && formData.images.length > 0 ? (
-                                        formData.images.map((image, index) => (
-                                            <img key={index} src={URL.createObjectURL(image)} alt={`Preview ${index + 1}`} className="w-full h-auto rounded-md" />
-                                        ))
+                                        <>
+                                            <div className="col-span-1 md:col-span-1 mb-4">
+                                                <img
+                                                    src={URL.createObjectURL(formData.images[0])}
+                                                    alt="Preview 1"
+                                                    className="w-full h-auto rounded-lg shadow-lg"
+                                                    style={{ height: '300px', objectFit: 'cover' }} // Increase height for larger first image
+                                                />
+                                            </div>
+                                            {formData.images.slice(1).map((image, index) => (
+                                                <div key={index} className="col-span-1 mb-4">
+                                                    <img
+                                                        src={URL.createObjectURL(image)}
+                                                        alt={`Preview ${index + 2}`}
+                                                        className="w-full h-auto rounded-md shadow-md"
+                                                        style={{ height: '150px', objectFit: 'cover' }} // Smaller images
+                                                    />
+                                                </div>
+                                            ))}
+                                        </>
                                     ) : (
-                                        <div>No images uploaded</div>
+                                        <div className="col-span-3 text-center text-gray-500">No images uploaded</div>
                                     )}
                                 </div>
                             </div>
+
                             <div className="flex justify-between mt-6">
-                                <button type="button" onClick={prevStep} className="bg-gray-300 text-black font-bold py-2 px-4 rounded hover:bg-gray-400 transition">
+                                <button
+                                    type="button"
+                                    onClick={prevStep}
+                                    className="bg-gray-300 text-black font-bold py-2 px-4 rounded-lg shadow transition-transform transform hover:bg-gray-400 hover:scale-105"
+                                >
                                     Previous
                                 </button>
-                                <button type="submit" onClick={handleSubmit} className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition">
+                                <button
+                                    type="submit"
+                                    onClick={handleSubmit}
+                                    className="bg-green-500 text-white font-bold py-2 px-4 rounded-lg shadow transition-transform transform hover:bg-green-600 hover:scale-105"
+                                >
                                     Submit Listing
                                 </button>
                             </div>
                         </motion.div>
                     )}
+
+
+
 
 
                     
