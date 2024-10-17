@@ -2,23 +2,16 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import useListingStore from '../../stores/ListingStore';
 import locationStore from '../../stores/LocationStore';
+import catagoryStore from '../../stores/CatagoryStore';
 
 function MultiForm() {
 
     const {locations, getAllLocations} = locationStore();
+    const {catagories, getCatagories} = catagoryStore();
     const { formData, setFormData, clearFormData } = useListingStore();
     const [step, setStep] = useState(1);
     const totalSteps = 8;
-    const categoriesList = [
-        { label: "Apartment", value: "apartment" },
-        { label: "House", value: "house" },
-        { label: "Cabin", value: "cabin" },
-        { label: "Villa", value: "villa" },
-        { label: "Condo", value: "condo" },
-        { label: "Loft", value: "loft" },
-        { label: "Studio", value: "studio" },
-        { label: "Townhouse", value: "townhouse" },
-    ];
+   
     // const stepTitles = [
     //     "Categories",    
     //     "Title & Desc",  
@@ -112,17 +105,14 @@ function MultiForm() {
         fetchLocation();
     } ,[locations , getAllLocations]);
 
-    
-    
-     // Get unique countries
-     const uniqueCountries = locations ? Array.from(new Set(locations.map(location => location.country))) : [];
-     const uniqueRegions = formData.country ? Array.from(new Set(locations
-         .filter(location => location.country === formData.country)
-         .map(location => location.region))) : [];
-     const uniqueCities = formData.region ? Array.from(new Set(locations
-         .filter(location => location.region === formData.region)
-         .map(location => location.city))) : [];
-     
+    // feach catagory 
+    useEffect(() => {
+        const fetchCatagory = async () => {
+            await getCatagories();
+        }
+        fetchCatagory();
+    } ,[catagories , getCatagories]);
+ 
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-white">
             <div className="container max-w-screen-xl mx-auto">
@@ -153,9 +143,9 @@ function MultiForm() {
                             {step === 3 && "Upload Images"}
                             {step === 4 && "Enter Property Details"}
                             {step === 5 && "Set Location"}
-                            {step === 7 && "Set Pricing"}
-                            {step === 8 && "Add Your House Rules"}
-                            {step === 9 && "Review Your Listing"}
+                            {step === 6 && "Set Pricing"}
+                            {step === 7 && "Add Your House Rules"}
+                            {step === 8 && "Review Your Listing"}
                         </div>
                     </div>
                 </div>
@@ -169,35 +159,38 @@ function MultiForm() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.3 }}
-                            className="py-8"
+                            className="py-8 px-6"
                         >
-                            <div className="text-base font-light text-center">Step 1/6</div>
-                            <div className="mt-4 text-3xl text-center">Select Categories</div>
-                            <div className="grid grid-cols-2 gap-4 mt-4">
-                                {categoriesList.map((category, index) => {
-                                    const isSelected = formData.categories.includes(category.value);
+                            <div className="text-base font-light text-center">Step 1/8</div>
+                            <div className="mt-4 text-3xl font-semibold text-center">Select Categories</div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                {catagories.map((category, index) => {
+                                    const isSelected = formData.categories.includes(category.id);
                                     return (
                                         <div
-                                            key={index}
+                                            key={category.id} // Use category.id instead of index for better key management
                                             onClick={() => {
                                                 const newCategories = isSelected 
-                                                    ? formData.categories.filter(cat => cat !== category.value) 
-                                                    : [...formData.categories, category.value];
+                                                    ? formData.categories.filter(catId => catId !== category.id) 
+                                                    : [...formData.categories, category.id];
                                                 setFormData({ ...formData, categories: newCategories });
-                                                localStorage.setItem('multiFormData', JSON.stringify({ ...formData, categories: newCategories }));
                                             }}
-                                            className={`p-4 border rounded-lg shadow-md flex items-center cursor-pointer transition-colors duration-200 ${isSelected ? 'bg-green-500 text-white' : 'bg-white hover:bg-gray-100'}`}
+                                            className={`relative p-4 border rounded-lg shadow-md flex items-center cursor-pointer transition-transform duration-200 hover:scale-105 ${isSelected ? 'bg-green-500 text-white' : 'bg-white border-gray-300 hover:bg-gray-100'}`}
                                         >
-                                            <span className={`text-xl text-center ${isSelected ? 'font-bold' : ''}`}>{category.label}</span>
+                                            {/* Category icon alongside the label */}
+                                            <i className={`${category.icon} text-2xl mr-2`}></i>
+                                            <span className={`text-xl text-center flex-grow ${isSelected ? 'font-bold' : 'font-medium'}`}>{category.name}</span>
+                                            {/* Optional: Add a checkmark icon if the category is selected */}
+                                            {isSelected && <i className="fas fa-check absolute top-2 right-2 text-white"></i>}
                                         </div>
                                     );
                                 })}
                             </div>
-                            <div className="flex justify-between mt-6">
+                            <div className="flex justify-center mt-6">
                                 <button
                                     type="button"
                                     onClick={nextStep}
-                                    className={`bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-800 transition ${!validateStep() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    className={`bg-black text-white font-bold py-2 px-6 rounded hover:bg-gray-800 transition ${!validateStep() ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     disabled={!validateStep()}
                                 >
                                     Next
@@ -205,6 +198,8 @@ function MultiForm() {
                             </div>
                         </motion.div>
                     )}
+
+
 
 
                     {step === 2 && (
@@ -216,7 +211,7 @@ function MultiForm() {
                             transition={{ duration: 0.3 }}
                             className="py-8"
                         >
-                            <div className="text-base font-light text-center">Step 2/6</div>
+                            <div className="text-base font-light text-center">Step 2/8</div>
                             <div className="mt-4 text-2xl font-semibold text-center">
                                 Add Title and Description
                             </div>
@@ -272,7 +267,7 @@ function MultiForm() {
                             transition={{ duration: 0.3 }}
                             className="py-8"
                         >
-                            <div className="text-base font-light text-center">Step 3/6</div>
+                            <div className="text-base font-light text-center">Step 3/8</div>
                             <div className="mt-4 text-3xl text-center">Upload Images</div>
                             <div className="mt-2 text-center text-gray-600">
                                 To showcase your property effectively, please upload **more than 5 images**. Include photos of the interior, exterior, and any unique features.
@@ -317,7 +312,7 @@ function MultiForm() {
                             transition={{ duration: 0.3 }}
                             className="py-8 px-4 md:px-8 lg:px-16"
                         >
-                            <div className="text-base font-light text-center">Step 4/6</div>
+                            <div className="text-base font-light text-center">Step 4/8</div>
                             <div className="mt-4 text-3xl text-center font-semibold">Enter Property Details</div>
 
                             <div className="flex flex-col md:flex-row md:space-x-4 mt-6">
@@ -391,7 +386,7 @@ function MultiForm() {
                         transition={{ duration: 0.3 }}
                         className="py-8 px-4 md:px-8 lg:px-16 bg-white shadow-lg rounded-lg"
                     >
-                        <div className="text-base font-light text-center text-gray-500">Step 7/7</div>
+                        <div className="text-base font-light text-center text-gray-500">Step 5/8</div>
                         <div className="mt-4 text-3xl font-semibold text-center text-gray-800">
                         Add Location
                         </div>
@@ -426,7 +421,7 @@ function MultiForm() {
                         </button>
                         <button
                             type="button"
-                            onClick={handleSubmit}
+                            onClick={nextStep}
                             className="bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-800 transition"
                             disabled={!validateStep()}
                         >
@@ -448,7 +443,7 @@ function MultiForm() {
                             transition={{ duration: 0.3 }}
                             className="py-8 px-4 md:px-8 lg:px-16 bg-white shadow-lg rounded-lg"
                         >
-                            <div className="text-base font-light text-center text-gray-500">Step 5/6</div>
+                            <div className="text-base font-light text-center text-gray-500">Step 6/8</div>
                             <div className="mt-4 text-3xl font-semibold text-center text-gray-800">Set Pricing</div>
 
                             <div className="mt-8 flex flex-col items-center">
@@ -507,7 +502,7 @@ function MultiForm() {
                             transition={{ duration: 0.3 }}
                             className="py-8 px-4 md:px-8 lg:px-16 bg-white shadow-lg rounded-lg"
                         >
-                            <div className="text-base font-light text-center text-gray-500">Final Step - 6/6</div>
+                            <div className="text-base font-light text-center text-gray-500">Final Step - 7/8</div>
                             <div className="mt-4 text-3xl font-semibold text-center text-gray-800">
                                 Add Your Home Rules
                             </div>
@@ -555,7 +550,7 @@ function MultiForm() {
 
                     {step === 8 && (
                         <motion.div key={step} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }} className="py-8">
-                            <div className="text-base font-light text-center">Step 6/6</div>
+                            <div className="text-base font-light text-center">Step 8/8</div>
                             <div className="mt-4 text-3xl text-center">Review Your Listing</div>
                             <div className="mt-6 text-left">
                                 <div><strong>Category:</strong> {formData.categories.join(', ')}</div>
@@ -579,7 +574,7 @@ function MultiForm() {
                                 <button type="button" onClick={prevStep} className="bg-gray-300 text-black font-bold py-2 px-4 rounded hover:bg-gray-400 transition">
                                     Previous
                                 </button>
-                                <button type="submit" className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition">
+                                <button type="submit" onClick={handleSubmit} className="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-600 transition">
                                     Submit Listing
                                 </button>
                             </div>
