@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import useListingStore from '../../stores/ListingStore';
+import locationStore from '../../stores/LocationStore';
 
 function MultiForm() {
+
+    const {locations, getAllLocations} = locationStore();
     const { formData, setFormData, clearFormData } = useListingStore();
-    const [step, setStep] = useState(5);
+    const [step, setStep] = useState(1);
     const totalSteps = 8;
     const categoriesList = [
         { label: "Apartment", value: "apartment" },
@@ -30,6 +33,16 @@ function MultiForm() {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+        // If city changes, find and set the corresponding location ID
+        if (name === 'city') {
+        const selectedLocation = locations.find(
+            (location) => location.city === value && location.region === formData.region && location.country === formData.country
+        );
+        setFormData((prevData) => ({
+            ...prevData,
+            location: selectedLocation ? selectedLocation.id : '', // Set location ID
+        }));
+    }
     
         if (type === 'checkbox') {
             setFormData({
@@ -90,6 +103,26 @@ function MultiForm() {
         setStep(7); // Move to confirmation step
     };
 
+
+     // feach location 
+     useEffect(() => {
+        const fetchLocation = async () => {
+            await getAllLocations();
+        }
+        fetchLocation();
+    } ,[locations , getAllLocations]);
+
+    
+    
+     // Get unique countries
+     const uniqueCountries = locations ? Array.from(new Set(locations.map(location => location.country))) : [];
+     const uniqueRegions = formData.country ? Array.from(new Set(locations
+         .filter(location => location.country === formData.country)
+         .map(location => location.region))) : [];
+     const uniqueCities = formData.region ? Array.from(new Set(locations
+         .filter(location => location.region === formData.region)
+         .map(location => location.city))) : [];
+     
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-white">
             <div className="container max-w-screen-xl mx-auto">
@@ -350,80 +383,60 @@ function MultiForm() {
 
 
                     {step === 5 && (
-                        <motion.div
-                            key={step}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.3 }}
-                            className="py-8 px-4 md:px-8 lg:px-16 bg-white shadow-lg rounded-lg"
+                    <motion.div
+                        key={step}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.3 }}
+                        className="py-8 px-4 md:px-8 lg:px-16 bg-white shadow-lg rounded-lg"
+                    >
+                        <div className="text-base font-light text-center text-gray-500">Step 7/7</div>
+                        <div className="mt-4 text-3xl font-semibold text-center text-gray-800">
+                        Add Location
+                        </div>
+
+                        <div className="mt-6">
+                        <label htmlFor="location" className="text-lg font-medium text-gray-700">
+                            Location
+                        </label>
+                        <select
+                            id="location"
+                            name="location"
+                            className="w-full border border-gray-300 rounded p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
+                            value={formData.location} // This will store the location ID
+                            onChange={handleChange} // You will handle setting the location ID
                         >
-                            <div className="text-base font-light text-center text-gray-500">Step 7/7</div>
-                            <div className="mt-4 text-3xl font-semibold text-center text-gray-800">
-                                Add Location
-                            </div>
+                            <option value="">Select Location</option>
+                            {locations.map((location, index) => (
+                            <option key={index} value={location.id}>
+                                {`${location.country} - ${location.region} - ${location.city}`}
+                            </option>
+                            ))}
+                        </select>
+                        </div>
 
-                            <div className="mt-6">
-                                <label htmlFor="country" className="text-lg font-medium text-gray-700">
-                                    Country
-                                </label>
-                                <input
-                                    id="country"
-                                    name="country"
-                                    placeholder="Enter Country"
-                                    className="w-full border border-gray-300 rounded p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
-                                    value={formData.country}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-                            <div className="mt-4">
-                                <label htmlFor="region" className="text-lg font-medium text-gray-700">
-                                    Region
-                                </label>
-                                <input
-                                    id="region"
-                                    name="region"
-                                    placeholder="Enter Region"
-                                    className="w-full border border-gray-300 rounded p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
-                                    value={formData.region}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-                            <div className="mt-4">
-                                <label htmlFor="city" className="text-lg font-medium text-gray-700">
-                                    City
-                                </label>
-                                <input
-                                    id="city"
-                                    name="city"
-                                    placeholder="Enter City"
-                                    className="w-full border border-gray-300 rounded p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
-                                    value={formData.city}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-                            <div className="flex justify-between mt-6">
-                                <button
-                                    type="button"
-                                    onClick={prevStep}
-                                    className="bg-gray-300 text-black font-bold py-2 px-4 rounded hover:bg-gray-400 transition"
-                                >
-                                    Previous
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={handleSubmit}
-                                    className="bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-800 transition"
-                                    disabled={!validateStep()}
-                                >
-                                    Submit
-                                </button>
-                            </div>
-                        </motion.div>
+                        <div className="flex justify-between mt-6">
+                        <button
+                            type="button"
+                            onClick={prevStep}
+                            className="bg-gray-300 text-black font-bold py-2 px-4 rounded hover:bg-gray-400 transition"
+                        >
+                            Previous
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleSubmit}
+                            className="bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-800 transition"
+                            disabled={!validateStep()}
+                        >
+                            Next
+                        </button>
+                        </div>
+                    </motion.div>
                     )}
+
+
 
 
                     {step === 6 && (
