@@ -4,8 +4,8 @@ import useListingStore from '../../stores/ListingStore';
 
 function MultiForm() {
     const { formData, setFormData, clearFormData } = useListingStore();
-    const [step, setStep] = useState(1);
-    const totalSteps = 6;
+    const [step, setStep] = useState(5);
+    const totalSteps = 8;
     const categoriesList = [
         { label: "Apartment", value: "apartment" },
         { label: "House", value: "house" },
@@ -16,6 +16,16 @@ function MultiForm() {
         { label: "Studio", value: "studio" },
         { label: "Townhouse", value: "townhouse" },
     ];
+    // const stepTitles = [
+    //     "Categories",    
+    //     "Title & Desc",  
+    //     "Guests, Beds & Baths",
+    //     "Photos",
+    //     "Pricing",                       
+    //     "House Rules" ,
+    //     "Submit",
+    // ];
+    
 
 
     const handleChange = (e) => {
@@ -44,18 +54,7 @@ function MultiForm() {
         setFormData({ ...formData, images: files });
     };
 
-    // const handleCategoryChange = (value) => {
-    
-    
-    //     setFormData((prevFormData) => {
-    //         const categories = prevFormData.categories.includes(value)
-    //             ? prevFormData.categories.filter((category) => category !== value)  // Remove if exists
-    //             : [...prevFormData.categories, value];  // Add if not exists
-    
-    //         return { categories };
-    //     });
-    // };
-    
+ 
     const nextStep = () => {
         if (validateStep()) {
             setStep(step + 1);
@@ -76,7 +75,9 @@ function MultiForm() {
             case 2: return formData.title && formData.description;
             case 3: return formData.images && formData.images.length > 0;
             case 4: return formData.beds && formData.maxGuests;
-            case 5: return formData.price;
+            case 5: return formData.location;
+            case 6: return formData.price;
+            case 7: return formData.rules;
             default: return true;
         }
     };
@@ -86,7 +87,7 @@ function MultiForm() {
         // Implement submission logic (e.g., API call here)
         // const response = await submitListing(formData);
         clearFormData();
-        setStep(6); // Move to confirmation step
+        setStep(7); // Move to confirmation step
     };
 
     return (
@@ -118,8 +119,10 @@ function MultiForm() {
                             {step === 2 && "Add Title and Description"}
                             {step === 3 && "Upload Images"}
                             {step === 4 && "Enter Property Details"}
-                            {step === 5 && "Set Pricing"}
-                            {step === 6 && "Review Your Listing"}
+                            {step === 5 && "Set Location"}
+                            {step === 7 && "Set Pricing"}
+                            {step === 8 && "Add Your House Rules"}
+                            {step === 9 && "Review Your Listing"}
                         </div>
                     </div>
                 </div>
@@ -346,8 +349,6 @@ function MultiForm() {
                     )}
 
 
-
-
                     {step === 5 && (
                         <motion.div
                             key={step}
@@ -355,27 +356,51 @@ function MultiForm() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.3 }}
-                            className="py-8 px-4 md:px-8 lg:px-16"
+                            className="py-8 px-4 md:px-8 lg:px-16 bg-white shadow-lg rounded-lg"
                         >
-                            <div className="text-base font-light text-center">Step 5/6</div>
-                            <div className="mt-4 text-3xl font-semibold text-center">Set Pricing</div>
+                            <div className="text-base font-light text-center text-gray-500">Step 7/7</div>
+                            <div className="mt-4 text-3xl font-semibold text-center text-gray-800">
+                                Add Location
+                            </div>
 
-                            <div className="mt-6 flex flex-col items-center">
-                                <label className="text-lg font-medium">Price: ${formData.price}</label>
+                            <div className="mt-6">
+                                <label htmlFor="country" className="text-lg font-medium text-gray-700">
+                                    Country
+                                </label>
                                 <input
-                                    type="range"
-                                    min="0"
-                                    max="1000" // Set maximum price limit here
-                                    value={formData.price}
-                                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2"
-                                    onChange={(e) => handleChange({ target: { name: 'price', value: e.target.value } })}
+                                    id="country"
+                                    name="country"
+                                    placeholder="Enter Country"
+                                    className="w-full border border-gray-300 rounded p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
+                                    value={formData.country}
+                                    onChange={handleChange}
                                 />
+                            </div>
+
+                            <div className="mt-4">
+                                <label htmlFor="region" className="text-lg font-medium text-gray-700">
+                                    Region
+                                </label>
                                 <input
-                                    type="number"
-                                    name="price"
-                                    placeholder="Enter Price"
-                                    className="mt-4 w-full border border-gray-300 rounded p-2 focus:outline-none"
-                                    value={formData.price}
+                                    id="region"
+                                    name="region"
+                                    placeholder="Enter Region"
+                                    className="w-full border border-gray-300 rounded p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
+                                    value={formData.region}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="mt-4">
+                                <label htmlFor="city" className="text-lg font-medium text-gray-700">
+                                    City
+                                </label>
+                                <input
+                                    id="city"
+                                    name="city"
+                                    placeholder="Enter City"
+                                    className="w-full border border-gray-300 rounded p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
+                                    value={formData.city}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -390,8 +415,66 @@ function MultiForm() {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={nextStep}
+                                    onClick={handleSubmit}
                                     className="bg-black text-white font-bold py-2 px-4 rounded hover:bg-gray-800 transition"
+                                    disabled={!validateStep()}
+                                >
+                                    Submit
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+
+
+                    {step === 6 && (
+                        <motion.div
+                            key={step}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                            className="py-8 px-4 md:px-8 lg:px-16 bg-white shadow-lg rounded-lg"
+                        >
+                            <div className="text-base font-light text-center text-gray-500">Step 5/6</div>
+                            <div className="mt-4 text-3xl font-semibold text-center text-gray-800">Set Pricing</div>
+
+                            <div className="mt-8 flex flex-col items-center">
+                                <label className="text-lg font-medium text-gray-700 mb-4">
+                                    Price: <span className="text-black font-bold">bir{formData.price}</span>
+                                </label>
+
+                                <input
+                                    type="range"
+                                    min="0"
+                                    max="1000"
+                                    value={formData.price}
+                                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2 transition focus:outline-none focus:ring-2 focus:ring-gray-400 hover:bg-gray-300"
+                                    onChange={(e) => handleChange({ target: { name: 'price', value: e.target.value } })}
+                                />
+
+                                <input
+                                    type="number"
+                                    name="price"
+                                    placeholder="Enter Price"
+                                    className="mt-4 w-1/4 border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-gray-400 transition shadow-sm text-center font-bold"
+                                    value={formData.price}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="flex justify-between mt-8">
+                                <button
+                                    type="button"
+                                    onClick={prevStep}
+                                    className="bg-gray-300 text-black font-bold py-2 px-6 rounded-lg shadow-md hover:bg-gray-400 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                >
+                                    Previous
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={nextStep}
+                                    className="bg-black text-white font-bold py-2 px-6 rounded-lg shadow-md hover:bg-gray-800 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-black"
                                     disabled={!validateStep()}
                                 >
                                     Next
@@ -400,8 +483,64 @@ function MultiForm() {
                         </motion.div>
                     )}
 
+                   
+                    
+                    {step === 7 && (
+                        <motion.div
+                            key={step}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                            className="py-8 px-4 md:px-8 lg:px-16 bg-white shadow-lg rounded-lg"
+                        >
+                            <div className="text-base font-light text-center text-gray-500">Final Step - 6/6</div>
+                            <div className="mt-4 text-3xl font-semibold text-center text-gray-800">
+                                Add Your Home Rules
+                            </div>
 
-                    {step === 6 && (
+                            <div className="mt-6">
+                                <label
+                                    htmlFor="homeRules"
+                                    className="text-lg font-medium text-gray-700"
+                                >
+                                    Home Rules Description
+                                </label>
+                                <textarea
+                                    id="homeRules"
+                                    name="homeRules"
+                                    placeholder="Add a brief description of the rules you want your guests to follow."
+                                    className="w-full border border-gray-300 rounded p-2 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
+                                    rows={5}
+                                    value={formData.homeRules}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="flex justify-between mt-8">
+                                <button
+                                    type="button"
+                                    onClick={prevStep}
+                                    className="bg-gray-300 text-black font-bold py-2 px-6 rounded-lg shadow-md hover:bg-gray-400 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500"
+                                >
+                                    Previous
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={nextStep}
+                                    className="bg-black text-white font-bold py-2 px-6 rounded-lg shadow-md hover:bg-gray-800 transition transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-black"
+                                    disabled={!validateStep()}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
+
+                  
+
+                    {step === 8 && (
                         <motion.div key={step} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }} className="py-8">
                             <div className="text-base font-light text-center">Step 6/6</div>
                             <div className="mt-4 text-3xl text-center">Review Your Listing</div>
@@ -433,6 +572,10 @@ function MultiForm() {
                             </div>
                         </motion.div>
                     )}
+
+
+                    
+
                 </form>
             </div>
         </div>

@@ -16,10 +16,12 @@ const listingStore = create((set) => ({
         maxGuests: '',
         bedrooms: '',
         bathrooms: '',
+        location: '',
         rules: '',
         price: '',
         startDate: '',
         endDate: '',
+
     },
     
     // Functions
