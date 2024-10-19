@@ -3,9 +3,10 @@ import catagoryStore from "../../stores/CatagoryStore";
 import CatagorySlide from "./CatagorySlider";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { VscSettings } from "react-icons/vsc";
+import CatagoryLoading from "./CatagoryLoading";
 
 const Catagory = () => {
-  const { catagories, getCatagories } = catagoryStore();
+  const { catagories, getCatagories ,loading} = catagoryStore();
 
   // Fetch the categories
   useEffect(() => {
@@ -13,7 +14,7 @@ const Catagory = () => {
       await getCatagories();
     };
     fetchCatagories();
-  }, []);
+  }, [getCatagories]);
 
   const slideLeft = () => {
     const slider = document.getElementById("slider");
@@ -24,6 +25,15 @@ const Catagory = () => {
     const slider = document.getElementById("slider");
     slider.scrollBy({ left: 500, behavior: 'smooth' });
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-between p-4 gap-2 bg-white shadow-md rounded-lg max-h-[100px] overflow-hidden">
+        <CatagoryLoading />
+      </div>
+  );
+  }
+ 
 
   return (
     <div className="flex items-center justify-between p-4 gap-2 bg-white shadow-md rounded-lg max-h-[100px] overflow-hidden">

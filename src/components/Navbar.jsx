@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State to control mobile menu
   const { checkAuth, logout, isAuthenticated, user } = userAuthStore();
   const navigate = useNavigate();
 
@@ -26,20 +27,34 @@ const Navbar = () => {
     navigate('/login');
   };
 
-  const handleSignin = () =>{
+  const handleSignin = () => {
     toggleModal();
-    navigate('/register')
-  }
+    navigate('/register');
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
-    <nav className="navbar flex flex-col md:flex-row justify-between px-6 py-4 bg-white shadow-lg max-h-[80px]">
+    <nav className="navbar flex flex-col md:flex-row justify-between items-center px-6 py-4 bg-white shadow-lg">
       {/* Logo */}
       <div className="logo flex items-center mb-4 md:mb-0">
         <img src={Logo} alt="Company Logo" className="w-40 h-auto" />
       </div>
 
+      {/* Hamburger Menu for Mobile */}
+      <div className="md:hidden flex items-center">
+        <button
+          onClick={toggleMenu}
+          className="text-gray-700 focus:outline-none"
+        >
+          <i className={`fas fa-${isMenuOpen ? 'times' : 'bars'} text-2xl`}></i>
+        </button>
+      </div>
+
       {/* Search Bar */}
-      <div className="search-bar flex flex-col md:flex-row items-center gap-2 shadow-xl rounded-full border border-gray-300 bg-white p-2 max-w-[450px]">
+      <div className={`search-bar flex flex-col md:flex-row items-center gap-2 shadow-xl rounded-full border border-gray-300 bg-white p-2 max-w-[450px] w-full ${isMenuOpen ? 'block' : 'hidden'} md:flex`}>
         {/* Where to search */}
         <div className="flex items-center gap-2 px-4 border-r border-gray-300">
           <input
@@ -74,16 +89,16 @@ const Navbar = () => {
         </div>
 
         {/* Search Button */}
-        <button className="bg-[#50087b] text-white rounded-full px-6 py-2 hover:bg-[#6a0dad] transition transform duration-300 hover:scale-105">
+        <button className="bg-[#50087b] text-white rounded-full px-4 md:px-6 py-2 hover:bg-[#6a0dad] transition transform duration-300 hover:scale-105">
           <i className="fas fa-search"></i>
         </button>
       </div>
 
       {/* User Profile */}
-      <div className="relative flex items-center gap-4">
-      <button
+      <div className="relative flex items-center gap-4 md:gap-6 mt-4 md:mt-0">
+        <button
           className="text-sm font-medium text-gray-700 hover:text-[#50087b] transition"
-          onClick={() =>{
+          onClick={() => {
             if (isAuthenticated) {
               if (user?.isHomeOwner === 1) {
                 navigate('/add-listing');
@@ -93,11 +108,10 @@ const Navbar = () => {
             } else {
               navigate('/login');
             }
-        }}
+          }}
         >
           Add your home
         </button>
-
 
         {/* Profile Button */}
         <div className="relative">
@@ -119,35 +133,25 @@ const Navbar = () => {
           {isModalOpen && (
             <div className={`absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 transition-transform duration-300 transform ${isModalOpen ? 'scale-100' : 'scale-0'}`}>
               <ul className="py-2">
-                {
-                  !isAuthenticated && (
+                {!isAuthenticated && (
+                  <>
                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogin}>
                       Login
                     </li>
-                    
-                  )
-                }
-                 {
-                  !isAuthenticated && (
                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleSignin}>
                       Signin
                     </li>
-                    
-                  )
-                }
-                {
-                  isAuthenticated && (
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
-                  )
-                }
+                  </>
+                )}
+                {isAuthenticated && (
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
+                )}
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
-                {
-                  isAuthenticated && (
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
-                      Logout
-                    </li>
-                  )
-                 }
+                {isAuthenticated && (
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
+                    Logout
+                  </li>
+                )}
               </ul>
             </div>
           )}

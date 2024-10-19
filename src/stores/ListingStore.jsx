@@ -60,21 +60,21 @@ const listingStore = create((set) => ({
                 set({ success: response.data.message });
                 return true; // Indicate success
             } else {
-                throw new Error('Failed to add listing.'); // Throw error if status is not 201
+                throw new Error('Failed to add listing.'); 
             }
         } catch (error) {
             if (error.response) {
                 console.error('Error response:', error.response.data);
-                set({ error: error.response.data.error }); // Set error message
-                throw new Error(error.response.data.message); // Throw error for handling in handleSubmit
+                set({ error: error.response.data.error }); 
+                throw new Error(error.response.data.message); 
             } else if (error.request) {
                 console.error('Error request:', error.request);
-                set({ error: 'No response received from the server.' }); // Generic error message
-                throw new Error('No response received from the server.'); // Throw error for handling in handleSubmit
+                set({ error: 'No response received from the server.' }); 
+                throw new Error('No response received from the server.'); 
             } else {
                 console.error('Error message:', error.message);
-                set({ error: 'An error occurred while adding the listing.' }); // Generic error message
-                throw new Error('An error occurred while adding the listing.'); // Throw error for handling in handleSubmit
+                set({ error: 'An error occurred while adding the listing.' }); 
+                throw new Error('An error occurred while adding the listing.');
             }
         } finally {
             set({ loading: false });
@@ -86,12 +86,12 @@ const listingStore = create((set) => ({
     getAllListing: async () => {
         set({ loading: true, error: null }); // Reset error
         try {
-            const response = await axios.get('http://localhost:8000/api/listing');
+            const response = await axios.get('http://localhost:8000/api/listings');
             if (response.data.status === 200) {
                 set({ listings: response.data.listings });
             }
         } catch (error) {
-            set({ error: error.response?.data?.message || 'Failed to fetch listings.' });
+            set({ error: error.response?.data?.error || 'Failed to fetch listings.' });
         } finally {
             set({ loading: false });
         }
