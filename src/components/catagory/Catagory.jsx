@@ -13,7 +13,7 @@ const Catagory = () => {
       await getCatagories();
     };
     fetchCatagories();
-  }, [getCatagories]);
+  }, []);
 
   const slideLeft = () => {
     const slider = document.getElementById("slider");

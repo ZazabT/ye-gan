@@ -1,11 +1,11 @@
 import axios from "axios";
 import { create } from "zustand";
 
-
 const listingStore = create((set) => ({
     // variables
     listings: [],
     error: null,
+    success: null,
     loading: false,
     formData: {
         categories: [], 
@@ -16,7 +16,7 @@ const listingStore = create((set) => ({
         max_guest: '',
         bedrooms: '',
         bathrooms: '',
-        location: '',
+        location_id: '',
         rules: '',
         price_per_night: '',
         start_date: '',
@@ -35,7 +35,7 @@ const listingStore = create((set) => ({
                                 description: '',
                                 images: [],
                                 beds: '',
-                                maxGuests: '',
+                                max_guest: '',
                                 bedrooms: '',
                                 bathrooms: '',
                                 rules: '',
@@ -49,12 +49,27 @@ const listingStore = create((set) => ({
                         addListing: async (formData) => {
                             set({ loading: true });
                             try {
-                                const response = await axios.post('http://localhost:8000/api/listing', formData);
+                                const response = await axios.post('http://localhost:8000/api/listings/create', formData ,{
+                                    headers: {
+                                        'Content-Type': 'multipart/form-data',
+                                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                                    },
+                                });
                                 if (response.data.status === 201) {
                                     set({ success: response.data.message });
                                 }
                             } catch (error) {
-                                set({ error: error.response.data.message });
+                                if (error.response) {
+                                    // The request was made and the server responded with a status code
+                                    console.error('Error response:', error.response.data);
+                                    console.error('Error status:', error.response.status);
+                                } else if (error.request) {
+                                    // The request was made but no response was received
+                                    console.error('Error request:', error.request);
+                                } else {
+                                    // Something happened in setting up the request that triggered an Error
+                                    console.error('Error message:', error.message);
+                                }
                             } finally {
                                 set({ loading: false });
                             }
@@ -93,9 +108,6 @@ const listingStore = create((set) => ({
                         },
     
 }));
-
-
-
 
 
 
