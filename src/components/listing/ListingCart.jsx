@@ -1,22 +1,32 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
+import { CalendarIcon } from '@heroicons/react/24/outline'; // Import Calendar icon
 
 const ListingCart = ({ listing }) => {
   // Main image 
   const mainImage = listing.item_images.find(image => image.isMain === 1);
   const location = `${listing.location.city}, ${listing.location.region}, ${listing.location.country}`;
-  const backEndUrl = 'http://localhost:8000';;
+  const backEndUrl = 'http://localhost:8000';
+
+  // Date formatting
+  const formatDateRange = (startDate, endDate) => {
+    const options = { month: 'short', day: 'numeric' };
+    return `${new Date(startDate).toLocaleDateString('en-US', options)} - ${new Date(endDate).toLocaleDateString('en-US', options)}`;
+  };
+
+  // Get start and end dates from listing
+  const dateRange = formatDateRange(listing.start_date, listing.end_date);
 
   return (
     <div className="relative group">
-      <a href="#" className="block rounded-lg p-4 shadow-lg transition-transform transform hover:scale-105 bg-white max-w-sm mx-auto">
+      <a href="#" className="block rounded-lg p-2 shadow-lg transition-transform transform hover:scale-105 bg-white max-w-sm mx-auto">
         {/* Heart icon for likes */}
         <div className="absolute top-3 right-3 cursor-pointer">
-          <HeartIcon className={`h-6 w-6 text-amber-800 transition-colors hover:scale-105 hover:text-red-500 `} />
+          <HeartIcon className={`h-6 w-6 text-white transition-colors hover:scale-125 hover:text-red-500 `} />
         </div>
 
         <img
           alt={listing.title}
-          src={`${backEndUrl}${mainImage?.image_url}` || 'https://via.placeholder.com/150'} 
+          src={`${backEndUrl}${mainImage?.image_url}` || 'https://via.placeholder.com/150'}
           className="h-56 w-full rounded-md object-cover"
         />
 
@@ -68,6 +78,13 @@ const ListingCart = ({ listing }) => {
               </div>
             </div>
           </div>
+
+          {/* Date Range Section */}
+          <div className="mt-5 flex items-center justify-end text-sm text-gray-500">
+            <CalendarIcon className="h-5 w-5 text-indigo-700 mr-1" aria-hidden="true" />
+            <p>{dateRange}</p>
+          </div>
+          
         </div>
       </a>
     </div>

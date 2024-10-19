@@ -3,8 +3,8 @@ const CatagorySlide = ({ catagory }) => {
     <div className="relative inline-block mx-2 transition-transform duration-300 hover:scale-105">
       {/* Icon on top */}
       <div className="flex flex-col items-center mb-2">
-        <i className={`${catagory.icon} text-2xl text-gray-500`} />
-        <h3 className="font-light text-sm text-center text-gray-800">{catagory.name}</h3>
+        <i className={`${catagory.icon} text-2xl text-gray-700`} />
+        <h3 className="font-light text-sm text-center text-gray-90000">{catagory.name}</h3>
       </div>
 
       {/* Hover description */}
