@@ -34,7 +34,7 @@ const ListingCart = ({ listing }) => {
           <dl>
             <div>
               <dt className="sr-only">Price</dt>
-              <dd className="text-lg font-bold text-gray-800">${listing.price_per_night}</dd>
+              <dd className="text-lg font-bold text-gray-800">Birr {listing.price_per_night}</dd>
             </div>
             
             <div>
