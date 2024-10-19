@@ -5,16 +5,17 @@ import locationStore from '../../stores/LocationStore';
 import catagoryStore from '../../stores/CatagoryStore';
 import { useNavigate } from 'react-router-dom';
 import ListingNotificationCard from '../../components/listing/ListingNotificationCard';
+import LoadingComponent from '../../components/listing/LoadingComponent';
 function MultiForm() {
 
-    const {locations, getAllLocations} = locationStore();
-    const {catagories, getCatagories} = catagoryStore();
-    const { formData, setFormData, clearFormData  ,addListing , loading } = useListingStore();
+    const { catagories, error: categoryError, loading: categoryLoading, getCatagories } = catagoryStore();
+    const { locations, error: locationError, loading: locationLoading, getAllLocations } = locationStore();
+    const { formData, setFormData, clearFormData  ,addListing , loading  ,error: lisingError} = useListingStore();
     const [step, setStep] = useState(1);
     const totalSteps = 9;
     const navigate = useNavigate();
     const [notification, setNotification] = useState({ visible: false, type: '', message: '' });
-   
+    
     // const stepTitles = [
     //     "Categories",    
     //     "Title & Desc",  
@@ -91,39 +92,40 @@ function MultiForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Submit form data to backend    
+        
         try {
-            await (addListing(formData));
+            // Submit form data to backend
+            await addListing(formData); // Corrected this to call the function directly without parentheses
             setNotification({ visible: true, type: 'success', message: 'Successfully added your listing!' });
-            clearFormData();
+    
+            // Navigate to the homepage and clear form data after a successful response
             setTimeout(() => {
                 navigate('/');
-            }, 5000);
-        }catch (error) {
+                clearFormData();
+            }, 3000);
+        } catch (error) {
             console.error('Error adding listing:', error);
-            setNotification({ visible: true, type: 'error', message: error.message || 'An error occurred while adding the listing.' });
-        } 
-        
+            // Only set notification if an error occurs
+            setNotification({ visible: true, type: 'error', message: lisingError || 'An error occurred while adding the listing.' });
+        }
     };
+    
+
 
     const closeNotification = () => {
         setNotification({ visible: false, type: '', message: '' }); // Hide notification
     };
-     // feach location 
-     useEffect(() => {
-        const fetchLocation = async () => {
-            await getAllLocations();
-        }
-        fetchLocation();
-    } ,[]);
-
-    // feach catagory 
     useEffect(() => {
-        const fetchCatagory = async () => {
-            await getCatagories();
-        }
-        fetchCatagory();
-    } ,[]);
+        getCatagories();
+        getAllLocations();
+    }, [getCatagories, getAllLocations]);
+    if (categoryLoading || locationLoading) return <LoadingComponent />;
+    if (categoryError) return <div>Error fetching categories: {categoryError}</div>;
+    if (locationError) return <div>Error fetching locations: {locationError}</div>;
+    if (loading) {
+        return <LoadingComponent />; 
+    }
+
  
     return (
         <div className="relative min-h-screen flex items-center justify-center bg-white">

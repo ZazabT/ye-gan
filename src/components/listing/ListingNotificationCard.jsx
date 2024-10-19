@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 const ListingNotificationCard = ({ visible, type, message, onClose }) => {
     if (!visible) return null; // Return null if not visible
