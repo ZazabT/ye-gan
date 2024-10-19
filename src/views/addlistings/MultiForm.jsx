@@ -4,6 +4,7 @@ import useListingStore from '../../stores/ListingStore';
 import locationStore from '../../stores/LocationStore';
 import catagoryStore from '../../stores/CatagoryStore';
 import { useNavigate } from 'react-router-dom';
+import ListingNotificationCard from '../../components/listing/ListingNotificationCard';
 function MultiForm() {
 
     const {locations, getAllLocations} = locationStore();
@@ -12,6 +13,7 @@ function MultiForm() {
     const [step, setStep] = useState(1);
     const totalSteps = 9;
     const navigate = useNavigate();
+    const [notification, setNotification] = useState({ visible: false, type: '', message: '' });
    
     // const stepTitles = [
     //     "Categories",    
@@ -89,13 +91,24 @@ function MultiForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // Submit form data to backend      
-        await (addListing(formData));
-        clearFormData();
-        navigate('/');
+        // Submit form data to backend    
+        try {
+            await (addListing(formData));
+            setNotification({ visible: true, type: 'success', message: 'Successfully added your listing!' });
+            clearFormData();
+            setTimeout(() => {
+                navigate('/');
+            }, 5000);
+        }catch (error) {
+            console.error('Error adding listing:', error);
+            setNotification({ visible: true, type: 'error', message: error.message || 'An error occurred while adding the listing.' });
+        } 
+        
     };
 
-
+    const closeNotification = () => {
+        setNotification({ visible: false, type: '', message: '' }); // Hide notification
+    };
      // feach location 
      useEffect(() => {
         const fetchLocation = async () => {
@@ -794,7 +807,17 @@ function MultiForm() {
                     
                 </form>
             </div>
+        
+        {/* Notification Pop-Up */}
+        <ListingNotificationCard
+                visible={notification.visible}
+                type={notification.type}
+                message={notification.message}
+                onClose={closeNotification}
+            />
+    
         </div>
+
     );
 }
 
