@@ -5,6 +5,7 @@ import Home from './views/Home'
 import Register from './views/auth/Register'
 import AddHostInfo from './views/profile/AddHostInfo'
 import Addlisting from './views/addlistings/Addlisting'
+import ListingDetail from './components/listing/listingDetail/ListingDetail'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
        <Route path='/register' element= {<Register/>} />
        <Route path='/add-listing' element= {<Addlisting/>} />
        <Route path='/add-host-info' element= {<AddHostInfo/>} />
+       <Route path='/listing/:id' element= {<ListingDetail/>} />
     </Routes>
   )
 }

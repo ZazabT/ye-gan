@@ -4,6 +4,7 @@ import { create } from "zustand";
 const listingStore = create((set) => ({
     // State variables
     listings: [],
+    listing: {},
     error: null,
     success: null,
     loading: false,
@@ -106,7 +107,7 @@ const listingStore = create((set) => ({
                 set({ listing: response.data.listing });
             }
         } catch (error) {
-            set({ error: error.response?.data?.message || 'Failed to fetch listing.' });
+            set({ error: error.response?.data?.error || 'Failed to fetch listing.' });
         } finally {
             set({ loading: false });
         }

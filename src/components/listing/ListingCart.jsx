@@ -1,7 +1,7 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { CalendarIcon } from '@heroicons/react/24/outline'; // Import Calendar icon
 
-const ListingCart = ({ listing }) => {
+const ListingCart = ({ listing , navigateToDetails}) => {
   // Main image 
   const mainImage = listing.item_images.find(image => image.isMain === 1);
   const location = `${listing.location.city}, ${listing.location.region}, ${listing.location.country}`;
@@ -17,8 +17,8 @@ const ListingCart = ({ listing }) => {
   const dateRange = formatDateRange(listing.start_date, listing.end_date);
 
   return (
-    <div className="relative group">
-      <a href="#" className="block rounded-lg p-2 shadow-lg transition-transform transform hover:scale-105 bg-white max-w-sm mx-auto">
+    <div className="relative group" onClick={navigateToDetails}>
+      <a className="block rounded-lg p-2 shadow-lg transition-transform transform hover:scale-105 bg-white max-w-sm mx-auto">
         {/* Heart icon for likes */}
         <div className="absolute top-3 right-3 cursor-pointer">
           <HeartIcon className={`h-6 w-6 text-white transition-colors hover:scale-125 hover:text-red-500 `} />
