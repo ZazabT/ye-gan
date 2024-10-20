@@ -1,8 +1,8 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { CalendarIcon } from '@heroicons/react/24/outline'; // Import Calendar icon
 
-const ListingCart = ({ listing , navigateToDetails}) => {
-  // Main image 
+const ListingCart = ({ listing, navigateToDetails }) => {
+  // Main image
   const mainImage = listing.item_images.find(image => image.isMain === 1);
   const location = `${listing.location.city}, ${listing.location.region}, ${listing.location.country}`;
   const backEndUrl = 'http://localhost:8000';
@@ -17,8 +17,8 @@ const ListingCart = ({ listing , navigateToDetails}) => {
   const dateRange = formatDateRange(listing.start_date, listing.end_date);
 
   return (
-    <div className="relative group" onClick={navigateToDetails}>
-      <a className="block rounded-lg p-2 shadow-lg transition-transform transform hover:scale-105 bg-white max-w-sm mx-auto">
+    <div className="relative group " onClick={navigateToDetails}>
+      <a className="block rounded-lg p-2 shadow-lg transition-transform transform hover:scale-105 bg-white max-w-sm mx-auto min-h-[400px] flex flex-col justify-between">
         {/* Heart icon for likes */}
         <div className="absolute top-3 right-3 cursor-pointer">
           <HeartIcon className={`h-6 w-6 text-white transition-colors hover:scale-125 hover:text-red-500 `} />
@@ -30,7 +30,7 @@ const ListingCart = ({ listing , navigateToDetails}) => {
           className="h-56 w-full rounded-md object-cover"
         />
 
-        <div className="mt-2">
+        <div className="mt-2 flex-grow">
           <dl>
             <div>
               <dt className="sr-only">Price</dt>
@@ -80,11 +80,10 @@ const ListingCart = ({ listing , navigateToDetails}) => {
           </div>
 
           {/* Date Range Section */}
-          <div className="mt-5 flex items-center justify-end text-sm text-gray-500">
+          {/* <div className="mt-5 flex items-center justify-end text-sm text-gray-500">
             <CalendarIcon className="h-5 w-5 text-indigo-700 mr-1" aria-hidden="true" />
             <p>{dateRange}</p>
-          </div>
-          
+          </div> */}
         </div>
       </a>
     </div>

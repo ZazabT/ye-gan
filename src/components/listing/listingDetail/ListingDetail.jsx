@@ -7,8 +7,9 @@ const ListingDetail = () => {
   const { error: listingError, loading, getListing, listing } = listingStore();
   const { id } = useParams();
   const backEndUrl = 'http://localhost:8000';
-  const location = `${listing?.location?.city}, ${listing?.location?.state} ${listing?.location?.country}`;
+  const location = `${listing?.location?.city}, ${listing?.location?.region} ${listing?.location?.country}`;
   const name = `${listing?.host?.user?.firstName} ${listing?.host?.user?.lastName}`;
+  const email = listing?.host?.user?.email;
 
   // Fetch listing details
   useEffect(() => {
@@ -19,53 +20,52 @@ const ListingDetail = () => {
   }, [id, getListing]);
 
   if (listingError) {
-    return <div className="text-red-500">Error loading listing details: {listingError.message}</div>;
+    return <div className="text-red-500 font-semibold">Error loading listing details: {listingError.message}</div>;
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-gray-700 font-semibold">Loading...</div>;
   }
 
   // Ensure listing and listing.item_images are defined
   if (!listing || !listing.item_images) {
-    return <div>No listing found</div>;
+    return <div className="text-gray-500 font-semibold">No listing found</div>;
   }
 
-  // Set desired height for images
   const imageHeight = "h-[29rem]"; 
 
   return (
     <>
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <h1 className="text-3xl font-semibold mb-6">{listing.title}</h1>
-        
+        <h1 className="text-4xl font-bold mb-6 text-gray-800">{listing.title}</h1>
+
         {/* Main Image and Thumbnail Grid */}
-        <div className="flex gap-1">
+        <div className="flex gap-2">
           {/* Main Image */}
-          <div className={`relative ${imageHeight}`}>
+          <div className={`relative ${imageHeight} w-2/3`}>
             {listing.item_images.slice(0, 1).map((image, index) => (
               <img
                 key={index}
                 src={`${backEndUrl}${image.image_url}`}
                 alt={`Main Image of ${listing.title}`}
-                className={`w-full h-full object-cover rounded-l-xl shadow-lg hover:shadow-xl transition-shadow duration-300 transform hover:scale-95`} 
+                className={`w-full h-full object-cover rounded-xl shadow-lg transition-shadow duration-300 transform hover:shadow-xl hover:scale-105`} 
               />
             ))}
             {/* Show All Images Button */}
-            <button className="absolute bottom-4 left-4 bg-white text-gray-800 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-100 transition-colors duration-300">
+            <button className="absolute bottom-4 left-4 bg-white text-gray-700 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-200 transition-colors duration-300">
               Show All Images
             </button>
           </div>
-          
+
           {/* Thumbnail Images */}
-          <div className={`grid grid-cols-2 gap-1 ${imageHeight}`}>
+          <div className={`grid grid-cols-2 gap-2 ${imageHeight}`}>
             {listing.item_images.slice(1, 5).map((image, index) => (
-              <div key={index} className={`p-1`}>
+              <div key={index} className="p-1">
                 <img
                   src={`${backEndUrl}${image.image_url}`}
                   alt={`Thumbnail ${index + 2} of ${listing.title}`}
-                  className={`w-full h-[14rem] object-cover hover:shadow-lg transition-shadow duration-300 transform hover:scale-95 ${index === 3 ? 'rounded-br-2xl' : ''} ${index === 1 ? 'rounded-tr-2xl' : ''}`}
+                  className={`w-full h-[14rem] object-cover rounded-lg transition-shadow duration-300 transform hover:shadow-lg hover:scale-105 ${index === 3 ? 'rounded-br-2xl' : ''} ${index === 1 ? 'rounded-tr-2xl' : ''}`}
                 />
               </div>
             ))}
@@ -73,95 +73,144 @@ const ListingDetail = () => {
         </div>
       </div>
 
-      {/* Location Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-semibold">{location}</h2>
-      </div>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex justify-between'>
+        {/* Left Section */}
+        <div className='w-2/3'>
+          {/* Location Section */}
+          <h2 className="text-2xl font-semibold text-gray-700">{location}</h2>
+          {/* Bed, Bath, and Guest Information */}
+          <h3 className="text-lg mb-2 text-gray-600">
+            {listing.max_guest} guests · {listing.bedrooms} bedrooms · {listing.bathrooms} baths · {listing.beds} beds
+          </h3>
+          {/* Description */}
+          {/* <p className="text-gray-700">{listing.description}</p> */}
+        </div>
 
-      {/* Bed, Bath, and Guest Information */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h3 className="text-lg mb-2 text-gray-800">
-          {listing.max_guest} guests · {listing.bedrooms} bedrooms · {listing.bathrooms} baths · {listing.beds} beds
-        </h3>
+        {/* Right Section (Booking Card) */}
+
+
       </div>
 
       {/* Host Card */}
-      <div className="pt-16 bg-blueGray-50 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="pt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="w-full lg:w-4/12 px-4 mx-auto">
-          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-xl rounded-lg mt-16">
+          <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-lg mt-16 transition-transform transform hover:scale-105 duration-300">
             <div className="px-6">
               <div className="flex flex-wrap justify-center">
                 <div className="w-full px-4 flex justify-center">
                   <div className="relative">
-                    <img alt="Host" src="https://demos.creative-tim.com/notus-js/assets/img/team-2-800x800.jpg" className="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px" />
+                    <img
+                      alt="Host"
+                      src="https://demos.creative-tim.com/notus-js/assets/img/team-2-800x800.jpg"
+                      onError={(e) => (e.target.src = "https://via.placeholder.com/150")}
+                      className="shadow-lg rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
+                    />
                   </div>
                 </div>
                 <div className="w-full px-4 text-center mt-20">
                   <div className="flex justify-center py-4 lg:pt-4 pt-8">
                     <div className="mr-4 p-3 text-center">
-                      <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">22</span>
-                      <span className="text-sm text-blueGray-400">Listings</span>
+                      <span className="text-xl font-bold block uppercase tracking-wide text-blue-600">22</span>
+                      <span className="text-sm text-gray-400">Listings</span>
                     </div>
                     <div className="mr-4 p-3 text-center">
-                      <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">10</span>
-                      <span className="text-sm text-blueGray-400"></span>
+                      <span className="text-xl font-bold block uppercase tracking-wide text-blue-600">4.8</span>
+                      <span className="text-sm text-gray-400">Ratings</span>
                     </div>
                     <div className="lg:mr-4 p-3 text-center">
-                      <span className="text-xl font-bold block uppercase tracking-wide text-blueGray-600">89</span>
-                      <span className="text-sm text-blueGray-400">Comments</span>
+                      <span className="text-xl font-bold block uppercase tracking-wide text-blue-600">5</span>
+                      <span className="text-sm text-gray-400">Years Hosting</span>
                     </div>
                   </div>
                 </div>
               </div>
+
+              {/* Host Information Section */}
               <div className="text-center mt-12">
-                <h3 className="text-xl font-semibold leading-normal mb-2 text-blueGray-700">{name}</h3>
-                <div className="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase">
-                  <i className="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
+                <h3 className="text-xl font-semibold leading-normal mb-2 text-gray-800">{name}</h3>
+                <div className="text-sm leading-normal mt-0 mb-2 text-gray-500 font-bold">
+                  <i className="fas fa-map-marker-alt mr-2 text-lg text-blue-400"></i>
                   Los Angeles, California
                 </div>
-                <div className="mb-2 text-blueGray-600 mt-10">
-                  <i className="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
-                  Solution Manager - Creative Tim Officer
-                </div>
-                <div className="mb-2 text-blueGray-600">
-                  <i className="fas fa-university mr-2 text-lg text-blueGray-400"></i>
-                  University of Computer Science
-                </div>
               </div>
-              <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
-                <div className="flex flex-wrap justify-center">
-                  <div className="w-full lg:w-9/12 px-4">
-                    <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                      An artist of considerable range, Jenna the name taken
-                      by Melbourne-raised, Brooklyn-based Nick Murphy
-                      writes, performs and records all of his own music,
-                      giving it a warm, intimate feel with a solid groove
-                      structure. An artist of considerable range.
-                    </p>
-                    <a href="javascript:void(0);" className="font-normal text-pink-500">
-                      Show more
-                    </a>
-                  </div>
+
+              {/* Contact Information Section */}
+              <div className="mt-6 mb-10 border-t border-gray-200 pt-6 text-center">
+                <h4 className="text-lg font-semibold mb-2">Contact Me:</h4>
+                <p className="text-gray-600 flex justify-center items-center">
+                  <i className="fas fa-envelope mr-2 text-lg text-blue-400"></i>
+                  Email: <a href={`mailto:${email}`} className="text-blue-600 hover:text-blue-400">{email}</a>
+                </p>
+                <p className="text-gray-600 flex justify-center items-center">
+                  <i className="fas fa-phone mr-2 text-lg text-blue-400"></i>
+                  Phone: <span>(123) 456 - 7890</span>
+                </p>
+
+                {/* Social Media Links */}
+                <div className="flex justify-center mt-4 space-x-4">
+                  <a href="#" aria-label="Facebook" className="text-blue-600 hover:text-blue-500 transition duration-300">
+                    <i className="fab fa-facebook-square"></i>
+                  </a>
+                  <a href="#" aria-label="Twitter" className="text-blue-600 hover:text-blue-500 transition duration-300">
+                    <i className="fab fa-twitter"></i>
+                  </a>
+                  <a href="#" aria-label="Instagram" className="text-blue-600 hover:text-blue-500 transition duration-300">
+                    <i className="fab fa-instagram"></i>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      <footer className="relative pt-8 pb-6 mt-8">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center md:justify-between justify-center">
-            <div className="w-full md:w-6/12 px-4 mx-auto text-center">
-              <div className="text-sm text-blueGray-500 font-semibold py-1">
-                Made with <a href="https://www.creative-tim.com/product/notus-js" className="text-blueGray-500 hover:text-gray-800" target="_blank" rel="noopener noreferrer">Notus JS</a> by <a href="https://www.creative-tim.com" className="text-blueGray-500 hover:text-blueGray-800" target="_blank" rel="noopener noreferrer"> Creative Tim</a>.
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
     </>
   );
 };
 
 export default ListingDetail;
+
+
+
+
+
+{/* <div className="w-1/3 bg-white shadow-lg rounded-xl p-6">
+  <h3 className="text-xl font-bold text-gray-700 mb-4">Book This Listing</h3>
+
+  <div className="flex items-center mb-4">
+    <i className="fas fa-calendar-alt text-blue-500 text-lg"></i>
+    <div className="flex space-x-3 w-full">
+      <input 
+        type="date" 
+        placeholder="Check-in" 
+        className="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:outline-none" 
+      />
+      <input 
+        type="date" 
+        placeholder="Check-out" 
+        className="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:outline-none" 
+      />
+    </div>
+  </div>
+
+  <div className="flex items-center mb-4">
+    <i className="fas fa-users text-blue-500 text-lg"></i>
+    <input 
+      type="number" 
+      placeholder="Guests" 
+      className="ml-3 p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:outline-none" 
+    />
+  </div>
+
+  <div className="flex justify-between items-center mb-4">
+    <span className="text-gray-700 font-semibold">Total Price:</span>
+    <span className="text-blue-600 font-bold">$150</span> {/* Replace with dynamic price calculation */}
+//   </div>
+
+//   <button className="w-full bg-[#50087b] text-white font-semibold py-3 rounded-lg shadow-md hover:bg-[#5a0a8d] transition-colors duration-300">
+//     Reserve Now
+//   </button>
+  
+//   <p className="text-gray-500 text-sm mt-2 text-center">
+//     You won’t be charged yet
+//   </p>
+// </div> */}
