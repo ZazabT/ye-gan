@@ -164,7 +164,7 @@ function MultiForm() {
                     </div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="mt-12 md:w-4/5 mx-auto rounded-3xl p-8 shadow-lg bg-white">
+                <form onSubmit={handleSubmit} className="mt-12 md:w-4/5 mx-auto">
                     
                     {step === 1 && (
                         <motion.div
@@ -424,7 +424,7 @@ function MultiForm() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.3 }}
-                        className="py-8 px-4 md:px-8 lg:px-16 bg-white shadow-lg rounded-lg"
+                        className="py-8 px-4 md:px-8 lg:px-16 "
                     >
                         <div className="text-base font-light text-center text-gray-500">Step 5/8</div>
                         <div className="mt-4 text-3xl font-semibold text-center text-gray-800">

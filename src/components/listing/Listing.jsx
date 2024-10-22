@@ -44,7 +44,14 @@ const Listing = () => {
       {listings?.length > 0 ? (
         listings.map((listing) => <ListingCart key={listing.id} listing={listing}  navigateToDetails={() => navigateToDetails(listing.id)} />)
       ) : (
-        <div className="w-full h-full flex items-center justify-center">No listings available</div>
+        
+    <div className="flex justify-center items-center w-screen">
+        <div className="text-center">
+        <h2 className="text-2xl font-semibold mb-2">No Listings Available</h2>
+        <p className="text-lg">Please check back later or try a different search.</p>
+      </div>
+    </div>
+
       )}
     </div>
   );

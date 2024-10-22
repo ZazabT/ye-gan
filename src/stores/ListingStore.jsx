@@ -59,7 +59,7 @@ const listingStore = create((set) => ({
             });
             if (response.data.status === 201) {
                 set({ success: response.data.message });
-                return true; // Indicate success
+                return true;
             } else {
                 throw new Error('Failed to add listing.'); 
             }
@@ -67,7 +67,7 @@ const listingStore = create((set) => ({
             if (error.response) {
                 console.error('Error response:', error.response.data);
                 set({ error: error.response.data.error }); 
-                throw new Error(error.response.data.message); 
+                throw new Error(error.response.data.error); 
             } else if (error.request) {
                 console.error('Error request:', error.request);
                 set({ error: 'No response received from the server.' }); 

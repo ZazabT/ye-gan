@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import listingStore from '../../../stores/ListingStore';
 import Navbar from '../../Navbar';
+import ListingDetailLoading from './components/ListongDetailLoading';
+import BookingCard from './components/BookingCard';
 
 const ListingDetail = () => {
   const { error: listingError, loading, getListing, listing } = listingStore();
@@ -20,11 +22,11 @@ const ListingDetail = () => {
   }, [id, getListing]);
 
   if (listingError) {
-    return <div className="text-red-500 font-semibold">Error loading listing details: {listingError.message}</div>;
+    return <div className="text-red-500 font-semibold">Error loading listing details: {listingError}</div>;
   }
 
   if (loading) {
-    return <div className="text-gray-700 font-semibold">Loading...</div>;
+    return <ListingDetailLoading />;
   }
 
   // Ensure listing and listing.item_images are defined
@@ -87,7 +89,9 @@ const ListingDetail = () => {
         </div>
 
         {/* Right Section (Booking Card) */}
-
+         <div className="w-1/3 p-2">
+         <BookingCard listing={listing} />
+        </div>
 
       </div>
 
@@ -171,46 +175,3 @@ export default ListingDetail;
 
 
 
-
-
-{/* <div className="w-1/3 bg-white shadow-lg rounded-xl p-6">
-  <h3 className="text-xl font-bold text-gray-700 mb-4">Book This Listing</h3>
-
-  <div className="flex items-center mb-4">
-    <i className="fas fa-calendar-alt text-blue-500 text-lg"></i>
-    <div className="flex space-x-3 w-full">
-      <input 
-        type="date" 
-        placeholder="Check-in" 
-        className="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:outline-none" 
-      />
-      <input 
-        type="date" 
-        placeholder="Check-out" 
-        className="p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:outline-none" 
-      />
-    </div>
-  </div>
-
-  <div className="flex items-center mb-4">
-    <i className="fas fa-users text-blue-500 text-lg"></i>
-    <input 
-      type="number" 
-      placeholder="Guests" 
-      className="ml-3 p-2 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-400 focus:outline-none" 
-    />
-  </div>
-
-  <div className="flex justify-between items-center mb-4">
-    <span className="text-gray-700 font-semibold">Total Price:</span>
-    <span className="text-blue-600 font-bold">$150</span> {/* Replace with dynamic price calculation */}
-//   </div>
-
-//   <button className="w-full bg-[#50087b] text-white font-semibold py-3 rounded-lg shadow-md hover:bg-[#5a0a8d] transition-colors duration-300">
-//     Reserve Now
-//   </button>
-  
-//   <p className="text-gray-500 text-sm mt-2 text-center">
-//     You won’t be charged yet
-//   </p>
-// </div> */}

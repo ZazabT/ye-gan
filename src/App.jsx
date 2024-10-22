@@ -6,6 +6,8 @@ import Register from './views/auth/Register'
 import AddHostInfo from './views/profile/AddHostInfo'
 import Addlisting from './views/addlistings/Addlisting'
 import ListingDetail from './components/listing/listingDetail/ListingDetail'
+import HostProfile from './views/profile/HostProfile'
+import GuestProfile from './views/profile/GuestProfile'
 
 function App() {
   return (
@@ -14,8 +16,10 @@ function App() {
        <Route path='/login' element= {<Login/>} />
        <Route path='/register' element= {<Register/>} />
        <Route path='/add-listing' element= {<Addlisting/>} />
-       <Route path='/add-host-info' element= {<AddHostInfo/>} />
+       <Route path='/add-host-info' element={<AddHostInfo />} />
        <Route path='/listing/:id' element= {<ListingDetail/>} />
+       <Route path='/host-profile' element= {<HostProfile/>} />
+       <Route path='/guest-profile' element= {<GuestProfile/>} />
     </Routes>
   )
 }

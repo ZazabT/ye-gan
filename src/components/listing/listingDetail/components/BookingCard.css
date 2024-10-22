@@ -1,0 +1,36 @@
+/* Custom Calendar Styling */
+.rdrCalendarWrapper {
+    border-radius: 12px;
+}
+
+.rdrMonthAndYearPickers select {
+    font-size: 1.2rem;
+    padding: 4px;
+    border-radius: 6px;
+}
+
+.rdrDayNumber span {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.rdrDay:hover {
+    background-color: #50087b;
+    border-radius: 100%;
+}
+
+
+/* Disable class styles */
+.rdrDay.rdrDayDisabled {
+    
+    cursor: not-allowed;
+    text-decoration: line-through;
+    text-decoration: dashed;
+}
+
+/* Add hover effect */
+.rdrDay.rdrDayDisabled:hover {
+    cursor: not-allowed; 
+    background-color: #fff;
+   border-radius: 100%;
+}

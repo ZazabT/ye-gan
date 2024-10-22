@@ -101,6 +101,7 @@ const Navbar = () => {
           onClick={() => {
             if (isAuthenticated) {
               if (user?.isHomeOwner === 1) {
+                 
                 navigate('/add-listing');
               } else {
                 navigate('/add-host-info');
@@ -144,7 +145,10 @@ const Navbar = () => {
                   </>
                 )}
                 {isAuthenticated && (
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/guest-profile')}>Profile</li>
+                )}
+                {isAuthenticated && user?.isHomeOwner === 1 && (
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/host-profile')}>Host Profile</li>
                 )}
                 <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
                 {isAuthenticated && (

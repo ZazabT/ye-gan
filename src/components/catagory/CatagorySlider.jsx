@@ -1,14 +1,14 @@
 const CatagorySlide = ({ catagory }) => {
   return (
-    <div className="relative inline-block mx-2 transition-transform duration-300 hover:scale-105">
-      {/* Icon on top */}
+    <div className="relative inline-block mx-2 transition-transform duration-300 hover:scale-105 group">
+      {/* Icon and Name */}
       <div className="flex flex-col items-center mb-2">
         <i className={`${catagory.icon} text-3xl text-gray-700`} />
         <h3 className="font-medium text-base text-center text-gray-900">{catagory.name}</h3>
       </div>
 
       {/* Hover description */}
-      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-[#50087b] text-white text-xs p-2 rounded opacity-0 hover:opacity-100 transition-opacity duration-300 z-10">
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-[#50087b] text-white text-xs p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
         {catagory.description}
       </div>
 
