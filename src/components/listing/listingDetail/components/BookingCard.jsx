@@ -179,11 +179,11 @@ const BookingCard = ({ listing }) => {
             moveRangeOnFirstSelection={false}
             ranges={dateRange}
             showSelectionPreview={true}
-            minDate={new Date()} // Allow selection from today onward
+            minDate={new Date()}
             disabledDates={disabledDates}
             rangeColors={['#5a0a8d']}
             locale={enGB}
-            className="rounded-lg"
+            className="rounded-lg "
           />
         )}
       </div>
@@ -229,3 +229,29 @@ const BookingCard = ({ listing }) => {
 };
 
 export default BookingCard;
+
+
+
+
+//    {/* Price Breakdown */}
+//    <div className="mt-4 space-y-2">
+//    <div className="flex justify-between text-gray-600">
+//      <span className='underline'>{PRICE_PER_NIGHT} x {nightCount} nights</span>
+//      <span>{PRICE_PER_NIGHT * nightCount}</span>
+//    </div>
+//    <div className="flex justify-between text-gray-600">
+//      <span className='underline'>Cleaning Fee</span>
+//      <span>{CLEANING_FEE}</span>
+//    </div>
+//    <div className="flex justify-between text-gray-600 ">
+//      <span className='underline'>Service Fee</span>
+//      <span>{SERVICE_FEE}</span>
+//    </div>
+//  </div>
+
+//  {/* Total */}
+//  <hr className="border border-dashed mt-2 mb-2" />
+//  <div className="flex justify-between text-black text-xl font-bold">
+//    <span>Total before taxes</span>
+//    <span>{totalBeforeTaxes}</span>
+//  </div>
