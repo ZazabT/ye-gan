@@ -102,7 +102,7 @@ const handleFileChange = (event) => {
         // try to submint the info to backend
         try{
              await createHostProfile(formData);
-             setNotification({ visible: true, type: 'success', message: 'Successfully added your listing!' });
+             setNotification({ visible: true, type: 'success', message: 'Successfully registered host info!' });
 
              // navigate to add listing page after 2 sec 
              setTimeout(() => {

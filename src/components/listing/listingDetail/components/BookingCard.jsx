@@ -120,6 +120,13 @@ const BookingCard = ({ listing }) => {
       await reserve(listing?.id, formattedCheckinDate, formattedCheckoutDate, totalBeforeTaxes);
       showNotification('success', 'Successfully added your listing!');
       setTimeout(() => navigate('/'), 2000);
+      //clear state
+      setGuestCount(1);
+      setDateRange([{
+        startDate: startDateParsed || new Date(),
+        endDate: endDateParsed || addDays(new Date(), 2),
+        key: 'selection',
+      }]);
     } catch (error) {
       console.error('Error adding listing:', error);
       showNotification('error', error?.message || 'An error occurred while adding the listing.');
@@ -138,7 +145,7 @@ const BookingCard = ({ listing }) => {
     <div className="max-w-md mx-auto border border-gray-300 px-12 py-3 rounded-2xl shadow-xl bg-white">
       {/* Price and Night */}
       <div className="flex items-baseline space-x-2 mb-4 mt-4">
-        <h2 className="text-2xl font-semibold text-black mb-4">bir {listing?.price_per_night}</h2>
+        <h2 className="text-2xl font-semibold text-black mb-4">br {listing?.price_per_night}</h2>
         <span className="text-gray-600">/ night</span>
       </div>
 
@@ -216,6 +223,29 @@ const BookingCard = ({ listing }) => {
         {loading ? 'Loading...' : 'Reserve'}
       </button>
 
+          {/* Price Breakdown */}
+   <div className="mt-4 space-y-2">
+   <div className="flex justify-between text-gray-600">
+      <span className='underline'>{PRICE_PER_NIGHT} x {nightCount} nights</span>
+      <span>{PRICE_PER_NIGHT * nightCount}</span>
+    </div>
+    <div className="flex justify-between text-gray-600">
+      <span className='underline'>Cleaning Fee</span>
+      <span>{CLEANING_FEE} br</span>
+    </div>
+    <div className="flex justify-between text-gray-600 ">
+      <span className='underline'>Service Fee</span>
+      <span>{SERVICE_FEE} br</span>
+    </div>
+  </div>
+
+  {/* Total */}
+  <hr className="border border-dashed mt-2 mb-2" />
+  <div className="flex justify-between text-black text-xl font-bold">
+    <span>Total before taxes</span>
+    <span>{totalBeforeTaxes} br</span>
+  </div>
+      
       {/* Notification */}
       {notification.visible && (
         <ListingNotificationCard
