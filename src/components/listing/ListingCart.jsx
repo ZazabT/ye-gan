@@ -4,9 +4,12 @@ import { CalendarIcon } from '@heroicons/react/24/outline'; // Import Calendar i
 const ListingCart = ({ listing, navigateToDetails }) => {
   // Main image
   const mainImage = listing.item_images.find(image => image.isMain === 1);
+  
+
   const location = `${listing.location.city}, ${listing.location.region}, ${listing.location.country}`;
   const backEndUrl = 'http://localhost:8000';
-
+  const imageUrl = mainImage ? `${backEndUrl}/${mainImage.image_url}` : 'https://via.placeholder.com/150';
+  console.log(imageUrl);
   // Date formatting
   const formatDateRange = (startDate, endDate) => {
     const options = { month: 'short', day: 'numeric' };
@@ -18,7 +21,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
 
   return (
     <div className="relative group " onClick={navigateToDetails}>
-      <a className="block rounded-lg p-2 shadow-lg transition-transform transform hover:scale-105 bg-white max-w-sm mx-auto min-h-[400px] flex flex-col justify-between">
+      <a className=" rounded-lg p-2 shadow-lg transition-transform transform hover:scale-105 bg-white max-w-sm mx-auto min-h-[400px] flex flex-col justify-between">
         {/* Heart icon for likes */}
         <div className="absolute top-3 right-3 cursor-pointer">
           <HeartIcon className={`h-6 w-6 text-white transition-colors hover:scale-125 hover:text-red-500 `} />
@@ -26,7 +29,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
 
         <img
           alt={listing.title}
-          src={`${backEndUrl}${mainImage?.image_url}` || 'https://via.placeholder.com/150'}
+          src={imageUrl}
           className="h-56 w-full rounded-md object-cover"
         />
 

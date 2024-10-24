@@ -49,7 +49,7 @@ const ListingDetail = () => {
             {listing.item_images.slice(0, 1).map((image, index) => (
               <img
                 key={index}
-                src={`${backEndUrl}${image.image_url}`}
+                src={`${backEndUrl}/${image.image_url}`}
                 alt={`Main Image of ${listing.title}`}
                 className={`w-full h-full object-cover rounded-xl shadow-lg transition-shadow duration-300 transform hover:shadow-xl hover:scale-105`} 
               />
@@ -65,7 +65,7 @@ const ListingDetail = () => {
             {listing.item_images.slice(1, 5).map((image, index) => (
               <div key={index} className="p-1">
                 <img
-                  src={`${backEndUrl}${image.image_url}`}
+                  src={`${backEndUrl}/${image.image_url}`}
                   alt={`Thumbnail ${index + 2} of ${listing.title}`}
                   className={`w-full h-[14rem] object-cover rounded-lg transition-shadow duration-300 transform hover:shadow-lg hover:scale-105 ${index === 3 ? 'rounded-br-2xl' : ''} ${index === 1 ? 'rounded-tr-2xl' : ''}`}
                 />
