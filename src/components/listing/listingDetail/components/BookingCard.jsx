@@ -98,7 +98,7 @@ const BookingCard = ({ listing }) => {
     console.log('Check-out Date:', checkoutDate);
 
     if (!checkinDate || !checkoutDate) {
-      return showNotification('error', 'Please select valid check-in and check-out dates.');
+      return setNotification({ visible: true, type: 'error', message: 'Please select a check-in and check-out date.' });
     }
 
     // Format the dates for the API
@@ -118,8 +118,8 @@ const BookingCard = ({ listing }) => {
 
     try {
       await reserve(listing?.id, formattedCheckinDate, formattedCheckoutDate, totalBeforeTaxes);
-      showNotification('success', 'Successfully added your listing!');
-      setTimeout(() => navigate('/'), 2000);
+      setNotification({ visible: true, type: 'success', message: `Successfully reserved ${listing?.title} wait till "${listing?.host?.username}" accepts your request`  });
+      setTimeout(() => navigate('/'), 5000);
       //clear state
       setGuestCount(1);
       setDateRange([{
@@ -129,13 +129,10 @@ const BookingCard = ({ listing }) => {
       }]);
     } catch (error) {
       console.error('Error adding listing:', error);
-      showNotification('error', error?.message || 'An error occurred while adding the listing.');
+      setNotification({ visible: true, type: 'error', message: bookingError || 'An error occurred while adding the listing.' });
     }
   };
 
-  const showNotification = (type, message) => {
-    setNotification({ visible: true, type, message });
-  };
 
   const closeNotification = () => {
     setNotification({ visible: false, type: '', message: '' });
@@ -220,7 +217,11 @@ const BookingCard = ({ listing }) => {
         onClick={handleReserve}
         disabled={loading}
       >
-        {loading ? 'Loading...' : 'Reserve'}
+        {loading ? 
+    <div className='flex justify-center'>
+    <div className="w-5 h-5 border-4 border-white border-double rounded-full animate-spin border-top-color:transparent"></div>
+   </div> 
+   : 'Reserve'}
       </button>
 
           {/* Price Breakdown */}
@@ -247,13 +248,12 @@ const BookingCard = ({ listing }) => {
   </div>
       
       {/* Notification */}
-      {notification.visible && (
-        <ListingNotificationCard
-          type={notification.type}
-          message={notification.message}
-          onClose={closeNotification}
-        />
-      )}
+      <ListingNotificationCard
+                visible={notification.visible}
+                type={notification.type}
+                message={notification.message}
+                onClose={closeNotification}
+            />
     </div>
   );
 };
