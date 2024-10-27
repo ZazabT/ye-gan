@@ -4,7 +4,7 @@ import listingStore from '../../../stores/ListingStore';
 import Navbar from '../../Navbar';
 import ListingDetailLoading from './components/ListongDetailLoading';
 import BookingCard from './components/BookingCard';
-
+import { useNavigate } from 'react-router-dom';
 const ListingDetail = () => {
   const { error: listingError, loading, getListing, listing } = listingStore();
   const { id } = useParams();
@@ -12,6 +12,7 @@ const ListingDetail = () => {
   const location = `${listing?.location?.city}, ${listing?.location?.region} ${listing?.location?.country}`;
   const name = `${listing?.host?.user?.firstName} ${listing?.host?.user?.lastName}`;
   const email = listing?.host?.user?.email;
+  const navigate = useNavigate();
 
   // Fetch listing details
   useEffect(() => {
@@ -55,7 +56,13 @@ const ListingDetail = () => {
               />
             ))}
             {/* Show All Images Button */}
-            <button className="absolute bottom-4 left-4 bg-white text-gray-700 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-200 transition-colors duration-300">
+            <button className="absolute bottom-4 left-4 bg-white text-gray-700 font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-gray-200 transition-colors duration-300" onClick={
+              () => {
+                   // Navigate to the listing image page
+                    navigate('/listing/images' , {state: {
+                      images: listing.item_images}});
+              }
+            }>
               Show All Images
             </button>
           </div>
