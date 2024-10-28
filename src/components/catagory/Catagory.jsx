@@ -36,9 +36,9 @@ const Catagory = () => {
  
 
   return (
-    <div className="flex items-center justify-between p-4 gap-2 bg-white shadow-md rounded-lg max-h-[100px] overflow-hidden">
+    <div className="flex items-center justify-between p-4 gap-2 shadow-md rounded-lg max-h-[100px] overflow-hidden ">
       {/* Categories Part */}
-      <div className="relative flex-grow overflow-hidden">
+      <div className="relative flex-grow overflow-hidden   ">
         <div className="flex items-center mb-2">
           <button
             aria-label="Slide Left"

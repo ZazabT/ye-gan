@@ -8,6 +8,35 @@ import ListingNotificationCard from '../../components/listing/ListingNotificatio
 import LoadingComponent from '../../components/listing/LoadingComponent';
 function MultiForm() {
 
+
+     // Calculate minimum end date based on selected start date
+     const getMinEndDate = () => {
+        const startDateStr = formData.start_date;
+    
+        // Check if start_date is valid before creating a Date object
+        if (!startDateStr) {
+            return ''; // Return an empty string to disable the end date input if no start date is selected
+        }
+    
+        const startDate = new Date(startDateStr);
+    
+        // Check if startDate is valid
+        if (isNaN(startDate.getTime())) {
+            return ''; // Return an empty string if the date is invalid
+        }
+    
+        // Calculate minimum end date (10 days after the start date)
+        const minEndDate = new Date(startDate);
+        minEndDate.setDate(minEndDate.getDate() + 10); // Add 10 days
+    
+        return minEndDate.toISOString().split('T')[0]; // Format the date to YYYY-MM-DD
+    };
+
+    const minStartDate = (() => {
+        const today = new Date();
+        today.setDate(today.getDate() + 5); // Set minimum start date to 5 days from today
+        return today.toISOString().split('T')[0];
+    })();
     const { catagories, error: categoryError, loading: categoryLoading, getCatagories } = catagoryStore();
     const { locations, error: locationError, loading: locationLoading, getAllLocations } = locationStore();
     const { formData, setFormData, clearFormData  ,addListing , loading  ,error: lisingError} = useListingStore();
@@ -78,17 +107,41 @@ function MultiForm() {
 
     const validateStep = () => {
         switch (step) {
-            case 1: return formData.categories?.length > 0;
-            case 2: return formData.title && formData.description;
-            case 3: return formData.images && formData.images?.length > 0;
-            case 4: return formData.beds && formData.max_guest &&formData.bathrooms;
-            case 5: return formData.location_id;
-            case 6: return formData.start_date && formData.end_date;
-            case 7: return formData.price_per_night;
-            case 8: return formData.rules;
-            default: return true;
+            case 1: 
+                return formData.categories?.length > 0;
+            case 2: 
+                return formData.title && formData.description;
+            case 3: 
+                return formData.images && formData.images?.length > 0;
+            case 4: 
+                return formData.beds && formData.max_guest && formData.bathrooms;
+            case 5: 
+                return formData.location_id;
+            case 6: {
+                // Get today's date
+                const today = new Date();
+                const minStartDate = new Date(today);
+                minStartDate.setDate(today.getDate() + 5); // Minimum start date (5 days from today)
+    
+                const startDate = new Date(formData.start_date);
+                const endDate = new Date(formData.end_date);
+                
+                // Check conditions
+                const isStartDateValid = startDate >= minStartDate;
+                const isEndDateValid = endDate >= new Date(startDate.setDate(startDate.getDate() + 10)); // End date must be at least 10 days after start date
+    
+                return formData.start_date && formData.end_date && isStartDateValid && isEndDateValid;
+            }
+            case 7: 
+                return formData.price_per_night;
+            case 8: 
+                return formData.rules;
+            default: 
+                return true;
         }
     };
+    
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -115,6 +168,8 @@ function MultiForm() {
     const closeNotification = () => {
         setNotification({ visible: false, type: '', message: '' }); // Hide notification
     };
+
+
     useEffect(() => {
         getCatagories();
         getAllLocations();
@@ -315,104 +370,104 @@ function MultiForm() {
                     )}
 
 
-{step === 4 && (
-    <motion.div
-        key={step}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3 }}
-        className="py-8 px-4 md:px-8 lg:px-16"
-    >
-        {/* Step Indicator */}
-        <div className="text-sm font-light text-center text-gray-500">Step 4 of 8</div>
+                    {step === 4 && (
+                        <motion.div
+                            key={step}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                            className="py-8 px-4 md:px-8 lg:px-16"
+                        >
+                            {/* Step Indicator */}
+                            <div className="text-sm font-light text-center text-gray-500">Step 4 of 8</div>
 
-        {/* Section Title */}
-        <div className="mt-4 text-3xl text-center font-semibold text-gray-900">Enter Property Details</div>
+                            {/* Section Title */}
+                            <div className="mt-4 text-3xl text-center font-semibold text-gray-900">Enter Property Details</div>
 
-        {/* Input Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-            {/* Number of Beds */}
-            <div className="flex flex-col">
-                <label htmlFor="beds" className="text-lg font-medium text-gray-700 mb-2">Number of Beds</label>
-                <input
-                    type="number"
-                    name="beds"
-                    placeholder="0"
-                    className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                    value={formData.beds}
-                    min="0"
-                    onChange={handleChange}
-                />
-            </div>
+                            {/* Input Fields */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+                                {/* Number of Beds */}
+                                <div className="flex flex-col">
+                                    <label htmlFor="beds" className="text-lg font-medium text-gray-700 mb-2">Number of Beds</label>
+                                    <input
+                                        type="number"
+                                        name="beds"
+                                        placeholder="0"
+                                        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                                        value={formData.beds}
+                                        min="0"
+                                        onChange={handleChange}
+                                    />
+                                </div>
 
-            {/* Number of Bedrooms */}
-            <div className="flex flex-col">
-                <label htmlFor="bedrooms" className="text-lg font-medium text-gray-700 mb-2">Number of Bedrooms</label>
-                <input
-                    type="number"
-                    id='bedrooms'
-                    name="bedrooms"
-                    placeholder="0"
-                    className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                    value={formData.bedrooms}
-                    min="0"
-                    onChange={handleChange}
-                />
-            </div>
+                                {/* Number of Bedrooms */}
+                                <div className="flex flex-col">
+                                    <label htmlFor="bedrooms" className="text-lg font-medium text-gray-700 mb-2">Number of Bedrooms</label>
+                                    <input
+                                        type="number"
+                                        id='bedrooms'
+                                        name="bedrooms"
+                                        placeholder="0"
+                                        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                                        value={formData.bedrooms}
+                                        min="0"
+                                        onChange={handleChange}
+                                    />
+                                </div>
 
-            {/* Number of Bathrooms */}
-            <div className="flex flex-col">
-                <label htmlFor="bathrooms" className="text-lg font-medium text-gray-700 mb-2">Number of Bathrooms</label>
-                <input
-                    type="number"
-                    name="bathrooms"
-                    id='bathrooms'
-                    placeholder="0"
-                    className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                    value={formData.bathrooms}
-                    min="0"
-                    onChange={handleChange}
-                />
-            </div>
+                                {/* Number of Bathrooms */}
+                                <div className="flex flex-col">
+                                    <label htmlFor="bathrooms" className="text-lg font-medium text-gray-700 mb-2">Number of Bathrooms</label>
+                                    <input
+                                        type="number"
+                                        name="bathrooms"
+                                        id='bathrooms'
+                                        placeholder="0"
+                                        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                                        value={formData.bathrooms}
+                                        min="0"
+                                        onChange={handleChange}
+                                    />
+                                </div>
 
-            {/* Max Guests */}
-            <div className="flex flex-col">
-                <label htmlFor="max_guest" className="text-lg font-medium text-gray-700 mb-2">Max Guests</label>
-                <input
-                    type="number"
-                    name="max_guest"
-                    id='max_guest'
-                    placeholder="0"
-                    className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
-                    value={formData.max_guest}
-                    min="0"
-                    onChange={handleChange}
-                />
-            </div>
-        </div>
+                                {/* Max Guests */}
+                                <div className="flex flex-col">
+                                    <label htmlFor="max_guest" className="text-lg font-medium text-gray-700 mb-2">Max Guests</label>
+                                    <input
+                                        type="number"
+                                        name="max_guest"
+                                        id='max_guest'
+                                        placeholder="0"
+                                        className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                                        value={formData.max_guest}
+                                        min="0"
+                                        onChange={handleChange}
+                                    />
+                                </div>
+                            </div>
 
-        {/* Navigation Buttons */}
-        <div className="flex justify-between items-center mt-8">
-            <button
-                type="button"
-                onClick={prevStep}
-                className="bg-gray-300 text-black font-semibold py-2 px-6 rounded-md hover:bg-gray-400 transition duration-200"
-            >
-                Previous
-            </button>
+                            {/* Navigation Buttons */}
+                            <div className="flex justify-between items-center mt-8">
+                                <button
+                                    type="button"
+                                    onClick={prevStep}
+                                    className="bg-gray-300 text-black font-semibold py-2 px-6 rounded-md hover:bg-gray-400 transition duration-200"
+                                >
+                                    Previous
+                                </button>
 
-            <button
-                type="button"
-                onClick={nextStep}
-                className={`bg-black text-white font-semibold py-2 px-6 rounded-md hover:bg-gray-700 transition duration-200 ${!validateStep() ? 'opacity-50 cursor-not-allowed' : ''}`}
-                disabled={!validateStep()}
-            >
-                Next
-            </button>
-        </div>
-    </motion.div>
-)}
+                                <button
+                                    type="button"
+                                    onClick={nextStep}
+                                    className={`bg-black text-white font-semibold py-2 px-6 rounded-md hover:bg-gray-700 transition duration-200 ${!validateStep() ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    disabled={!validateStep()}
+                                >
+                                    Next
+                                </button>
+                            </div>
+                        </motion.div>
+                    )}
 
 
 
@@ -473,94 +528,94 @@ function MultiForm() {
 
                     
                     {step === 6 && (
-                    <motion.div
-                        key={step}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.4 }}
-                        className="py-12 px-8 md:px-12 lg:px-24 bg-white shadow-2xl rounded-2xl"
-                    >
-                        {/* Step Indicator */}
-                        <div className="text-sm font-medium text-center text-gray-400 tracking-wider">Step 6/8</div>
+                            <motion.div
+                                key={step}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.4 }}
+                                className="py-12 px-8 md:px-12 lg:px-24 bg-white shadow-2xl rounded-2xl"
+                            >
+                                {/* Step Indicator */}
+                                <div className="text-sm font-medium text-center text-gray-400 tracking-wider">Step 6/8</div>
 
-                        {/* Heading */}
-                        <div className="mt-4 text-4xl font-extrabold text-center text-gray-800">
-                        Set Your Availability
-                        </div>
+                                {/* Heading */}
+                                <div className="mt-4 text-4xl font-extrabold text-center text-gray-800">
+                                    Set Your Availability
+                                </div>
 
-                        {/* Subheading */}
-                        <div className="mt-2 text-base font-normal text-center text-gray-500">
-                        Please choose the dates you are available for hosting
-                        </div>
+                                {/* Subheading */}
+                                <div className="mt-2 text-base font-normal text-center text-gray-500">
+                                    Please choose the dates you are available for hosting
+                                </div>
 
-                        {/* Start Date Input */}
-                        <div className="mt-8">
-                        <label htmlFor="start_date" className="block text-lg font-semibold text-gray-700 mb-3">
-                            Start Date
-                        </label>
-                        <div className="relative">
-                            <input
-                            type="date"
-                            id="start_date"
-                            name="start_date"
-                            className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition duration-300 ease-in-out hover:border-blue-400"
-                            value={formData.start_date}
-                            onChange={handleChange}
-                            />
-                            <span className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400">
-                            📅
-                            </span>
-                        </div>
-                        </div>
+                                {/* Start Date Input */}
+                                <div className="mt-8">
+                                    <label htmlFor="start_date" className="block text-lg font-semibold text-gray-700 mb-3">
+                                        Start Date
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type="date"
+                                            id="start_date"
+                                            name="start_date"
+                                            className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition duration-300 ease-in-out hover:border-blue-400"
+                                            value={formData.start_date || ''}
+                                            onChange={handleChange}
+                                            min={minStartDate} // Set the minimum date
+                                        />
+                                        <span className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400">
+                                            📅
+                                        </span>
+                                    </div>
+                                </div>
 
-                        {/* End Date Input */}
-                        <div className="mt-8">
-                        <label htmlFor="end_date" className="block text-lg font-semibold text-gray-700 mb-3">
-                            End Date
-                        </label>
-                        <div className="relative">
-                            <input
-                            type="date"
-                            id="end_date"
-                            name="end_date"
-                            className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition duration-300 ease-in-out hover:border-blue-400"
-                            value={formData.end_date}
-                            onChange={handleChange}
-                            />
-                            <span className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400">
-                            📅
-                            </span>
-                        </div>
-                        </div>
+                                {/* End Date Input */}
+                                <div className="mt-8">
+                                    <label htmlFor="end_date" className="block text-lg font-semibold text-gray-700 mb-3">
+                                        End Date
+                                    </label>
+                                    <div className="relative">
+                                        <input
+                                            type="date"
+                                            id="end_date"
+                                            name="end_date"
+                                            className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition duration-300 ease-in-out hover:border-blue-400"
+                                            value={formData.end_date || ''}
+                                            onChange={handleChange}
+                                            min={getMinEndDate()} // Set minimum end date based on start date
+                                        />
+                                        <span className="absolute inset-y-0 right-4 flex items-center pointer-events-none text-gray-400">
+                                            📅
+                                        </span>
+                                    </div>
+                                </div>
 
-                        {/* Navigation Buttons */}
-                        <div className="flex justify-between mt-10">
-                        {/* Previous Button */}
-                        <button
-                            type="button"
-                            onClick={prevStep}
-                            className="bg-gray-100 text-gray-700 font-bold py-2 px-6 rounded-lg shadow-md hover:bg-gray-200 hover:text-gray-900 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                        >
-                            Previous
-                        </button>
+                                {/* Navigation Buttons */}
+                                <div className="flex justify-between mt-10">
+                                    <button
+                                        type="button"
+                                        onClick={prevStep}
+                                        className="bg-gray-100 text-gray-700 font-bold py-2 px-6 rounded-lg shadow-md hover:bg-gray-200 hover:text-gray-900 transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-400"
+                                    >
+                                        Previous
+                                    </button>
 
-                        {/* Next Button */}
-                        <button
-                            type="button"
-                            onClick={nextStep}
-                            className={`${
-                            !validateStep() ? 'bg-gray-400' : 'bg-black'
-                            } text-white font-bold py-2 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 ${
-                            !validateStep() ? 'hover:bg-gray-500' : 'hover:bg-gray-700'
-                            }`}
-                            disabled={!validateStep()}
-                        >
-                            Next
-                        </button>
-                        </div>
-                    </motion.div>
-                    )}
+                                    <button
+                                        type="button"
+                                        onClick={nextStep}
+                                        className={`${
+                                            !validateStep() ? 'bg-gray-400' : 'bg-black'
+                                        } text-white font-bold py-2 px-6 rounded-lg shadow-md transition-transform transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gray-500 ${
+                                            !validateStep() ? 'hover:bg-gray-500' : 'hover:bg-gray-700'
+                                        }`}
+                                        disabled={!validateStep()}
+                                    >
+                                        Next
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
 
 
                     {step === 7 && (
@@ -583,7 +638,7 @@ function MultiForm() {
                                 <input
                                     type="range"
                                     min="0"
-                                    max="1000"
+                                    max="2000"
                                     value={formData.price_per_night}
                                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer mt-2 transition focus:outline-none focus:ring-2 focus:ring-gray-400 hover:bg-gray-300"
                                     onChange={(e) => handleChange({ target: { name: 'price_per_night', value: e.target.value } })}

@@ -118,16 +118,16 @@ const ListingCart = ({ listing, navigateToDetails }) => {
           <dl>
             <div>
               <dt className="sr-only">Price</dt>
-              <dd className="text-lg font-bold text-gray-500">Sold out</dd>
+              <dd className="text-lg font-bold text-red-500">Sold out</dd>
             </div>
             
             <div>
               <dt className="sr-only">Title</dt>
-              <dd className="font-bold text-gray-700 line-clamp-1 line-through">{listing.title || 'Unknown location'}</dd>
+              <dd className="font-bold text-gray-700 line-clamp-1 line-through-red-500">{listing.title || 'Unknown location'}</dd>
             </div>
             <div>
               <dt className="sr-only">Address</dt>
-              <dd className="font-medium text-gray-500 line-through">{location || 'Unknown location'}</dd>
+              <dd className="font-medium text-gray-500 line-through-red-500">{location || 'Unknown location'}</dd>
             </div>
           </dl>
 
@@ -138,7 +138,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
               </svg>
               <div>
                 <p className="text-gray-500">Beds</p>
-                <p className="font-medium line-through">{listing.beds || 0} beds</p>
+                <p className="font-medium line-through-red-500">{listing.beds || 0} beds</p>
               </div>
             </div>
 
@@ -148,7 +148,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
               </svg>
               <div>
                 <p className="text-gray-500">Bathrooms</p>
-                <p className="font-medium line-through">{listing.bathrooms || 0} bathrooms</p>
+                <p className="font-medium line-through-red-500">{listing.bathrooms || 0} bathrooms</p>
               </div>
             </div>
 
@@ -158,7 +158,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
               </svg>
               <div>
                 <p className="text-gray-500">Bedrooms</p>
-                <p className="font-medium line-through">{listing.bedrooms || 0} bedrooms</p>
+                <p className="font-medium line-through-red-500">{listing.bedrooms || 0} bedrooms</p>
               </div>
             </div>
           </div>

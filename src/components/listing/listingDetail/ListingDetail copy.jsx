@@ -6,7 +6,7 @@ import ListingDetailLoading from './components/ListongDetailLoading';
 import BookingCard from './components/BookingCard';
 import { useNavigate } from 'react-router-dom';
 import { WiStars } from "react-icons/wi";
-import { MdOutlineCleaningServices } from "react-icons/md";
+import { MdCleaningServices } from "react-icons/md";
 import { LuCheckCircle2 } from "react-icons/lu";
 import { FaRegMessage } from "react-icons/fa6";
 import { SlLocationPin } from "react-icons/sl";
@@ -246,177 +246,56 @@ const ListingDetail = () => {
     </div>
   </div>
     
-{/* Specific Ratings Section */}
-<div className="mt-8 max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-8">
-  <div className="grid grid-cols-6 gap-4">
-    
+ {/* Specific Ratings Section */}
+<div className="mt-4 max-w-7xl">
+  <div className="grid grid-cols-6">
     {/* Column 1: Overall Rating */}
-    <div className="p-6 border-r-2 border-gray-200 flex flex-col items-start ">
-      <h2 className="text-md font-semibold text-gray-700">Overall Rating</h2>
-      <p className="text-xl font-bold text-gray-800 pb-3">4.5</p>
-      {/* <span className="text-4xl text-yellow-500"><FaStar /></span> */}
+    <div className="p-4 border-r-2 border-gray-300 flex flex-col items-start">
+      <h2 className="text-sm mt-2">Overall Rating</h2>
+      <p className="text-lg font-semibold">4.5</p>
     </div>
 
     {/* Column 2: Accuracy Rating */}
-    <div className="p-6 border-r-2 border-gray-200 flex flex-col items-start ">
-      <h2 className="text-md font-semibold text-gray-700">Accuracy</h2>
-      <p className="text-xl font-bold text-gray-800 pb-3">4.7</p>
-      <span className="text-3xl "><LuCheckCircle2 /></span>
+    <div className="p-4 border-r-2 border-gray-300 flex flex-col items-start">
+    
+      
+      <h2 className="text-sm mt-2">Accuracy</h2>
+
+      <p className="text-lg font-semibold">4.7</p>
+      <LuCheckCircle2 />
     </div>
 
     {/* Column 3: Value Rating */}
-    <div className="p-6 border-r-2 border-gray-200 flex flex-col items-start">
-      <h2 className="text-md font-semibold text-gray-700">Value</h2>
-      <p className="text-xl font-bold text-gray-800 pb-3">4.3</p>
-      <span className="text-3xl "><IoPricetagOutline /></span>
+    <div className="p-4 border-r-2 border-gray-300 flex flex-col items-start">
+
+      <h2 className="text-sm mt-2">Value</h2>
+      <p className="text-lg font-semibold">4.3</p>
+      <IoPricetagOutline />
     </div>
 
     {/* Column 4: Cleanliness Rating */}
-    <div className="p-6 border-r-2 border-gray-200 flex flex-col items-start">
-      <h2 className="text-md font-semibold text-gray-700">Cleanliness</h2>
-      <p className="text-xl font-bold text-gray-800 pb-3">4.8</p>
-      <span className="text-3xl "><MdOutlineCleaningServices /></span>
+    <div className="p-4 border-r-2 border-gray-300 flex flex-col items-start">
+      <h2 className="text-sm mt-2">Cleanliness</h2>
+    
+      <p className="text-lg font-semibold">4.8</p>
+      <MdCleaningServices />
     </div>
 
     {/* Column 5: Communication Rating */}
-    <div className="p-6 border-r-2 border-gray-200 flex flex-col items-start ">
-      <h2 className="text-md font-semibold text-gray-700">Communication</h2>
-      <p className="text-xl font-bold text-gray-800 pb-3">4.9</p>
-      <span className="text-3xl "><FaRegMessage /></span>
+    <div className="p-4 border-r-1 border-black flex flex-col items-start">
+      <h2 className="text-sm mt-2">Communication</h2>
+      <p className="text-lg font-semibold">4.9</p>
+      <FaRegMessage />
     </div>
 
     {/* Column 6: Location Rating */}
-    <div className="p-6 flex flex-col items-start space-y-2">
-      <h2 className="text-md font-semibold text-gray-700">Location</h2>
-      <p className="text-xl font-bold text-gray-800 pb-3">4.6</p>
-      <span className="text-3xl "><SlLocationPin /></span>
+    <div className="p-4 flex flex-col items-start">
+      <h2 className="text-sm mt-2">Location</h2>
+      <p className="text-lg font-semibold">4.6</p>
+      <SlLocationPin />
     </div>
   </div>
 </div>
-
-
-{/* Reviews Section */}
-
-<hr className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6" />
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-  <div className='grid grid-cols-2 gap-2'>
-    {/* Review 1 */}
-    <blockquote className="flex flex-col items-center p-4">
-      <p className="max-w-4xl text-sm font-medium text-center md:text-lg lg:text-xl">
-        &quot;I recently used this website to purchase a gift, and I was thoroughly impressed! The selection was vast, the interface was user-friendly, and my order arrived sooner than expected. Highly recommend!&quot;
-      </p>
-      <footer className="flex items-center gap-3 mt-6 md:mt-12">
-        <img
-          className="flex-shrink-0 w-12 h-12 border rounded-full border-black/10"
-          src={`${backEndUrl}/${listing.host.profilePicture}`}
-          alt="Jane Doe"
-          loading="lazy"
-        />
-        <div className="inline-block font-bold tracking-tight">
-          <p>Jane Doe</p>
-          <p className="font-medium text-black/60">Founder of XYZ</p>
-          {/* Star rating */}
-          <div className="flex items-center mt-1">
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-gray-400">&#9733;</span> {/* Half star */}
-          </div>
-        </div>
-      </footer>
-    </blockquote>
-
-    {/* Review 2 */}
-    <blockquote className="flex flex-col items-center p-4">
-      <p className="max-w-4xl text-sm font-medium text-center md:text-lg lg:text-xl">
-        &quot;This website made my shopping experience delightful! The product range was impressive, and the delivery time was incredibly quick. I will definitely be back for more!&quot;
-      </p>
-      <footer className="flex items-center gap-3 mt-6 md:mt-12">
-        <img
-          className="flex-shrink-0 w-12 h-12 border rounded-full border-black/10"
-          src={`${backEndUrl}/${listing.host.profilePicture}`}
-          alt="Jane Doe"
-          loading="lazy"
-        />
-        <div className="inline-block font-bold tracking-tight">
-          <p>John Smith</p>
-          <p className="font-medium text-black/60">CEO of ABC Corp</p>
-          {/* Star rating */}
-          <div className="flex items-center mt-1">
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-gray-400">&#9733;</span> {/* Half star */}
-          </div>
-        </div>
-      </footer>
-    </blockquote>
-
-
-     {/* Review 1 */}
-     <blockquote className="flex flex-col items-center p-4">
-      <p className="max-w-4xl text-sm font-medium text-center md:text-lg lg:text-xl">
-        &quot;I recently used this website to purchase a gift, and I was thoroughly impressed! The selection was vast, the interface was user-friendly, and my order arrived sooner than expected. Highly recommend!&quot;
-      </p>
-      <footer className="flex items-center gap-3 mt-6 md:mt-12">
-        <img
-          className="flex-shrink-0 w-12 h-12 border rounded-full border-black/10"
-          src={`${backEndUrl}/${listing.host.profilePicture}`}
-          alt="Jane Doe"
-          loading="lazy"
-        />
-        <div className="inline-block font-bold tracking-tight">
-          <p>Jane Doe</p>
-          <p className="font-medium text-black/60">Founder of XYZ</p>
-          {/* Star rating */}
-          <div className="flex items-center mt-1">
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-gray-400">&#9733;</span> {/* Half star */}
-          </div>
-        </div>
-      </footer>
-    </blockquote>
-
-    {/* Review 2 */}
-    <blockquote className="flex flex-col items-center p-4">
-      <p className="max-w-4xl text-sm font-medium text-center md:text-lg lg:text-xl">
-        &quot;This website made my shopping experience delightful! The product range was impressive, and the delivery time was incredibly quick. I will definitely be back for more!&quot;
-      </p>
-      <footer className="flex items-center gap-3 mt-6 md:mt-12">
-        <img
-          className="flex-shrink-0 w-12 h-12 border rounded-full border-black/10"
-          src={`${backEndUrl}/${listing.host.profilePicture}`}
-          alt="Jane Doe"
-          loading="lazy"
-        />
-        <div className="inline-block font-bold tracking-tight">
-          <p>John Smith</p>
-          <p className="font-medium text-black/60">CEO of ABC Corp</p>
-          {/* Star rating */}
-          <div className="flex items-center mt-1">
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-yellow-400">&#9733;</span>
-            <span className="text-gray-400">&#9733;</span> {/* Half star */}
-          </div>
-        </div>
-      </footer>
-    </blockquote>
-    
-  </div>
-</div>
-
-
-
-
-
-
 
 
     </>
