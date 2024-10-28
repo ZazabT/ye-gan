@@ -97,7 +97,7 @@ const Navbar = () => {
       {/* User Profile */}
       <div className="relative flex items-center gap-4 md:gap-6 mt-4 md:mt-0">
         <button
-          className="text-sm font-medium text-gray-700 hover:text-[#50087b] transition"
+          className="text-base font-medium text-gray-700 hover:text-[#50087b] transition"
           onClick={() => {
             if (isAuthenticated) {
               if (user?.isHomeOwner === 1) {
@@ -111,7 +111,7 @@ const Navbar = () => {
             }
           }}
         >
-          Add your home
+          Make your Yegna
         </button>
 
         {/* Profile Button */}
