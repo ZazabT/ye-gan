@@ -110,10 +110,12 @@ const userAuthStore = create((set) => ({
                     loading: false, 
                     isAuthenticated: false,
                 });
+            } finally {
+                set({ loading: false });
             }
         } else {
             console.log('No token found.');
-            set({ loading: false, isAuthenticated: false }); 
+    
         }
     }
 }));
