@@ -13,7 +13,7 @@ const bookingStore = create((set) =>({
   // Functions 
 
               // reserve
-              reserve: async (listingId, checkinDate, checkoutDate, totalPrice) => {
+              reserve: async (listingId, checkinDate, checkoutDate, totalPrice , guestCount) => {
                 // Start loading
                 set({ loading: true });
             
@@ -23,6 +23,7 @@ const bookingStore = create((set) =>({
                     checkin_date: checkinDate,
                     checkout_date: checkoutDate,
                     total_price: totalPrice,
+                    guest_count: guestCount,
                 });
             
                 // Try to reserve the listing
@@ -32,6 +33,7 @@ const bookingStore = create((set) =>({
                         checkin_date: checkinDate,
                         checkout_date: checkoutDate,
                         total_price: totalPrice,
+                        guest_count: guest_count
                     }, { 
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } 
                     });
@@ -69,7 +71,7 @@ const bookingStore = create((set) =>({
 
               // get all booking for spasific Host 
               getMyListingBooking : async (id) =>{
-
+                
               },
 
               // gett all booking for spasific guest 
