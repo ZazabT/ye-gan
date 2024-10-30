@@ -11,7 +11,7 @@ const bookingStore = create((set) =>({
 
 
   // Functions 
-  
+
               // reserve
               reserve: async (listingId, checkinDate, checkoutDate, totalPrice , guestCount) => {
                 // Start loading
@@ -33,7 +33,7 @@ const bookingStore = create((set) =>({
                         checkin_date: checkinDate,
                         checkout_date: checkoutDate,
                         total_price: totalPrice,
-                        guest_count: guest_count
+                        guest_count: guestCount
                     }, { 
                         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } 
                     });
@@ -70,8 +70,49 @@ const bookingStore = create((set) =>({
 
 
               // get all booking for spasific Host 
-              getMyListingBooking : async (id) =>{
-                
+              getMyListingBooking : async (id , token) =>{
+                // Start loading
+                set({ loading: true });
+
+                // Log parameters before the API call
+                console.log('Preparing to send request with data:', {
+                    listing_id: id,
+                });
+
+                // Try to get all booking for the host 
+                try {
+                    const response = await axios.get(`http://localhost:8000/api/bookings/host/${id}`, { 
+                        headers: { 'Authorization': `Bearer ${token}` } 
+                    });
+            
+                    // Log the entire response object
+                    console.log('API response:', response);
+                     
+                    // Check if the response is ok 
+                    if (response.data.status === 200) {
+                        set({ bookings: response.data.bookings });
+                        console.log('Bookings :', response.data.bookings);
+                        return true;
+                    } else {
+                        throw new Error('Failed to add listing.'); 
+                    }
+                } catch (error) {
+                    if (error.response) {
+                        console.error('Error response:', error.response.data);
+                        set({ error: error.response.data.error }); 
+                        throw new Error(`Error from server: ${error.response.data.error}`); 
+                    } else if (error.request) {
+                        console.error('Error request:', error.request);
+                        set({ error: 'No response received from the server.' }); 
+                        throw new Error('No response received from the server.'); 
+                    } else {
+                        console.error('Error message:', error.message);
+                        set({ error: 'An error occurred while adding the listing.' }); 
+                        throw new Error('An unexpected error occurred.'); 
+                    }
+                } finally {
+                    set({ loading: false });
+                }
               },
 
               // gett all booking for spasific guest 
