@@ -118,7 +118,7 @@ const BookingCard = ({ listing }) => {
     });
 
     try {
-      await reserve(listing?.id, formattedCheckinDate, formattedCheckoutDate, totalBeforeTaxes);
+      await reserve(listing?.id, formattedCheckinDate, formattedCheckoutDate, totalBeforeTaxes , guestCount);
       setNotification({ visible: true, type: 'success', message: `Successfully reserved ${listing?.title} wait till "${listing?.host?.username}" accepts your request`  });
       setTimeout(() => navigate('/'), 5000);
       //clear state

@@ -2,11 +2,10 @@ import axios from "axios";
 import { create } from "zustand";
 
 const hostProfileStore = create((set) => ({
-    hostProfile: {},
+    hostProfile:[],
     error: null,
     success: null,
     loading: false,
-    hostListing: [],
     formData: {
         username: '',
         hostDescription: '',
@@ -63,28 +62,52 @@ const hostProfileStore = create((set) => ({
         },
 
         // getHostProfile
-        getHostProfile:async (id) =>{
-                    // start loading
-                    set({ loading: true, error: null });
+        getHostProfile: async (id, token) => {
+            // Start loading
+            set({ loading: true, error: null });
+        
+            // Try to get user profile
+            try {
+                console.log('Fetching host profile for ID:', id); // Debugging log
+                const response = await axios.get(`http://localhost:8000/api/host/profile/${id}`,{
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+        
+                console.log('Response received:', response); // Debugging log
+        
+                if (response.data.status === 200) {
+                    set({ hostProfile: response.data.hostProfile[0] });
+                    set({ success: response.data.message });
+                } else {
+                    console.error('Unexpected status code:', response.data.status); // Debugging log for unexpected status
+                    set({ error: 'Unexpected response status' });
+                }
 
-                    //try to get user profile
-                    try {
-                        const response = await axios.get(`http://localhost:8000/api/host/profile/${id}`, {} , {
-                            headers :{
-                                'Content-Type': 'multipart/form-data',
-                                'Authorization': `Bearer ${localStorage.getItem('token')}`
-                            }
-                        });
-                        if(response.data.status === 200){
-                            set({ hostProfile: response.data.hostProfile });
-                            set({ success: response.data.message });
-                        }
-                    } catch (error) {
-                        set({ error: error.response.data.error});
-                    } finally {
-                        set({ loading: false });
-                    }
+                console.log('Host profile:', response.data.hostProfile); 
+            } catch (error) {
+                console.error('Error fetching host profile:', error); 
+                if (error.response) {
+                    // Server responded with a status other than 200
+                    console.error('Response data:', error.response.data); // Log response data
+                    console.error('Response status:', error.response.status); // Log response status
+                    console.error('Response headers:', error.response.headers); // Log response headers
+                    set({ error: error.response.data.error });
+                } else if (error.request) {
+                    // Request was made but no response received
+                    console.error('Request data:', error.request); // Log request data
+                    set({ error: 'No response received from the server' });
+                } else {
+                    // Something happened in setting up the request
+                    console.error('Error message:', error.message); // Log error message
+                    set({ error: 'Error in setting up the request' });
+                }
+            } finally {
+                set({ loading: false });
+            }
         },
+        
 
         // update host profile
         updateHostProfile: async (formData , id) => {
