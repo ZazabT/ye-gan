@@ -4,6 +4,7 @@ import { create } from "zustand";
 const listingStore = create((set) => ({
     // State variables
     listings: [],
+    myListings: [],
     listing: {},
     error: null,
     success: null,
@@ -112,6 +113,8 @@ const listingStore = create((set) => ({
             set({ loading: false });
         }
     },
+
+   
 }));
 
 export default listingStore;
