@@ -3,25 +3,25 @@ import userAuthStore from '../../stores/UserAuthStore';
 import hostProfileStore from '../../stores/HostProfile';
 import bookingStore from '../../stores/BookingStore';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../../assets/logo.png';
 import HostListingCard from './components/HostListingCard';
 import HostBookingCard from './components/HostBookingCard';
+import HostNavBar from './components/HostNavBar';
+import { useMemo } from 'react';
 const HostProfile = () => {
     const { getHostProfile, hostProfile, loading: hostProfileLoading, error: hostProfileError } = hostProfileStore();
     const { bookings , loading:bookingLoading , getMyListingBooking } = bookingStore();
     const { token, user } = userAuthStore();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
-    const backEndUrl = 'http://localhost:8000';
 
     
     const myListings = hostProfile?.listings;
-    const currentHostingLists = myListings?.filter(listing => listing.status === 'active' && listing.confirmed === 1);
+    const currentHostingLists = useMemo(() =>myListings?.filter(listing => listing.status === 'active' && listing.confirmed === 1) , [myListings]);
     const currentHostingListsCount = currentHostingLists?.length;
     // Filter accepted bookings from listings
-    const acceptedBookings = bookings?.filter(booking => booking.status === 'accepted');
+    const acceptedBookings = useMemo(()=>bookings?.filter(booking => booking.status === 'accepted') , [bookings]);
     // Count of accepted bookings
-    const acceptedBookingsCpunt = acceptedBookings?.length
+    const acceptedBookingsCpunt = acceptedBookings?.length 
     useEffect(() => {
         const fetchHostProfile = async () => {
             if (user && token) {
@@ -52,7 +52,11 @@ const HostProfile = () => {
     }, [user, token, getHostProfile, navigate , getMyListingBooking]);
 
     if (hostProfileLoading) {
-        return <div>Loading...</div>;
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+        </div>
+    );
     }
 
     if (hostProfileError) {
@@ -66,131 +70,65 @@ const HostProfile = () => {
     return (
         <div>
             {/* Host Nav Bar */}
-            <nav className="bg-white border-b flex justify-between items-center px-8 py-4 md:px-12 lg:px-20 ">
-                {/* Logo */}
-                <img src={Logo} alt="logo" className="w-32 hover:scale-105 duration-200 cursor-pointer "  onClick={() => navigate("/")}/>
-
-                {/* Primary Navigation Links */}
-                <ul className="flex items-center space-x-8 text-lg">
-                    <li>
-                    <a href="#" className="text-gray-600 hover:text-blue-600 transition duration-200 hover:underline">
-                        Home
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" className="text-gray-600 hover:text-blue-600 transition duration-200 hover:underline">
-                        Listings
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" className="text-gray-600 hover:text-blue-600 transition duration-200 hover:underline">
-                        Bookings
-                    </a>
-                    </li>
-                    <li>
-                    <a href="#" className="text-gray-600 hover:text-blue-600 transition duration-200 hover:underline">
-                        Messages
-                    </a>
-                    </li>
-                </ul>
-
-               {/* Secondary Navigation Links */}
-                <ul className="flex items-center space-x-6">
-                {/* Notification Icon */}
-                <li>
-                    <a href="#" className="relative text-gray-600 hover:text-blue-600 transition duration-200">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14V11a6 6 0 00-5-5.91V4a1 1 0 10-2 0v1.09A6 6 0 006 11v3c0 .295-.105.571-.293.793L4 17h5m6 0a3 3 0 11-6 0"
-                        />
-                    </svg>
-                    {/* Notification Badge */}
-                    <span className="absolute top-0 right-0 bg-red-600 h-2 w-2 rounded-full"></span>
-                    </a>
-                </li>
-
-                {/* Avatar */}
-                <li>
-                    <a href="#" className="flex items-center">
-                    <img
-                        src= { `${backEndUrl}/${hostProfile?.profilePicture}` }
-                        alt="User Avatar"
-                        className="h-12 w-12 rounded-full border border-gray-300"
-                    />
-                    </a>
-                </li>
-                </ul>
-
-                </nav>
-
-
-
+            <HostNavBar hostProfile={hostProfile}/>
+          
             {/* Body */}
             <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-10 py-16">
-    {/* Welcome Message */}
-    <h1 className="text-4xl text-gray-800 font-bold mb-8">Welcome, {hostProfile?.username}!</h1>
+            {/* Welcome Message */}
+            <h1 className="text-4xl text-gray-800 font-bold mb-8">Welcome, {hostProfile?.username}!</h1>
 
-    {/* Welcome Paragraph */}
-    <p className="text-base text-gray-700 italic mb-12 leading-relaxed rounded-lg ">
-    &ldquo; Heelloo, {hostProfile?.username}! Your hosting dashboard awaits—an organized space where you can effortlessly manage your exclusive listings, stay on top of bookings, and keep in touch with guests. Dive in to handle every detail with ease, elegance, and efficiency. &rdquo;
-    </p>
+            {/* Welcome Paragraph */}
+            <p className="text-base text-gray-700 italic mb-12 leading-relaxed rounded-lg ">
+            &ldquo; Heelloo, {hostProfile?.username}! Your hosting dashboard awaits—an organized space where you can effortlessly manage your exclusive listings, stay on top of bookings, and keep in touch with guests. Dive in to handle every detail with ease, elegance, and efficiency. &rdquo;
+            </p>
 
 
-    {/* Tab Navigation */}
-    <div className="flex space-x-4 mb-8">
-        {[`Current Hosting (${currentHostingListsCount})`, `Accepted Bookings (${acceptedBookingsCpunt})`, "Messages (0)", "Reviews (0)"].map((label, index) => (
-            <button 
-                key={index}
-                onClick={() => handleTabClick(index)} 
-                className={`py-2 px-6 rounded-full text-sm font-medium transition-colors 
-                ${activeTab === index ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`
-            }>
-                {label}
-            </button>
-        ))}
-    </div>
-
-    {/* Tab Content */}
-    <div className="w-full">
-        {activeTab === 0 && (
-            <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
-                {currentHostingLists?.map((listing) => (
-                    <HostListingCard key={listing.id} listing={listing} />
+            {/* Tab Navigation */}
+            <div className="flex space-x-4 mb-8">
+                {[`Current Hosting (${currentHostingListsCount})`, `Accepted Bookings (${acceptedBookingsCpunt})`, "Messages (0)", "Reviews (0)"].map((label, index) => (
+                    <button 
+                        key={index}
+                        onClick={() => handleTabClick(index)} 
+                        className={`py-2 px-6 rounded-full text-sm font-medium transition-colors 
+                        ${activeTab === index ? 'bg-gray-800 text-white' : 'bg-gray-200 text-gray-600 hover:bg-gray-300'}`
+                    }>
+                        {label}
+                    </button>
                 ))}
             </div>
-        )}
 
-        {activeTab === 1 && (
-             <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
-             {acceptedBookings?.map((booking) => (
-                 <HostBookingCard key={booking.id} booking={booking} />
-             ))}
-         </div>
-        )}
+            {/* Tab Content */}
+            <div className="w-full">
+                {activeTab === 0 && (
+                    <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
+                        {currentHostingLists?.map((listing) => (
+                            <HostListingCard key={listing.id} listing={listing} />
+                        ))}
+                    </div>
+                )}
 
-        {activeTab === 2 && (
-            <div className="p-6 bg-gray-50 rounded-lg shadow-sm">
-                <h2 className="text-xl font-semibold mb-3">Messages</h2>
-                <p className="text-gray-600">Your messages will appear here...</p>
+                {activeTab === 1 && (
+                    <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
+                    {acceptedBookings?.map((booking) => (
+                        <HostBookingCard key={booking.id} booking={booking} />
+                    ))}
+                </div>
+                )}
+
+                {activeTab === 2 && (
+                    <div className="p-6 bg-gray-50 rounded-lg shadow-sm">
+                        <h2 className="text-xl font-semibold mb-3">Messages</h2>
+                        <p className="text-gray-600">Your messages will appear here...</p>
+                    </div>
+                )}
+
+                {activeTab === 3 && (
+                    <div className="p-6 bg-gray-50 rounded-lg shadow-sm">
+                        <h2 className="text-xl font-semibold mb-3">Reviews</h2>
+                        <p className="text-gray-600">Your reviews will appear here...</p>
+                    </div>
+                )}
             </div>
-        )}
-
-        {activeTab === 3 && (
-            <div className="p-6 bg-gray-50 rounded-lg shadow-sm">
-                <h2 className="text-xl font-semibold mb-3">Reviews</h2>
-                <p className="text-gray-600">Your reviews will appear here...</p>
-            </div>
-        )}
-    </div>
 </div>
 
         </div>

@@ -9,6 +9,8 @@ import ListingDetail from './components/listing/listingDetail/ListingDetail'
 import HostProfile from './views/profile/HostProfile'
 import GuestProfile from './views/profile/GuestProfile'
 import ListingImage from './components/listing/listingDetail/ListingImage'
+import HostListingPage from './views/profile/components/HostProfilePages/HostListingPage'
+import HostBookingPage from './views/profile/components/HostProfilePages/HostBookingPage'
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
        <Route path='listing/images' element= {<ListingImage/>} />
        <Route path='/host-profile' element= {<HostProfile/>} />
        <Route path='/guest-profile' element= {<GuestProfile/>} />
+       <Route path='/host-profile-listings' element= {<HostListingPage/>} />
+       <Route path='/host-profile-bookings' element= {<HostBookingPage/>} />
     </Routes>
   )
 }

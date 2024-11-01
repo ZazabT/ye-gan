@@ -8,7 +8,7 @@ import { enGB } from 'date-fns/locale';
 import bookingStore from '../../../../stores/BookingStore';
 import ListingNotificationCard from '../../ListingNotificationCard';
 import { useNavigate } from 'react-router-dom';
-import { div } from 'framer-motion/client';
+
 
 const BookingCard = ({ listing }) => {
   const { loading, error: bookingError, reserve } = bookingStore();
