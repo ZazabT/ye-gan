@@ -10,8 +10,18 @@ const HostListingPage = () => {
     const { bookings, loading: bookingLoading, getMyListingBooking, error: bookingError } = bookingStore();
     const { token, user } = userAuthStore();
     const navigate = useNavigate();
+    const navLinks = [
+        { path: '/host-profile', label: 'Yegna' },
+        { path: '/host-profile-listings', label: 'Listings' },
+        { path: '/host-profile-bookings', label: 'Bookings' },
+        { path: '#', label: 'Messages' }
+    ];
 
     const numberOfBookings = bookings?.length || 0;
+
+    const navigateToDetails = (id) => {
+        navigate(`/host-profile-booking/${id}`);
+    };
     
     useEffect(() => {
         const fetchHostBooking = async () => {
@@ -57,7 +67,7 @@ const HostListingPage = () => {
     return (
         <div className="min-h-screen bg-gray-50">
             {/* Navbar */}
-            <HostNavBar hostProfile={hostProfile} />
+            <HostNavBar hostProfile={hostProfile} navLinks={navLinks} />
       
             {/* Main Content */}
             <div className="px-6 py-8 container mx-auto">
@@ -94,12 +104,12 @@ const HostListingPage = () => {
                                 </div>
                             
                             </td>
-                                    <td className="py-4 px-5 text-center border-r">{`${booking.guest?.user?.firstName} ${booking.guest?.user?.lastName}`}</td>
-                                    <td className="py-4 px-5 text-center border-r">{booking.guest_count}</td>
-                                    <td className="py-4 px-5 text-center border-r">{new Date(booking.checkin_date).toLocaleDateString()}</td>
-                                    <td className="py-4 px-5 text-center border-r">{new Date(booking.checkout_date).toLocaleDateString()}</td>
-                                    <td className="py-4 px-5 text-center border-r">${parseFloat(booking.total_price || 0).toFixed(2)}</td>
-                                    <td className="py-4 px-5 text-center border-r">
+                                    <td onClick={() => navigateToDetails(booking.id)} className="py-4 px-5 text-center border-r">{`${booking.guest?.user?.firstName} ${booking.guest?.user?.lastName}`}</td>
+                                    <td onClick={() => navigateToDetails(booking.id)} className="py-4 px-5 text-center border-r">{booking.guest_count}</td>
+                                    <td onClick={() => navigateToDetails(booking.id)} className="py-4 px-5 text-center border-r">{new Date(booking.checkin_date).toLocaleDateString()}</td>
+                                    <td onClick={() => navigateToDetails(booking.id)} className="py-4 px-5 text-center border-r">{new Date(booking.checkout_date).toLocaleDateString()}</td>
+                                    <td onClick={() => navigateToDetails(booking.id)} className="py-4 px-5 text-center border-r">${parseFloat(booking.total_price || 0).toFixed(2)}</td>
+                                    <td onClick={() => navigateToDetails(booking.id)} className="py-4 px-5 text-center border-r">
                                         <span className={`px-3 py-1 rounded-full font-semibold ${booking.status === 'accepted' ? 'text-green-600 bg-green-100' : booking.status === 'rejected' ? 'text-red-600 bg-red-100' :booking.status === 'pending' ? 'text-yellow-600 bg-yellow-100' : 'text-gray-600 bg-gray-100'}`}>
                                             {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
                                         </span>

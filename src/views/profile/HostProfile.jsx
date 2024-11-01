@@ -13,6 +13,12 @@ const HostProfile = () => {
     const { token, user } = userAuthStore();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
+    const navLinks = [
+      { path: '/host-profile', label: 'Yegna' },
+      { path: '/host-profile-listings', label: 'Listings' },
+      { path: '/host-profile-bookings', label: 'Bookings' },
+      { path: '#', label: 'Messages' }
+  ];
 
     
     const myListings = hostProfile?.listings;
@@ -70,7 +76,7 @@ const HostProfile = () => {
     return (
         <div>
             {/* Host Nav Bar */}
-            <HostNavBar hostProfile={hostProfile}/>
+            <HostNavBar hostProfile={hostProfile} navLinks={navLinks}/>
           
             {/* Body */}
             <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-10 py-16">

@@ -8,6 +8,12 @@ const HostListingPage = () => {
     const { getHostProfile, hostProfile, loading: hostProfileLoading, error: hostProfileError } = hostProfileStore();
     const { token, user } = userAuthStore();
     const navigate = useNavigate();
+    const navLinks = [
+      { path: '/host-profile', label: 'Yegna' },
+      { path: '/host-profile-listings', label: 'Listings' },
+      { path: '/host-profile-bookings', label: 'Bookings' },
+      { path: '#', label: 'Messages' }
+  ];
 
     const myListings = hostProfile?.listings;
     const numberOfListings = myListings?.length;
@@ -55,7 +61,7 @@ const HostListingPage = () => {
     return (
         <div className="min-h-screen bg-gray-50">
           {/* Navbar */}
-          <HostNavBar hostProfile={hostProfile} />
+          <HostNavBar hostProfile={hostProfile}  navLinks={navLinks}/>
       
           {/* Main Content */}
           <div className="container mx-auto px-6 py-10">
@@ -73,7 +79,7 @@ const HostListingPage = () => {
                         <th className="py-4 px-5  border-b">Listing</th>
                         <th className="py-4 px-5  text-center  border-b">Bathrooms</th>
                         <th className="py-4 px-5  text-center border-b">Bedrooms</th>
-                        <th className="py-4 px-5  text-center  border-b">Bed</th>
+                        <th className="py-4 px-5  text-center  border-b">Bed_number</th>
                         <th className="py-4 px-5  text-center  border-b">Starting Date</th>
                         <th className="py-4 px-5  text-center  border-b">Ending Date</th>
                         <th className="py-4 px-5  text-center  border-b">Price per Night</th>

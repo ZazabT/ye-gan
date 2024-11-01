@@ -11,6 +11,8 @@ import GuestProfile from './views/profile/GuestProfile'
 import ListingImage from './components/listing/listingDetail/ListingImage'
 import HostListingPage from './views/profile/components/HostProfilePages/HostListingPage'
 import HostBookingPage from './views/profile/components/HostProfilePages/HostBookingPage'
+import HostBookingDetailsPage from './views/profile/components/HostProfilePages/HostProfileDetailsPage/HostBookingDetailsPage'
+import MessageRoom from './views/messages/MessageRoom';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
        <Route path='/guest-profile' element= {<GuestProfile/>} />
        <Route path='/host-profile-listings' element= {<HostListingPage/>} />
        <Route path='/host-profile-bookings' element= {<HostBookingPage/>} />
+       <Route path='/host-profile-booking/:id' element= {<HostBookingDetailsPage/>} />
+       <Route path='/message' element= {<MessageRoom/>} />
     </Routes>
   )
 }

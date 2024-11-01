@@ -1,7 +1,7 @@
 import Logo from '../../../assets/logo.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const HostNavBar = ({ hostProfile }) => {
+const HostNavBar = ({ hostProfile, navLinks }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const backEndUrl = 'http://localhost:8000';
@@ -19,50 +19,20 @@ const HostNavBar = ({ hostProfile }) => {
 
                 {/* Primary Navigation Links */}
                 <ul className="flex items-center text-md font-medium">
-                    <li>
-                        <a
-                            href="/host-profile"
-                            className={`px-4 py-3 rounded-full transition duration-200 ${
-                                location.pathname === '/host-profile'
-                                    ? 'text-black border-b-2 border-black'
-                                    : 'text-gray-600 hover:bg-gray-100'
-                            }`}
-                        >
-                            Yegna
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="/host-profile-listings"
-                            className={`px-4 py-3 rounded-full transition duration-200 ${
-                                location.pathname === '/host-profile-listings'
-                                    ? 'text-black border-b-2 border-black'
-                                    : 'text-gray-600 hover:bg-gray-100'
-                            }`}
-                        >
-                            Listings
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="/host-profile-bookings"
-                            className={`px-4 py-3 rounded-full transition duration-200 ${
-                                location.pathname === '/host-profile-bookings'
-                                    ? 'text-black border-b-2 border-black'
-                                    : 'text-gray-600 hover:bg-gray-100'
-                            }`}
-                        >
-                            Bookings
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="#"
-                            className="text-gray-600 hover:bg-gray-100 rounded-full px-4 py-3 transition duration-200"
-                        >
-                            Messages
-                        </a>
-                    </li>
+                    {navLinks.map((link) => (
+                        <li key={link.path}>
+                            <a
+                                href={link.path}
+                                className={`px-4 py-3 rounded-full transition duration-200 ${
+                                    location.pathname === link.path
+                                        ? 'text-black border-b-2 border-black'
+                                        : 'text-gray-600 hover:bg-gray-100'
+                                }`}
+                            >
+                                {link.label}
+                            </a>
+                        </li>
+                    ))}
                 </ul>
 
                 {/* Secondary Navigation Links */}
