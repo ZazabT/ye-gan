@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams , useLocation } from 'react-router-dom';
 import listingStore from '../../../stores/ListingStore';
 import Navbar from '../../Navbar';
 import ListingDetailLoading from './components/ListongDetailLoading';
@@ -19,9 +19,18 @@ const ListingDetail = () => {
   const backEndUrl = 'http://localhost:8000';
   const location = `${listing?.location?.city}, ${listing?.location?.region} ${listing?.location?.country}`;
   const name = `${listing?.host?.user?.firstName} ${listing?.host?.user?.lastName}`;
-  const profilePicture = listing?.host?.profilePicture;
-  const email = listing?.host?.user?.email;
+  // const profilePicture = listing?.host?.profilePicture;
+  // const email = listing?.host?.user?.email;
   const navigate = useNavigate();
+
+
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    // Scroll to the top whenever the route changes
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
 
 
