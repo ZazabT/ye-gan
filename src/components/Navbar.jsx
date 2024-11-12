@@ -39,9 +39,13 @@ const Navbar = () => {
   return (
     <nav className="navbar flex flex-col md:flex-row justify-between items-center px-6 py-4 ">
       {/* Logo */}
-      <div className="logo flex items-center mb-4 md:mb-0">
+      <div
+        className="logo flex items-center mb-4 md:mb-0 transition-transform duration-300 ease-in-out hover:scale-105 hover:-rotate-3 cursor-pointer"
+        onClick={() => navigate('/')}
+      >
         <img src={Logo} alt="Company Logo" className="w-40 h-auto" />
       </div>
+
 
       {/* Hamburger Menu for Mobile */}
       <div className="md:hidden flex items-center">

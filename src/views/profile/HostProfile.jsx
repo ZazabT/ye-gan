@@ -43,9 +43,9 @@ const HostProfile = () => {
                 return;
             }
             try {
+                await getTodaysCheckins(hostProfile.id, token);
                 await getHostProfile(user.id, token);
                 await getMyListingBooking(hostProfile.id, token);
-                await getTodaysCheckins(hostProfile.id, token);
             } catch (error) {
                 console.error("Failed to fetch host profile:", error);
             }
@@ -54,7 +54,7 @@ const HostProfile = () => {
         fetchHostProfile();
     }, [user, token, getHostProfile, navigate, getMyListingBooking , hostProfile.id , getTodaysCheckins]);
 
-    if (hostProfileLoading) {
+    if (hostProfileLoading || bookingLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>

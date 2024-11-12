@@ -13,7 +13,7 @@ const GuestNavBar = ({ guestProfile, navLinks }) => {
                 <img
                     src={Logo}
                     alt="logo"
-                    className="w-32 hover:scale-105 duration-200 cursor-pointer"
+                    className="w-32  transition-transform duration-300 ease-in-out hover:scale-110 hover:-rotate-3 cursor-pointer"
                     onClick={() => navigate("/")}
                 />
 
