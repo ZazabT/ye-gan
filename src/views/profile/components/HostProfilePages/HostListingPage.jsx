@@ -89,6 +89,18 @@ const HostListingPage = () => {
         <div className="min-h-screen">
             {/* Navbar */}
             <HostNavBar hostProfile={hostProfile} navLinks={navLinks} />
+
+            <div className="px-6 py-6">
+                <h1 className="text-3xl font-semibold text-gray-800 text-bold">Manage Your Listings</h1>
+                <p className="mt-2 text-gray-600">
+                    Welcome to your Listings Page! Here, you can manage all the properties you have listed. Easily view the details of each listing, update information, and monitor the performance of your listings to ensure a great experience for your guests. This is where you can showcase the best of what you offer and attract potential bookings!
+                </p>
+
+                <p className="mt-1 text-black" style={{ fontWeight: '800' }}>
+                  You currently have <strong>{numberOfListings}</strong> listings to review.
+              </p>
+
+            </div>
             
             {/* Main Content */}
             {numberOfListings === 0 ? (

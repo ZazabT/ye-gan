@@ -111,6 +111,18 @@ const HostBookingPage = () => {
         <div className="min-h-screen bg-gray-50">
             {/* Navbar */}
             <HostNavBar hostProfile={hostProfile} navLinks={navLinks} />
+            <div className="px-6 py-6">
+                <h1 className="text-3xl font-bold text-gray-800">Manage Your Bookings</h1>
+                <p className="mt-4 text-lg text-gray-700">
+                    Welcome to your Host Booking Page! This is your central hub to manage all your property bookings with ease. 
+                    Stay in control of your bookings by quickly accepting or rejecting booking requests, viewing important booking details, 
+                    and keeping track of payment statuses. Our goal is to ensure a smooth and seamless experience for both you and your guests!
+                </p>
+                <p className="mt-1 text-black" style={{ fontWeight: '800' }}>
+                    You currently have <span className="font-semibold text-gray-800">{numberOfBookings}</span> bookings awaiting your review. 
+                    Take action and stay up to date to provide the best experience possible.
+                </p>
+            </div>
 
             {/* Main Content */}
 
@@ -147,7 +159,7 @@ const HostBookingPage = () => {
                                 <th className="py-4 px-5 text-center border-b">Action</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-100">
+                        <tbody className="divide-y divide-gray-100 overflow-auto">
                             {bookings?.map((booking, index) => (
                                 <tr key={booking.id} className={`hover:bg-gray-100 transition ${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
                                     <td className="py-4 px-5 border-r">{booking.id}</td>

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import Catagory from "../components/catagory/Catagory"; 
 import userAuthStore from "../stores/UserAuthStore";
 import Listing from "../components/listing/Listing";
+import Footer from "../components/footer";
 const Home = () => {
     const {isAuthenticated , checkAuth} = userAuthStore();
     useEffect(() => {
@@ -13,6 +14,10 @@ const Home = () => {
            <Navbar />
            <Catagory/>
            <Listing/>
+
+
+           {/* Footer */}
+           <Footer />
         </div>
         
     );
