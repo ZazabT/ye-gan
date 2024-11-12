@@ -1,5 +1,5 @@
 import axios from "axios";
-import { fi } from "date-fns/locale";
+import { ca, fi } from "date-fns/locale";
 import { create } from "zustand";
 
 const bookingStore = create((set) => ({
@@ -9,6 +9,8 @@ const bookingStore = create((set) => ({
   error: null,
   loading: false,
   success: null,
+  todaysCheckins: [],
+  guestTodayCheckins: [],
 
   // Functions 
 
@@ -210,7 +212,50 @@ const bookingStore = create((set) => ({
       // stop loading
       set({ loading: false });
     }
+    },
+  
+  // get todays checkins for the host 
+  getTodaysCheckins: async (id, token) => {
+    // try to get todays checkins
+    try{
+      // start loading
+      set({ loading: true, error: null });
+      
+      // log parameters before the API call
+      console.log('Preparing to send request with data:', {
+        host_id: id,
+      });
+
+      // try to get todays checkins
+      const response = await axios.get(`http://localhost:8000/api/bookings/host/today/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      // log the API response
+      console.log('API response:', response);
+
+      // check if the status is 200
+      if(response.data.status === 200){
+        set({ todaysCheckins: response.data.bookings });
+        return true;
+      } else {
+        throw new Error('Failed to get todays checkins.');
+      }
+    }catch (error) {
+      // handle the error
+      handleError(error, set);
+    }finally {
+      // stop loading
+      set({ loading: false });
     }
+    
+  },
+
+
+  // get todays checkins for the guest
+  getTodaysCheckinsGuest: async (id, token) => {
+    
+  }
 }));
 
 

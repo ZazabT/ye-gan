@@ -1,8 +1,10 @@
+import { div } from 'framer-motion/m';
+import { FaCalendarAlt, FaUser, FaMoon} from 'react-icons/fa';
 import Logo from '../../../assets/logo.png';
-import { FaCalendarAlt, FaUser, FaMoon, FaStar } from 'react-icons/fa';
+import { FaStar } from 'react-icons/fa';
 import { CiMoneyCheck1 } from "react-icons/ci";
 
-const HostBookingCard = ({ booking }) => {
+const HostTodayCheckinCard = ({ booking }) => {
     const backEndUrl = 'http://localhost:8000';
     const mainImage = booking?.listing?.item_images.find(image => image.isMain === 1);
     const image = `${backEndUrl}/${mainImage?.image_url || Logo}`;
@@ -36,10 +38,12 @@ const HostBookingCard = ({ booking }) => {
                 <div className="relative h-48 overflow-hidden text-white rounded-md">
                     <img src={image} alt="Property" className="object-cover w-full h-full opacity-90" />
                     <div className="absolute inset-0 bg-gradient-to-t from-black opacity-50" />
-                    <div className="absolute bottom-2 left-2 text-white p-2 text-base font-semibold rounded line whitespace-nowrap text-ellipsis overflow-hidden max-w-[75%]">
+                    <div className="absolute bottom-2 left-2 text-white p-2 text-base font-semibold  rounded ">
                         {booking?.listing?.title || 'Property Title'}
                     </div>
-                    <div className={`absolute bottom-2 right-2 p-1 text-xs text-extrabold rounded ${booking?.isPaid ? 'bg-green-500' : 'bg-red-500'} text-white`}>
+                    <div className={`absolute bottom-2 right-2 p-1 text-xs text-extrabold rounded ${
+                        booking?.isPaid ? 'bg-green-500' : 'bg-red-500'
+                    } text-white`}>
                         {booking?.isPaid ? 'Paid' : 'Not Paid'}
                     </div>
 
@@ -61,8 +65,9 @@ const HostBookingCard = ({ booking }) => {
                             <span>{booking.guest_count} Guests</span>
                         </div>
                         <div className="text-xs bg-green-600 text-white px-3 py-1 rounded-full flex items-center space-x-1">
+                           
                         <CiMoneyCheck1 className='text-base'/>
-                        <span>brr {booking.total_price}</span>
+                            <span>brr {booking.total_price}</span>
                         </div>
                     </div>
                     <p className="text-slate-600 font-light text-sm mb-1">Check-in/Check-out:</p>
@@ -94,18 +99,19 @@ const HostBookingCard = ({ booking }) => {
                             <span className="text-slate-600">Guest</span>
                         </div>
                     </div>
-                    <div className="flex justify-center items-center gap-0">
-                        <button className="text-sm font-bold text-gray-800 p-1">
-                            4.5
-                        </button>
-                        <span>
-                            <FaStar size={15} color="gold" />
-                        </span>
+                    <div className='flex justify-center items-center gap-0'>
+                    <button className="text-sm font-bold text-gray-800  p-1">
+                        4.5
+                    </button>
+                    <span>
+                        <FaStar size={15} color="gold" /> 
+                    </span>
                     </div>
+                  
                 </div>
             </div>
         </a>
     );
 };
 
-export default HostBookingCard;
+export default HostTodayCheckinCard;

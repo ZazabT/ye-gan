@@ -5,11 +5,12 @@ import hostProfileStore from '../../stores/HostProfile';
 import bookingStore from '../../stores/BookingStore';
 import HostListingCard from './components/HostListingCard';
 import HostBookingCard from './components/HostBookingCard';
+import HostTodayCheckinCard from './components/HostTodayCheckinCard';
 import HostNavBar from './components/HostNavBar';
 
 const HostProfile = () => {
     const { getHostProfile, hostProfile, loading: hostProfileLoading, error: hostProfileError } = hostProfileStore();
-    const { bookings, loading: bookingLoading, getMyListingBooking } = bookingStore();
+    const { bookings, loading: bookingLoading, getMyListingBooking  , error: bookingError , getTodaysCheckins , todaysCheckins } = bookingStore();
     const { token, user } = userAuthStore();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
@@ -27,6 +28,9 @@ const HostProfile = () => {
         [myListings]
     );
     const acceptedBookings = useMemo(() => bookings?.filter(booking => booking.status === 'accepted'), [bookings]);
+    const memoizedTodaysCheckins = useMemo(() => todaysCheckins, [todaysCheckins]);
+    const checkedInForTodayNum =memoizedTodaysCheckins?.length; 
+    
 
     useEffect(() => {
         const fetchHostProfile = async () => {
@@ -41,13 +45,14 @@ const HostProfile = () => {
             try {
                 await getHostProfile(user.id, token);
                 await getMyListingBooking(hostProfile.id, token);
+                await getTodaysCheckins(hostProfile.id, token);
             } catch (error) {
                 console.error("Failed to fetch host profile:", error);
             }
         };
 
         fetchHostProfile();
-    }, [user, token, getHostProfile, navigate, getMyListingBooking , hostProfile.id]);
+    }, [user, token, getHostProfile, navigate, getMyListingBooking , hostProfile.id , getTodaysCheckins]);
 
     if (hostProfileLoading) {
         return (
@@ -74,7 +79,7 @@ const HostProfile = () => {
 
                 {/* Tab Navigation */}
                 <div className="flex space-x-4 mb-8">
-                    {[`Current Hosting (${currentHostingLists?.length})`, `Accepted Bookings (${acceptedBookings?.length})`, "Messages (0)", "Reviews (0)"].map((label, index) => (
+                    { [ `Checkins for today (${checkedInForTodayNum})` ,`Current Hosting (${currentHostingLists?.length})`, `Accepted Bookings (${acceptedBookings?.length})`, "Messages (0)", "Reviews (0)"].map((label, index) => (
                         <button 
                             key={index}
                             onClick={() => setActiveTab(index)} 
@@ -90,25 +95,34 @@ const HostProfile = () => {
                 <div className="w-full">
                     {activeTab === 0 && (
                         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
+                            {
+                                memoizedTodaysCheckins?.map(checkin => (
+                                    <HostTodayCheckinCard key={checkin.id} booking={checkin} />
+                                ))
+                            }
+                        </div>
+                    )}
+                    {activeTab === 1 && (
+                        <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
                             {currentHostingLists?.map(listing => (
                                 <HostListingCard key={listing.id} listing={listing} />
                             ))}
                         </div>
                     )}
-                    {activeTab === 1 && (
+                    {activeTab === 2 && (
                         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
                             {acceptedBookings?.map(booking => (
                                 <HostBookingCard key={booking.id} booking={booking} />
                             ))}
                         </div>
                     )}
-                    {activeTab === 2 && (
+                    {activeTab === 3 && (
                         <div className="p-6 bg-gray-50 rounded-lg shadow-sm">
                             <h2 className="text-xl font-semibold mb-3">Messages</h2>
                             <p className="text-gray-600">Your messages will appear here...</p>
                         </div>
                     )}
-                    {activeTab === 3 && (
+                    {activeTab === 4 && (
                         <div className="p-6 bg-gray-50 rounded-lg shadow-sm">
                             <h2 className="text-xl font-semibold mb-3">Reviews</h2>
                             <p className="text-gray-600">Your reviews will appear here...</p>

@@ -1,5 +1,5 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
-import { CalendarIcon } from '@heroicons/react/24/outline'; // Import Calendar icon
+import { CalendarIcon } from '@heroicons/react/24/outline';
 import { IoBedOutline } from "react-icons/io5";
 import { PiBathtubBold } from "react-icons/pi";
 import { RiDoorOpenLine } from "react-icons/ri";
