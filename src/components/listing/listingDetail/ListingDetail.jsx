@@ -24,38 +24,7 @@ const ListingDetail = () => {
   const navigate = useNavigate();
 
 
-  const demoReviews = [
-    {
-      id: 1,
-      user: {
-        name: 'John Doe',
-        profilePicture: 'https://via.placeholder.com/50', // Replace with actual image URL
-      },
-      rating: 4.5,
-      comment: 'Great place, very clean and well located. The host was super friendly!',
-      date: 'September 12, 2023',
-    },
-    {
-      id: 2,
-      user: {
-        name: 'Jane Smith',
-        profilePicture: 'https://via.placeholder.com/50',
-      },
-      rating: 5,
-      comment: 'Fantastic experience! The amenities were top-notch and the place was very cozy.',
-      date: 'August 18, 2023',
-    },
-    {
-      id: 3,
-      user: {
-        name: 'Alex Johnson',
-        profilePicture: 'https://via.placeholder.com/50',
-      },
-      rating: 4,
-      comment: 'Nice location, but a bit noisy at night. Overall, a good stay.',
-      date: 'July 30, 2023',
-    },
-  ];
+
 
 
   // Fetch listing details
@@ -67,8 +36,13 @@ const ListingDetail = () => {
   }, [id, getListing]);
 
   if (listingError) {
-    return <div className="text-red-500 font-semibold">Error loading listing details: {listingError}</div>;
+    return (
+      <div className="text-red-500 font-semibold">
+        Error loading listing details: {listingError}
+      </div>
+    );
   }
+  
 
   if (loading) {
     return <ListingDetailLoading />;
@@ -209,14 +183,17 @@ const ListingDetail = () => {
         {/* Description */}
         <hr className='mt-6' />
         <div className='pt-4 pr-10 mt-2 mr-28'>
-          <p className="text-gray-700 mb-2">
-            <strong>Experience the luxury of our listing:</strong>
-          </p>
-          <p className="text-gray-700 mb-2">{listing.description}</p>
-          <p className="text-gray-700">
-            <em>Book your stay now!</em>
-          </p>
-        </div>
+        <p className="text-gray-700 mb-2">
+          <strong>Experience the luxury of our listing:</strong>
+        </p>
+        <p className="text-gray-700 mb-2 break-words">
+          {listing.description}
+        </p>
+        <p className="text-gray-700">
+          <em>Book your stay now!</em>
+        </p>
+      </div>
+
 
 
         </div>
@@ -298,11 +275,11 @@ const ListingDetail = () => {
 {/* Reviews Section */}
 
 <hr className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6" />
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+<div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 ">
   <div className='grid grid-cols-2 gap-2'>
     {/* Review 1 */}
     <blockquote className="flex flex-col items-center p-4">
-      <p className="max-w-4xl text-sm font-medium text-center md:text-lg lg:text-xl">
+      <p className="max-w-4xl text-xs font-normal text-center md:text-lg lg:text-xl">
         &quot;I recently used this website to purchase a gift, and I was thoroughly impressed! The selection was vast, the interface was user-friendly, and my order arrived sooner than expected. Highly recommend!&quot;
       </p>
       <footer className="flex items-center gap-3 mt-6 md:mt-12">
@@ -329,7 +306,7 @@ const ListingDetail = () => {
 
     {/* Review 2 */}
     <blockquote className="flex flex-col items-center p-4">
-      <p className="max-w-4xl text-sm font-medium text-center md:text-lg lg:text-xl">
+      <p className="max-w-4xl text-sm font-normal text-center md:text-lg lg:text-xl">
         &quot;This website made my shopping experience delightful! The product range was impressive, and the delivery time was incredibly quick. I will definitely be back for more!&quot;
       </p>
       <footer className="flex items-center gap-3 mt-6 md:mt-12">
@@ -357,7 +334,7 @@ const ListingDetail = () => {
 
      {/* Review 1 */}
      <blockquote className="flex flex-col items-center p-4">
-      <p className="max-w-4xl text-sm font-medium text-center md:text-lg lg:text-xl">
+      <p className="max-w-4xl text-sm font-normal text-center md:text-lg lg:text-xl">
         &quot;I recently used this website to purchase a gift, and I was thoroughly impressed! The selection was vast, the interface was user-friendly, and my order arrived sooner than expected. Highly recommend!&quot;
       </p>
       <footer className="flex items-center gap-3 mt-6 md:mt-12">
@@ -384,7 +361,7 @@ const ListingDetail = () => {
 
     {/* Review 2 */}
     <blockquote className="flex flex-col items-center p-4">
-      <p className="max-w-4xl text-sm font-medium text-center md:text-lg lg:text-xl">
+      <p className="max-w-4xl text-sm font-normal text-center md:text-lg lg:text-xl">
         &quot;This website made my shopping experience delightful! The product range was impressive, and the delivery time was incredibly quick. I will definitely be back for more!&quot;
       </p>
       <footer className="flex items-center gap-3 mt-6 md:mt-12">

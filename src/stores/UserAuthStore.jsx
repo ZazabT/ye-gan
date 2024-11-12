@@ -1,8 +1,8 @@
-import axios from "axios"; 
+import axios from "axios";
 import { create } from "zustand";
 
 const userAuthStore = create((set) => ({
-    user: null,
+    user: JSON.parse(localStorage.getItem('user')) || null, // Store user data from localStorage if available
     token: localStorage.getItem('token') || null,
     isAuthenticated: !!localStorage.getItem('token'),
     error: null,
@@ -14,15 +14,13 @@ const userAuthStore = create((set) => ({
 
         try {
             const response = await axios.post('http://localhost:8000/api/login', { email, password });
-            console.log(response); // Debugging log
             if (response.data.status === 200) {
                 localStorage.setItem('token', response.data.access_token);
+                localStorage.setItem('user', JSON.stringify(response.data.user)); // Save user data in localStorage
                 set({ user: response.data.user, token: response.data.access_token, isAuthenticated: true });
-                console.log('Login successful:', response.data.user); // Debugging log
-            } 
+            }
         } catch (error) {
             set({ error: error.response.data.message });
-            console.error('Login error:', error.response.data.message); // Debugging log
         } finally {
             set({ loading: false });
         }
@@ -44,13 +42,12 @@ const userAuthStore = create((set) => ({
 
             if (response.data.status === 201) {
                 localStorage.setItem('token', response.data.access_token);
+                localStorage.setItem('user', JSON.stringify(response.data.user)); // Save user data in localStorage
                 set({ user: response.data.user, token: response.data.access_token, isAuthenticated: true });
-                console.log('Registration successful:', response.data.user); // Debugging log
             }
 
         } catch (error) {
             set({ error: error.response.data.message });
-            console.error('Registration error:', error.response.data.message); // Debugging log
         } finally {
             set({ loading: false });
         }
@@ -72,12 +69,11 @@ const userAuthStore = create((set) => ({
 
             if (response.data.status === 200) {
                 localStorage.removeItem('token');
+                localStorage.removeItem('user'); // Clear user data from localStorage
                 set({ token: null, user: null, isAuthenticated: false });
-                console.log('Logout successful'); // Debugging log
             }
         } catch (error) {
             set({ error: error.response.data.message });
-            console.error('Logout error:', error.response.data.message); // Debugging log
         } finally {
             set({ loading: false });
         }
@@ -85,35 +81,35 @@ const userAuthStore = create((set) => ({
 
     // Check if there is a user
     checkAuth: async () => {
-        set({ loading: true });
         const token = localStorage.getItem('token');
         if (token) {
+            set({ loading: true });
             try {
                 const response = await axios.get('http://localhost:8000/api/user', {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                console.log('User data retrieved:', response.data); // Debugging log
                 set({
                     user: response.data,
                     loading: false, 
                     isAuthenticated: true
                 });
             } catch (error) {
-                console.error('Token validation failed:', error);
                 set({ error: error.response.data.message });
                 localStorage.removeItem('token');
+                localStorage.removeItem('user'); // Clear user data if token is invalid
                 set({
                     user: null,
                     token: null,
                     loading: false, 
                     isAuthenticated: false,
                 });
+            } finally {
+                set({ loading: false });
             }
         } else {
             console.log('No token found.');
-            set({ loading: false, isAuthenticated: false }); 
         }
     }
 }));

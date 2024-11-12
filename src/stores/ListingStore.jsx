@@ -1,9 +1,11 @@
 import axios from "axios";
+
 import { create } from "zustand";
 
 const listingStore = create((set) => ({
     // State variables
     listings: [],
+    myListings: [],
     listing: {},
     error: null,
     success: null,
@@ -108,6 +110,21 @@ const listingStore = create((set) => ({
             }
         } catch (error) {
             set({ error: error.response?.data?.error || 'Failed to fetch listing.' });
+        } finally {
+            set({ loading: false });
+        }
+    },
+
+    // get all listing for spasific Host
+    getMyListing: async (id) => {
+        set({ loading: true, error: null }); // Reset error
+        try {
+            const response = await axios.get(`http://localhost:8000/api/listing/my/${id}`);
+            if (response.data.status === 200) {
+                set({ myListings: response.data.listings });
+            }
+        } catch (error) {
+            set({ error: error.response?.data?.error || 'Failed to fetch listings.' });
         } finally {
             set({ loading: false });
         }
