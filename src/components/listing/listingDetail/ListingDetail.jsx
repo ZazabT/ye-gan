@@ -183,14 +183,17 @@ const ListingDetail = () => {
         {/* Description */}
         <hr className='mt-6' />
         <div className='pt-4 pr-10 mt-2 mr-28'>
-          <p className="text-gray-700 mb-2">
-            <strong>Experience the luxury of our listing:</strong>
-          </p>
-          <p className="text-gray-700 mb-2">{listing.description}</p>
-          <p className="text-gray-700">
-            <em>Book your stay now!</em>
-          </p>
-        </div>
+        <p className="text-gray-700 mb-2">
+          <strong>Experience the luxury of our listing:</strong>
+        </p>
+        <p className="text-gray-700 mb-2 break-words">
+          {listing.description}
+        </p>
+        <p className="text-gray-700">
+          <em>Book your stay now!</em>
+        </p>
+      </div>
+
 
 
         </div>

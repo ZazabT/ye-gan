@@ -1,23 +1,25 @@
-import { useEffect, useState , useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import guestProfileStore from '../../stores/GuestProfile';
 import messageStore from '../../stores/MessageStore';
 import conversationStore from '../../stores/ConversationStore';
 import userAuthStore from '../../stores/UserAuthStore';
-import GuestNavBar from '../profile/components/GuestNavBar';
+import HostNavBar from '../profile/components/HostNavBar';
 import wallapaper from '../../assets/wallapaper.jpeg';
-import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import hostProfileStore from '../../stores/HostProfile';
 import { Input, Button } from "@material-tailwind/react";
+import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+
 
 const MessageRoom = () => {
     const { id } = useParams(); // User ID
     const navigate = useNavigate();
-    const backEndUrl = 'http://localhost:8000';
 
     const { token, user } = userAuthStore();
-    const { getGuestProfile, guestProfile, loading: guestProfileLoading, error: guestProfileError } = guestProfileStore();
+    const { getHostProfile, hostProfile, loading: hostProfileLoading, error: hostProfileError } = hostProfileStore();
     const { sendMessage } = messageStore();
     const { users, usersConversationWith, getMessageForConversation, loading: conversationLoading, messages } = conversationStore();
+    const backEndUrl = 'http://localhost:8000';
+    const numberOfContactWith = users?.length;
 
     const [selectedConversationId, setSelectedConversationId] = useState(null);
     const [messageText, setMessageText] = useState('');
@@ -30,16 +32,16 @@ const MessageRoom = () => {
     const navLinks = [
         { path: '/guest-profile', label: 'My Profile' },
         { path: '/guest-profile-bookings', label: 'Bookings' },
-        { path: guestProfile ? `/guest/messages/${guestProfile.id}` : '', label: 'Messages' },
+        { path: hostProfile ? `/guest/messages/${hostProfile.id}` : '', label: 'Messages' },
         { path: '/guest/reviews', label: 'Reviews' }
-    ].filter(link => link.path); // Remove empty paths
+    ].filter(link => link.path);
 
     // Fetch user profile and conversations
     useEffect(() => {
         const fetchGuestProfile = async () => {
             if (user && token) {
                 try {
-                    await getGuestProfile(user.id, token);
+                    await getHostProfile(user.id, token);
                     await usersConversationWith(id, token);
                 } catch (error) {
                     console.error("Failed to fetch guest profile:", error);
@@ -50,14 +52,15 @@ const MessageRoom = () => {
         };
 
         fetchGuestProfile();
-    }, [user, token, getGuestProfile, usersConversationWith, navigate, id]);
+    }, [user, token, getHostProfile, usersConversationWith, navigate, id]);
 
     useEffect(() => {
         if (selectedConversationId) {
             getMessageForConversation(selectedConversationId, token);
         }
-}, [selectedConversationId, getMessageForConversation, token]);
-  // Automatically set the first conversation as the selected one
+    }, [selectedConversationId, getMessageForConversation, token]);
+
+    // Automatically set the first conversation as the selected one
 useEffect(() => {
     if (users && users.length > 0 && !selectedConversationId) {
         // Set the first conversation if no conversation is selected
@@ -70,9 +73,9 @@ useEffect(() => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [messages]); 
+    }, [messages]); // This will trigger whenever messages array changes
 
-    if (guestProfileLoading) {
+    if (hostProfileLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
@@ -80,8 +83,8 @@ useEffect(() => {
         );
     }
 
-    if (guestProfileError) {
-        return <div>Error loading profile: {guestProfileError}</div>;
+    if (hostProfileError) {
+        return <div>Error loading profile: {hostProfileError}</div>;
     }
 
     // Handle sending a message
@@ -98,8 +101,11 @@ useEffect(() => {
             setSending(false);
         }
     };
+
     return (
-            <div className="flex h-screen antialiased text-gray-800 bg-gray-100">
+        <>
+         {/* <HostNavBar hostProfile={hostProfile} navLinks={navLinks} /> */}
+        <div className="flex h-screen antialiased text-gray-800 bg-gray-100">
             <div className="flex flex-row overflow-x-hidden h-full w-full">
                 {/* Sidebar */}
                 <div className="flex flex-col py-8 pl-6 pr-2 w-64 flex-shrink-0 bg-white shadow-lg">
@@ -114,35 +120,24 @@ useEffect(() => {
 
                     {/* Host Profile */}
                     <div className="flex flex-col items-center bg-green-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg">
-                    <div className="h-20 w-20 rounded-full border overflow-hidden flex items-center justify-center bg-gray-200 text-xl font-bold text-gray-700">
-                        {guestProfile?.profilePicture ? (
-                            // Show profile picture if available
+                        <div className="h-20 w-20 rounded-full border overflow-hidden">
                             <img
-                            src={`${backEndUrl}/${guestProfile.profilePicture}`}
-                            alt="Avatar"
-                            className="h-full w-full object-cover"
+                                src={`${backEndUrl}/${hostProfile?.profilePicture}`}
+                                alt="Avatar"
+                                className="h-full w-full"
                             />
-                        ) : (
-                            // Show first character of username or first name as fallback
-                            <span className='text-3xl'>
-                            {guestProfile?.username
-                                ? guestProfile.username.charAt(0).toUpperCase() 
-                                : guestProfile?.user?.firstName?.charAt(0).toUpperCase() + guestProfile?.user?.lastName?.charAt(0).toUpperCase() }
-                            </span>
-                        )}
                         </div>
-
-                        <div className="text-sm font-semibold mt-2">{guestProfile?.userName || `${guestProfile?.user?.firstName} ${guestProfile?.user?.lastName}`}</div>
+                        <div className="text-sm font-semibold mt-2">{hostProfile?.userName || `${hostProfile?.user?.firstName} ${hostProfile?.user?.lastName}`}</div>
                     </div>
 
                     {/* Active Conversations */}
-                    <div className="flex flex-col mt-8">
+                    <div className="flex flex-col mt-8 min-h-[400px] w-full py-6 px-4 rounded-lg">
                         <div className="flex flex-row items-center justify-between text-xs">
                             <span className="font-bold">Active Conversations</span>
-                            <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{users?.length}</span>
+                            <span className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full">{numberOfContactWith}</span>
                         </div>
 
-                        <div className="flex flex-col space-y-1 mt-4 -mx-2 h-48 overflow-y-auto">
+                        <div className="flex flex-col space-y-1 mt-4 -mx-2 h-full overflow-y-auto">
     {
     // conversationLoading ? (
     //     // Show loading indicator while loading
@@ -187,12 +182,12 @@ useEffect(() => {
                        <div className="flex flex-col h-full bg-white p-4 shadow-lg rounded-lg overflow-y-auto">
   
                             {/* Display Messages */}
-                            <div className="flex flex-col flex-grow overflow-y-auto bg-white">
+                            <div className="flex flex-col flex-grow overflow-y-auto">
                                 {messages && messages.length > 0 ? (
                                     messages.map((message, index) => (
                                         <div
                                             key={index}
-                                            className={`flex flex-row ${message.sender_id === user.id ? 'flex-row-reverse' : ''} mx-4`}
+                                            className={`flex flex-row ${message.sender_id === user.id ? 'flex-row-reverse' : ''} mx-4 my-2`}
                                         >
                                             <div className="flex flex-col">
                                                 {/* Sender's Name */}
@@ -223,7 +218,7 @@ useEffect(() => {
                             <div className="flex w-full items-center space-x-2">
                                 {/* Input Field */}
                                 <Input
-                                    className="flex-grow border-2 border-indigo-500 rounded-lg px-4 py-2 text-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 active:scale-95 transition duration-200"
+                                    className="flex-grow border-2 border-indigo-500 rounded-lg px-4 py-2 text-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                                     placeholder="Type your message..."
                                     value={messageText}
                                     onChange={(e) => setMessageText(e.target.value)}
@@ -237,24 +232,28 @@ useEffect(() => {
                                 {/* Send Button */}
                                 <Button
                                     onClick={handleSendMessage}
-                                    className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-2 px-4 text-sm flex items-center space-x-2 transition-all duration-300"
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-2 px-4 text-sm flex items-center space-x-2 transition-all duration-300 transform active:scale-95"
                                     disabled={sending || !messageText.trim()}
                                 >
                                     {/* Icon and Text */}
                                     <PaperAirplaneIcon className="h-5 w-5" />
                                     <span>Send</span>
                                 </Button>
+
                             </div>
-                            </div>
+</div>
 
                         </div>
                     )}
                 </div>
             </div>
         </div>
-
-        
+        </>
     );
 };
 
 export default MessageRoom;
+
+
+
+

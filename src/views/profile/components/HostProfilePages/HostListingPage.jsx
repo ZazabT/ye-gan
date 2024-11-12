@@ -12,7 +12,7 @@ const HostListingPage = () => {
       { path: '/host-profile', label: 'Yegna' },
       { path: '/host-profile-listings', label: 'Listings' },
       { path: '/host-profile-bookings', label: 'Bookings' },
-      { path: '#', label: 'Messages' }
+      { path: `/host/messages/${hostProfile?.id}`, label: 'Messages' },
   ];
 
     const myListings = hostProfile?.listings;
@@ -31,7 +31,7 @@ const HostListingPage = () => {
                             console.error("Failed to fetch host profile:", error);
                         }
                     } else {
-                        console.error("User is not a homeowner, redirecting to home.");
+                        console.error("User is not a homeowner, redirecting to home");
                         navigate("/");
                     }
                 } else {
@@ -64,7 +64,14 @@ const HostListingPage = () => {
           <HostNavBar hostProfile={hostProfile}  navLinks={navLinks}/>
       
           {/* Main Content */}
-          <div className="container mx-auto px-6 py-10">
+
+          {
+            numberOfListings === 0 ? (
+              <div className="flex justify-center items-center min-h-screen">
+              <p className="text-gray-500 font-semibold">No Listings yet.</p>
+             </div>
+            ) : (
+              <div className="container mx-auto px-6 py-10">
             {/* Header Section */}
   
             {/* Table */}
@@ -141,6 +148,9 @@ const HostListingPage = () => {
               )}
             </div>
           </div>
+            )
+          }
+          
         </div>
       );
 };

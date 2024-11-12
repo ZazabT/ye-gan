@@ -1,5 +1,8 @@
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { CalendarIcon } from '@heroicons/react/24/outline'; // Import Calendar icon
+import { IoBedOutline } from "react-icons/io5";
+import { PiBathtubBold } from "react-icons/pi";
+import { RiDoorOpenLine } from "react-icons/ri";
 
 const ListingCart = ({ listing, navigateToDetails }) => {
   // Main image
@@ -49,7 +52,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
               
               <div>
                 <dt className="sr-only">Title</dt>
-                <dd className="font-bold text-gray-700 line-clamp-1">{listing.title || 'Unknown location'}</dd>
+                <dd className="font-bold text-gray-800 line-clamp-1">{listing.title || 'Unknown location'}</dd>
               </div>
               <div>
                 <dt className="sr-only">Address</dt>
@@ -59,9 +62,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
   
             <div className="mt-4 flex flex-col sm:flex-row sm:justify-between text-sm">
               <div className="inline-flex items-center gap-2 mb-2 sm:mb-0">
-                <svg className="h-5 w-5 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                </svg>
+              <IoBedOutline className='h-5 w-5 text-indigo-800'/>
                 <div>
                   <p className="text-gray-500">Beds</p>
                   <p className="font-medium">{listing.beds || 0} beds</p>
@@ -69,9 +70,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
               </div>
   
               <div className="inline-flex items-center gap-2 mb-2 sm:mb-0">
-                <svg className="h-5 w-5 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
+              <PiBathtubBold className='h-5 w-5 text-indigo-800'/>
                 <div>
                   <p className="text-gray-500">Bathrooms</p>
                   <p className="font-medium">{listing.bathrooms || 0} bathrooms</p>
@@ -79,9 +78,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
               </div>
   
               <div className="inline-flex items-center gap-2">
-                <svg className="h-5 w-5 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
+              <RiDoorOpenLine className='h-5 w-5 text-indigo-800'/>
                 <div>
                   <p className="text-gray-500">Bedrooms</p>
                   <p className="font-medium">{listing.bedrooms || 0} bedrooms</p>
@@ -90,10 +87,10 @@ const ListingCart = ({ listing, navigateToDetails }) => {
             </div>
   
             {/* Date Range Section */}
-            {/* <div className="mt-5 flex items-center justify-end text-sm text-gray-500">
-              <CalendarIcon className="h-5 w-5 text-indigo-700 mr-1" aria-hidden="true" />
+            <div className="mt-2 flex items-center justify-end text-xs text-gray-500">
+              <CalendarIcon className="h-3 w-3 text-indigo-800 mr-1" aria-hidden="true" />
               <p>{dateRange}</p>
-            </div> */}
+            </div>
           </div>
         </a>
         )  
@@ -118,12 +115,12 @@ const ListingCart = ({ listing, navigateToDetails }) => {
           <dl>
             <div>
               <dt className="sr-only">Price</dt>
-              <dd className="text-lg font-bold text-red-500">Sold out</dd>
+              <dd className="text-lg font-bold text-red-700 line-through">Sold out</dd>
             </div>
             
             <div>
               <dt className="sr-only">Title</dt>
-              <dd className="font-bold text-gray-700 line-clamp-1 line-through-red-500">{listing.title || 'Unknown location'}</dd>
+              <dd className="font-bold text-gray-800 line-clamp-1 line-through-red-500">{listing.title || 'Unknown location'}</dd>
             </div>
             <div>
               <dt className="sr-only">Address</dt>
@@ -133,9 +130,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
 
           <div className="mt-4 flex flex-col sm:flex-row sm:justify-between text-sm">
             <div className="inline-flex items-center gap-2 mb-2 sm:mb-0">
-              <svg className="h-5 w-5 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-              </svg>
+            <IoBedOutline className='h-5 w-5 text-indigo-800'/>
               <div>
                 <p className="text-gray-500">Beds</p>
                 <p className="font-medium line-through-red-500">{listing.beds || 0} beds</p>
@@ -143,9 +138,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
             </div>
 
             <div className="inline-flex items-center gap-2 mb-2 sm:mb-0">
-              <svg className="h-5 w-5 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-              </svg>
+            <PiBathtubBold className='h-5 w-5 text-indigo-800'/>
               <div>
                 <p className="text-gray-500">Bathrooms</p>
                 <p className="font-medium line-through-red-500">{listing.bathrooms || 0} bathrooms</p>
@@ -153,9 +146,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
             </div>
 
             <div className="inline-flex items-center gap-2">
-              <svg className="h-5 w-5 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
+            <RiDoorOpenLine className='h-5 w-5 text-indigo-800'/>
               <div>
                 <p className="text-gray-500">Bedrooms</p>
                 <p className="font-medium line-through-red-500">{listing.bedrooms || 0} bedrooms</p>
@@ -163,11 +154,12 @@ const ListingCart = ({ listing, navigateToDetails }) => {
             </div>
           </div>
 
+          
           {/* Date Range Section */}
-          {/* <div className="mt-5 flex items-center justify-end text-sm text-gray-500">
-            <CalendarIcon className="h-5 w-5 text-indigo-700 mr-1" aria-hidden="true" />
-            <p>{dateRange}</p>
-          </div> */}
+          <div className="mt-2 flex items-center justify-end text-xs text-gray-500">
+              <CalendarIcon className="h-3 w-3 text-indigo-800 mr-1" aria-hidden="true" />
+              <p>{dateRange}</p>
+            </div>
         </div>
       </a>
         )
@@ -197,7 +189,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
             
             <div>
               <dt className="sr-only">Title</dt>
-              <dd className="font-bold text-gray-700 line-clamp-1">{listing.title || 'Unknown location'}</dd>
+              <dd className="font-bold text-gray-800 line-clamp-1">{listing.title || 'Unknown location'}</dd>
             </div>
             <div>
               <dt className="sr-only">Address</dt>
@@ -207,9 +199,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
 
           <div className="mt-4 flex flex-col sm:flex-row sm:justify-between text-sm">
             <div className="inline-flex items-center gap-2 mb-2 sm:mb-0">
-              <svg className="h-5 w-5 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-              </svg>
+            <IoBedOutline className='h-5 w-5 text-indigo-800'/>
               <div>
                 <p className="text-gray-500">Beds</p>
                 <p className="font-medium">{listing.beds || 0} beds</p>
@@ -217,9 +207,7 @@ const ListingCart = ({ listing, navigateToDetails }) => {
             </div>
 
             <div className="inline-flex items-center gap-2 mb-2 sm:mb-0">
-              <svg className="h-5 w-5 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-              </svg>
+            <PiBathtubBold className='h-5 w-5 text-indigo-900'/>
               <div>
                 <p className="text-gray-500">Bathrooms</p>
                 <p className="font-medium">{listing.bathrooms || 0} bathrooms</p>
@@ -227,21 +215,22 @@ const ListingCart = ({ listing, navigateToDetails }) => {
             </div>
 
             <div className="inline-flex items-center gap-2">
-              <svg className="h-5 w-5 text-indigo-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-              </svg>
+            <RiDoorOpenLine className='h-5 w-5 text-indigo-800'/>
               <div>
                 <p className="text-gray-500">Bedrooms</p>
                 <p className="font-medium">{listing.bedrooms || 0} bedrooms</p>
               </div>
+              
             </div>
+
+       
           </div>
 
           {/* Date Range Section */}
-          {/* <div className="mt-5 flex items-center justify-end text-sm text-gray-500">
-            <CalendarIcon className="h-5 w-5 text-indigo-700 mr-1" aria-hidden="true" />
+          <div className="mt-2 flex items-center justify-end text-sm text-gray-500">
+            <CalendarIcon className="h-3 w-3 text-indigo-800 mr-1" aria-hidden="true" />
             <p>{dateRange}</p>
-          </div> */}
+          </div>
         </div>
       </a>
        )

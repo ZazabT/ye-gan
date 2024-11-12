@@ -1,7 +1,7 @@
 import Logo from '../../../assets/logo.png';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const HostNavBar = ({ hostProfile, navLinks }) => {
+const GuestNavBar = ({ guestProfile, navLinks }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const backEndUrl = 'http://localhost:8000';
@@ -35,37 +35,10 @@ const HostNavBar = ({ hostProfile, navLinks }) => {
                     ))}
                 </ul>
 
+
                 {/* Secondary Navigation Links */}
-                <ul className="flex items-center space-x-4">
-                    {/* Add Icon*/}
-
-                    <li>
-                        <a href="/add-listing" className="relative text-gray-600 hover:text-green-600 transition duration-200">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M12 5v14M5 12h14"
-                                />
-                            </svg>
-                        </a>
-                    </li>
-
-
-
-
-
-
+                <ul className="flex items-center space-x-6">
                     {/* Notification Icon */}
-
-
                     <li>
                         <a href="#" className="relative text-gray-600 hover:text-blue-600 transition duration-200">
                             <svg
@@ -89,13 +62,20 @@ const HostNavBar = ({ hostProfile, navLinks }) => {
 
                     {/* Avatar */}
                     <li>
-                        <a href="#" className="flex items-center">
-                            <img
-                                src={`${backEndUrl}/${hostProfile?.profilePicture}`}
-                                alt="User Avatar"
-                                className="h-12 w-12 rounded-full border border-gray-300"
-                            />
-                        </a>
+                    {guestProfile?.profilePicture ? (
+                        <img
+                            src={`${backEndUrl}/${guestProfile.profilePicture}`}
+                            alt="User Avatar"
+                            className="h-12 w-12 rounded-full border border-gray-300"
+                        />
+                    ) : (
+                        <div
+                            className="h-12 w-12 flex items-center justify-center rounded-full bg-green-500 text-2xl text-bold text-white font-bold border border-gray-300"
+                        >
+                            {guestProfile?.user?.firstName?.charAt(0).toUpperCase()}
+                        </div>
+                    )}
+
                     </li>
                 </ul>
             </nav>
@@ -103,4 +83,4 @@ const HostNavBar = ({ hostProfile, navLinks }) => {
     );
 };
 
-export default HostNavBar;
+export default GuestNavBar;

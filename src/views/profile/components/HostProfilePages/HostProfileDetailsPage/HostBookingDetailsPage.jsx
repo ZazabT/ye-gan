@@ -4,7 +4,6 @@ import bookingStore from "../../../../../stores/BookingStore";
 import userAuthStore from "../../../../../stores/UserAuthStore";
 import hostProfileStore from "../../../../../stores/HostProfile";
 import HostNavBar from "../../HostNavBar";
-import { use } from "framer-motion/client";
 
 const HostBookingDetailsPage = () => {
     const { id } = useParams();
