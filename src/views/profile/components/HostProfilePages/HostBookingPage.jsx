@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect ,useRef} from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import userAuthStore from '../../../../stores/UserAuthStore';
@@ -15,7 +15,22 @@ const HostBookingPage = () => {
     const { getHostProfile, hostProfile, loading: hostProfileLoading, error: hostProfileError } = hostProfileStore();
     const { bookings, loading: bookingLoading, getMyListingBooking, error: bookingError, acceptBooking, rejectBooking } = bookingStore();
     const { token, user } = userAuthStore();
+    const dropdownRef = useRef(null);
     const navigate = useNavigate();
+
+
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdownVisible(null);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     const navLinks = [
         { path: '/host-profile', label: 'Yegna' },
@@ -186,12 +201,21 @@ const HostBookingPage = () => {
                                             {booking.payment_status === 'paid' ? 'Paid' : 'Pending'}
                                         </span>
                                     </td>
-                                    <td className="py-4 px-5 text-center relative">
+                                    <td className="py-4 px-5 text-center relative"  ref={dropdownRef}>
                                         <BsThreeDotsVertical onClick={() => handleDropdownToggle(booking.id)} />
                                         {dropdownVisible === booking.id && (
                                             <div className="absolute right-0 mt-2 w-40 bg-white border rounded-md shadow-md z-10">
-                                                <button onClick={() => handleAction(booking.id, 'accept')} className="w-full px-4 py-2 text-sm text-green-600 hover:bg-green-100" disabled={booking.status === 'accepted'}>Accept</button>
-                                                <button onClick={() => handleAction(booking.id, 'reject')} className="w-full px-4 py-2 text-sm text-red-600 hover:bg-red-100" disabled={booking.status === 'rejected'}>Reject</button>
+                                               <button 
+                                                onClick={() => handleAction(booking.id, 'accept')} 
+                                                className={`w-full px-4 py-2 text-sm text-green-600 hover:bg-green-100 ${booking.status === 'accepted' ? 'cursor-not-allowed' : ''}`} 
+                                                disabled={booking.status === 'accepted'}
+                                                >
+                                                Accept
+                                                </button>
+                                                <button onClick={() => 
+                                                handleAction(booking.id, 'reject')} 
+                                                className={`w-full px-4 py-2 text-sm text-red-600 hover:bg-red-100 ${booking.status === 'rejected' ? 'cursor-not-allowed' : ''}`} 
+                                                 disabled={booking.status === 'rejected'}>Reject</button>
                                                 <button onClick={() => handleAction(booking.id, 'detail')} className="w-full px-4 py-2 text-sm text-white text-bold bg-indigo-500 hover:bg-indigo-400">Detail</button>
                                             </div>
                                         )}
