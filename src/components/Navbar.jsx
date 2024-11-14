@@ -143,23 +143,23 @@ const Navbar = () => {
               <ul className="py-2">
                 {!isAuthenticated && (
                   <>
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogin}>
+                    <li className="px-4 py-2 hover:bg-purple-100 cursor-pointer" onClick={handleLogin}>
                       LogIn
                     </li>
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleSignin}>
+                    <li className="px-4 py-2 hover:bg-purple-100 cursor-pointer" onClick={handleSignin}>
                       SignUp
                     </li>
                   </>
                 )}
                 {isAuthenticated && (
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/guest-profile')}>Guest Profile</li>
+                  <li className="px-4 py-2 hover:bg-purple-100 cursor-pointer" onClick={() => navigate('/guest-profile')}>Guest Profile</li>
                 )}
                 {isAuthenticated && user?.isHomeOwner === 1 && (
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/host-profile')}>Host Profile</li>
+                  <li className="px-4 py-2 hover:bg-purple-100 cursor-pointer" onClick={() => navigate('/host-profile')}>Host Profile</li>
                 )}
-                <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                <li className="px-4 py-2 hover:bg-purple-100 cursor-pointer">Settings</li>
                 {isAuthenticated && (
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogout}>
+                  <li className="px-4 py-2 hover:bg-purple-100 cursor-pointer" onClick={handleLogout}>
                     Logout
                   </li>
                 )}

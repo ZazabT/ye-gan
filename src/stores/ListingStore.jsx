@@ -83,7 +83,57 @@ const listingStore = create((set) => ({
             set({ loading: false });
         }
     },
+
+    // Update listing
     
+
+
+    // Delete listing
+    deleteListing: async (id , token) => {
+        // Start loading
+        set({ loading: true, error: null });
+
+        //try to delete lising with id 
+        try{
+            // Log parameters before the API call
+            console.log('Preparing to send delete request with data Listing id:', {
+                id,
+            });
+            const response = await axios.delete(`http://localhost:8000/api/listing/${id}`,{
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            // Log the API response
+            console.log('API response:', response);
+
+            //check if the API call was successful
+            if (response.data.status === 200) {
+                set({ success: response.data.message });
+                return true;
+            } else {
+                throw new Error('Failed to delete listing.');
+            }
+
+        }catch (error) {
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                set({ error: error.response.data.error }); 
+                throw new Error(error.response.data.error); 
+            } else if (error.request) {
+                console.error('Error request:', error.request);
+                set({ error: 'No response received from the server.' }); 
+                throw new Error('No response received from the server.'); 
+            } else {
+                console.error('Error message:', error.message);
+                set({ error: 'An error occurred while adding the listing.' }); 
+                throw new Error('An error occurred while adding the listing.');
+            }
+        } finally {
+            set({ loading: false });
+        }
+        
+    },
 
     // Get all listings
     getAllListing: async () => {
