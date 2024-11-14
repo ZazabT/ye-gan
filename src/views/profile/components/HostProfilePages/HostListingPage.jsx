@@ -4,6 +4,7 @@ import hostProfileStore from '../../../../stores/HostProfile';
 import { useNavigate } from 'react-router-dom';
 import HostNavBar from '../HostNavBar';
 import { BsThreeDotsVertical } from 'react-icons/bs';
+import Footer from '../../../../components/footer';
 
 const HostListingPage = () => {
     const { getHostProfile, hostProfile, loading: hostProfileLoading, error: hostProfileError } = hostProfileStore();
@@ -191,6 +192,9 @@ const HostListingPage = () => {
                     </div>
                 </div>
             )}
+
+            {/* Footer */}
+            <Footer/>
         </div>
     );
 };

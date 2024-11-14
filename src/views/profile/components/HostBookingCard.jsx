@@ -43,11 +43,24 @@ const HostBookingCard = ({ booking }) => {
                         {booking?.isPaid ? 'Paid' : 'Not Paid'}
                     </div>
 
-                    {daysLeft > 0 && (
-                        <div className="absolute top-2 left-2 bg-emerald-500 text-white px-3 py-1 rounded-md text-xs font-semibold">
-                            {daysLeft} Days Left
-                        </div>
-                    )}
+                    {daysLeft > 0 ? (
+                            <div className="absolute top-2 left-2 bg-emerald-500 text-white px-3 py-1 rounded-md text-xs font-semibold">
+                                {daysLeft} Days Left
+                            </div>
+                        ) : daysLeft === 0 ? (
+                            <div className="absolute top-2 left-2 bg-yellow-500 text-white px-3 py-1 rounded-md text-xs font-semibold">
+                                On Board
+                            </div>
+                        ) : daysLeft < 0 && new Date() < new Date(booking.checkout_date) ? (
+                            <div className="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-md text-xs font-semibold">
+                                They Left
+                            </div>
+                        ) : (
+                            <div className="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-md text-xs font-semibold">
+                                Already Checked Out
+                            </div>
+                        )}
+
                 </div>
 
                 <div className="px-4 py-2">

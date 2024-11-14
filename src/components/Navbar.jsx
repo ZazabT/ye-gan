@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import userAuthStore from '../stores/UserAuthStore';
-import Logo from '../assets/logo.png';
+import Logo from '../assets/logo1.png';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
@@ -58,38 +58,41 @@ const Navbar = () => {
       </div>
 
       {/* Search Bar */}
-      <div className={`search-bar flex flex-col md:flex-row items-center gap-2 shadow-xl rounded-full border border-gray-300 bg-white p-2 max-w-[450px] w-full ${isMenuOpen ? 'block' : 'hidden'} md:flex`}>
+      <div className={`search-bar flex flex-col md:flex-row items-center justify-center gap-1 shadow-xl rounded-full border border-gray-300 bg-white p-2 px-3 max-w-[400px] w-full ${isMenuOpen ? 'block' : 'hidden'} md:flex`}>
         {/* Where to search */}
-        <div className="flex items-center gap-2 px-4 border-r border-gray-300">
+        <div className="flex items-center gap-2 px-4 border-r border-gray-200">
           <input
             type="text"
-            className="h-10 w-full focus:outline-none focus:ring-0 text-gray-700 placeholder-gray-400 transition duration-300 ease-in-out"
-            placeholder="Where to?"
+            className="h-10 w-full focus:outline-none focus:ring-0 text-gray-700 placeholder-black transition duration-300 ease-in-out"
+            style={{  fontWeight: 600 }}
+            placeholder="Where"
             aria-label="Where to search"
           />
-          <i className="fas fa-map-marker-alt text-gray-500" aria-hidden="true"></i>
+          {/* <i className="fas fa-map-marker-alt text-gray-500" aria-hidden="true"></i> */}
         </div>
 
         {/* When to search */}
         <div className="flex items-center gap-2 px-4 border-r border-gray-300">
           <input
             type="text"
-            className="h-10 w-full focus:outline-none focus:ring-0 text-gray-700 placeholder-gray-400 transition duration-300 ease-in-out"
-            placeholder="When?"
+            className="h-10 w-full focus:outline-none focus:ring-0 text-gray-700 placeholder-black  transition duration-300 ease-in-out"
+            style={{  fontWeight:600}}
+            placeholder="When"
             aria-label="When to search"
           />
-          <i className="fas fa-calendar-alt text-gray-500" aria-hidden="true"></i>
+          {/* <i className="fas fa-calendar-alt text-gray-500" aria-hidden="true"></i> */}
         </div>
 
         {/* Guests */}
         <div className="flex items-center gap-2 px-4">
           <input
             type="text"
-            className="h-10 w-full focus:outline-none focus:ring-0 text-gray-700 placeholder-gray-400 transition duration-300 ease-in-out"
-            placeholder="Guests?"
+            className="h-10 w-full focus:outline-none focus:ring-0 text-gray-400 placeholder-black transition duration-300 ease-in-out"
+            style={{  fontWeight: 600 }}
+            placeholder="Guests"
             aria-label="Number of guests"
           />
-          <i className="fas fa-user text-gray-500" aria-hidden="true"></i>
+          {/* <i className="fas fa-user text-gray-500" aria-hidden="true"></i> */}
         </div>
 
         {/* Search Button */}
@@ -141,15 +144,15 @@ const Navbar = () => {
                 {!isAuthenticated && (
                   <>
                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleLogin}>
-                      Login
+                      LogIn
                     </li>
                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleSignin}>
-                      Signin
+                      SignUp
                     </li>
                   </>
                 )}
                 {isAuthenticated && (
-                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/guest-profile')}>Profile</li>
+                  <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/guest-profile')}>Guest Profile</li>
                 )}
                 {isAuthenticated && user?.isHomeOwner === 1 && (
                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => navigate('/host-profile')}>Host Profile</li>

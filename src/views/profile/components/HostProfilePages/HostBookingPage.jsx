@@ -6,6 +6,7 @@ import hostProfileStore from '../../../../stores/HostProfile';
 import bookingStore from '../../../../stores/BookingStore';
 import HostNavBar from '../HostNavBar';
 import ListingNotificationCard from '../../../../components/listing/ListingNotificationCard'; 
+import Footer from '../../../../components/footer';
 
 const HostBookingPage = () => {
     const [dropdownVisible, setDropdownVisible] = useState(null);
@@ -230,6 +231,9 @@ const HostBookingPage = () => {
                
             }
             
+
+            {/* Footer */}
+            <Footer />
         </div>
     );
 };

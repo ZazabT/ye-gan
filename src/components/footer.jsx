@@ -2,7 +2,7 @@ import Logo from '../assets/logo.png';
 
 const Footer = () => {
   return (
-    <footer className="bg-white border border-gray-200 shadow-2xl mt-10">
+    <footer className="bg-white border border-gray-200  border-opacity-50 rounded mt-40 hover:bg-gray-50 hover:scale-95 hover:shadow-xl transition-all duration-300 ease-in-out">
       <div className="container px-6 py-5 mx-auto">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-y-10 lg:grid-cols-4">
           <div className="sm:col-span-2">

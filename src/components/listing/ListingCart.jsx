@@ -12,7 +12,6 @@ const ListingCart = ({ listing, navigateToDetails }) => {
   const location = `${listing.location.city}, ${listing.location.region}, ${listing.location.country}`;
   const backEndUrl = 'http://localhost:8000';
   const imageUrl = mainImage ? `${backEndUrl}/${mainImage.image_url}` : 'https://via.placeholder.com/150';
-  console.log(imageUrl);
   // Date formatting
   const formatDateRange = (startDate, endDate) => {
     const options = { month: 'short', day: 'numeric' };

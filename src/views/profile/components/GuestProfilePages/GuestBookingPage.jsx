@@ -4,6 +4,7 @@ import guestProfileStore from '../../../../stores/GuestProfile';
 import bookingStore from '../../../../stores/BookingStore';
 import { useNavigate } from 'react-router-dom';
 import GuestNavBar from '../GuestNavBar';
+import Footer from '../../../../components/footer';
 
 const GuestBookingPage = () => {
     const { getGuestProfile, guestProfile, loading: guestProfileLoading, error: guestProfileError } = guestProfileStore();
@@ -29,8 +30,8 @@ const GuestBookingPage = () => {
             if (user && token) {
                 const userId = user.id;
                 try {
-                    await getGuestProfile(userId, token);
                     await getAllMyBookings(guestProfile.id, token);
+                    await getGuestProfile(userId, token);
                 } catch (error) {
                     console.error("Failed to fetch host profile:", error);
                 }
@@ -61,6 +62,21 @@ const GuestBookingPage = () => {
         <div className="min-h-screen bg-gray-50">
             {/* Navbar */}
             <GuestNavBar guestProfile={guestProfile} navLinks={navLinks} />
+
+
+            <div className="px-6 py-6">
+            <h1 className="text-3xl font-bold text-gray-800">Manage Your Reservations</h1>
+            <p className="mt-4 text-lg text-gray-700">
+                Welcome to your Guest Reservation Page! This is your central hub to manage all your property bookings with ease. 
+                Keep track of your reservation details, confirm bookings, and stay informed about payment statuses. 
+                We strive to provide you with a seamless and enjoyable experience throughout your stay.
+            </p>
+            <p className="mt-1 text-black" style={{ fontWeight: '800' }}>
+                You currently have <span className="font-semibold text-gray-800">{numberOfBookings}</span> reservations awaiting confirmation. 
+                Review your bookings and stay up to date to make your travel experience as smooth as possible.
+            </p>
+        </div>
+
 
             {/* Main Content */}
             <div className="px-6 py-8 container mx-auto">
@@ -134,6 +150,9 @@ const GuestBookingPage = () => {
                     </div>
                 )}
             </div>
+
+            {/* Footer */}
+            <Footer/>
         </div>
     );
 };

@@ -7,6 +7,7 @@ import HostListingCard from './components/HostListingCard';
 import HostBookingCard from './components/HostBookingCard';
 import HostTodayCheckinCard from './components/HostTodayCheckinCard';
 import HostNavBar from './components/HostNavBar';
+import Footer from '../../components/footer';
 
 const HostProfile = () => {
     const { getHostProfile, hostProfile, loading: hostProfileLoading, error: hostProfileError } = hostProfileStore();
@@ -20,6 +21,7 @@ const HostProfile = () => {
         { path: '/host-profile-listings', label: 'Listings' },
         { path: '/host-profile-bookings', label: 'Bookings' },
         { path: `/host/messages/${hostProfile?.id}`, label: 'Messages' },
+        { path: '/host/Profile', label: 'Profile' },
     ];
 
     const myListings = hostProfile?.listings;
@@ -46,6 +48,7 @@ const HostProfile = () => {
                 await getTodaysCheckins(hostProfile.id, token);
                 await getHostProfile(user.id, token);
                 await getMyListingBooking(hostProfile.id, token);
+                
             } catch (error) {
                 console.error("Failed to fetch host profile:", error);
             }
@@ -95,28 +98,38 @@ const HostProfile = () => {
                 <div className="w-full">
                     {activeTab === 0 && (
                         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
-                            {
-                                memoizedTodaysCheckins?.map(checkin => (
+                            {memoizedTodaysCheckins?.length > 0 ? (
+                                memoizedTodaysCheckins.map(checkin => (
                                     <HostTodayCheckinCard key={checkin.id} booking={checkin} />
                                 ))
-                            }
+                            ) : (
+                                <div className='text-bold text-xl'>No checkins for today</div>
+                            )}
                         </div>
                     )}
                     {activeTab === 1 && (
                         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
-                            {currentHostingLists?.map(listing => (
-                                <HostListingCard key={listing.id} listing={listing} />
-                            ))}
+                            {currentHostingLists?.length > 0 ? (
+                                currentHostingLists.map(listing => (
+                                    <HostListingCard key={listing.id} listing={listing} />
+                                ))
+                            ) : (
+                                <div className='text-bold text-xl'>No listings available</div>
+                            )}
                         </div>
                     )}
                     {activeTab === 2 && (
                         <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-6">
-                            {acceptedBookings?.map(booking => (
-                                <HostBookingCard key={booking.id} booking={booking} />
-                            ))}
+                            {acceptedBookings?.length > 0 ? (
+                                acceptedBookings.map(booking => (
+                                    <HostBookingCard key={booking.id} booking={booking} />
+                                ))
+                            ) : (
+                                <div>No bookings accepted</div>
+                            )}
                         </div>
                     )}
-                    {activeTab === 3 && (
+                     {activeTab === 3 && (
                         <div className="p-6 bg-gray-50 rounded-lg shadow-sm">
                             <h2 className="text-xl font-semibold mb-3">Messages</h2>
                             <p className="text-gray-600">Your messages will appear here...</p>
@@ -129,7 +142,12 @@ const HostProfile = () => {
                         </div>
                     )}
                 </div>
+
             </div>
+
+            {/* Footer */}
+
+            <Footer />
         </div>
     );
 };

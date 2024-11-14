@@ -47,9 +47,8 @@ const geustProfileStore = create((set) => ({
             set({ loading: true, error: null });
         
             // Try to get guest profile
-            console.log("00000000");
+           
             try {
-                console.log("!!!!!!!!!!!!!!!");
                 console.log('Fetching guest profile for ID:', id);
                 const response = await axios.get(`http://localhost:8000/api/guest/profile/${id}`, {
                     headers: {

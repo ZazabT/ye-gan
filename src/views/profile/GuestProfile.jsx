@@ -5,7 +5,7 @@ import bookingStore from '../../stores/BookingStore';
 import { useNavigate } from 'react-router-dom';
 import GuestBookingCard from './components/GuestBookingCard';
 import  GuestNavBar from './components/GuestNavBar';
-import { gu } from 'date-fns/locale';
+import Footer from '../../components/footer';
 
 const GuestProfile = () => {
     const { getGuestProfile, guestProfile, loading: guestProfileLoading, error: guestProfileError } = guestProfileStore();
@@ -18,7 +18,7 @@ const GuestProfile = () => {
       { path: '/guest-profile', label: 'My Profile' },
       { path: '/guest-profile-bookings', label: 'Bookings' },
       { path: `/guest/messages/${guestProfile?.id}`, label: 'Messages' },
-      { path: '/guest/reviews', label: 'Reviews' }
+      { path: '/guest/Profile', label: 'Profile' }
     ];
 
     const acceptedBookings = useMemo(() => bookings?.filter(booking => booking.status === 'accepted'), [bookings]);
@@ -28,8 +28,8 @@ const GuestProfile = () => {
         const fetchGuestProfile = async () => {
             if (user && token) {
                 try {
-                    await getGuestProfile(user.id, token);
                     await getAllMyBookings(guestProfile.id, token);
+                    await getGuestProfile(user.id, token);
                 } catch (error) {
                     console.error("Failed to fetch guest profile:", error);
                 }
@@ -101,6 +101,9 @@ const GuestProfile = () => {
                     )}
                 </div>
             </div>
+
+            {/* Footer */}
+            <Footer />
         </div>
     );
 };

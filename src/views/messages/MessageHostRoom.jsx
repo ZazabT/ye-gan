@@ -41,8 +41,9 @@ const MessageRoom = () => {
         const fetchGuestProfile = async () => {
             if (user && token) {
                 try {
-                    await getHostProfile(user.id, token);
                     await usersConversationWith(id, token);
+                    await getHostProfile(user.id, token);
+                    
                 } catch (error) {
                     console.error("Failed to fetch guest profile:", error);
                 }
@@ -75,7 +76,7 @@ useEffect(() => {
         }
     }, [messages]); // This will trigger whenever messages array changes
 
-    if (hostProfileLoading) {
+    if (hostProfileLoading || conversationLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
                 <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
@@ -218,7 +219,7 @@ useEffect(() => {
                             <div className="flex w-full items-center space-x-2">
                                 {/* Input Field */}
                                 <Input
-                                    className="flex-grow border-2 border-indigo-500 rounded-lg px-4 py-2 text-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                    className="flex-grow border-2 border-indigo-500 rounded-lg px-4 py-2 text-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 active:scale-95"
                                     placeholder="Type your message..."
                                     value={messageText}
                                     onChange={(e) => setMessageText(e.target.value)}
@@ -232,7 +233,7 @@ useEffect(() => {
                                 {/* Send Button */}
                                 <Button
                                     onClick={handleSendMessage}
-                                    className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-2 px-4 text-sm flex items-center space-x-2 transition-all duration-300 transform active:scale-95"
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-2 px-4 text-sm flex items-center space-x-2 transition-all duration-300 transform active:scale-105"
                                     disabled={sending || !messageText.trim()}
                                 >
                                     {/* Icon and Text */}

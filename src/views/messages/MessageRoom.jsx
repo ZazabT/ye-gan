@@ -39,8 +39,8 @@ const MessageRoom = () => {
         const fetchGuestProfile = async () => {
             if (user && token) {
                 try {
-                    await getGuestProfile(user.id, token);
                     await usersConversationWith(id, token);
+                    await getGuestProfile(user.id, token);  
                 } catch (error) {
                     console.error("Failed to fetch guest profile:", error);
                 }
@@ -237,7 +237,7 @@ useEffect(() => {
                                 {/* Send Button */}
                                 <Button
                                     onClick={handleSendMessage}
-                                    className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-2 px-4 text-sm flex items-center space-x-2 transition-all duration-300"
+                                    className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-2 px-4 text-sm flex items-center space-x-2 transition-all duration-300 active:scale-105"
                                     disabled={sending || !messageText.trim()}
                                 >
                                     {/* Icon and Text */}
