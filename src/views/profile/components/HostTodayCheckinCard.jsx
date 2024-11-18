@@ -33,7 +33,7 @@ const HostTodayCheckinCard = ({ booking }) => {
     const daysLeft = calculateDaysLeft(booking.checkin_date);
 
     return (
-        <a href="javascript:void(0)">
+        <a href="#" onClick={(e) => e.preventDefault()}>
             <div className="relative flex flex-col bg-white max-w-sm w-full h-auto transition-transform transform hover:scale-95 border border-gray-100 rounded-lg border-opacity-70">
                 <div className="relative h-48 overflow-hidden text-white rounded-md">
                     <img src={image} alt="Property" className="object-cover w-full h-full opacity-90" />

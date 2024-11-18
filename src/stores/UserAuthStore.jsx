@@ -18,6 +18,7 @@ const userAuthStore = create((set) => ({
                 localStorage.setItem('token', response.data.access_token);
                 localStorage.setItem('user', JSON.stringify(response.data.user)); // Save user data in localStorage
                 set({ user: response.data.user, token: response.data.access_token, isAuthenticated: true });
+                console.log('User logged in successfully. user' , response.data.user);
             }
         } catch (error) {
             set({ error: error.response.data.message });
@@ -95,6 +96,7 @@ const userAuthStore = create((set) => ({
                     loading: false, 
                     isAuthenticated: true
                 });
+                
             } catch (error) {
                 set({ error: error.response.data.message });
                 localStorage.removeItem('token');

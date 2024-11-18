@@ -14,8 +14,8 @@ const HostListingPage = () => {
     const [notificationVisible, setNotificationVisible] = useState(false); 
     const [notificationType, setNotificationType] = useState(''); // 'success' or 'error'
     const [notificationMessage, setNotificationMessage] = useState('');
-    const {deleteListing , listing, getAllListing , updateListing , getListing , error: listingError , loading: listingLoading } = listingStore();
-    const {getAllLocations , locations } = locationStore();
+    const {deleteListing , listing, formData , setFormData,updateListing , getListing , error: listingError , loading: listingLoading } = listingStore();
+    const {getAllLocations , locations ,loading: locationLoading} = locationStore();
     const { token, user } = userAuthStore();
     const navigate = useNavigate();
     const [dropdownVisible, setDropdownVisible] = useState(null);
@@ -42,10 +42,10 @@ const HostListingPage = () => {
         try {
             if (action === 'update') {
                 console.log('Update ' + listingId);
-                await getListing(listingId, token);
-                await getAllLocations();
-                setShowModal(true)
-            }
+                await getListing(listingId, token);  // Fetching the listing
+                await getAllLocations();  // Fetching all locations
+                setShowModal(true);  // Opening modal
+            }            
             if (action === 'delete') {
                 setSelectedListingId(listingId);
                 setIsModalVisible(true);  // Show modal
@@ -54,6 +54,34 @@ const HostListingPage = () => {
             console.error('Error handling booking action:', error);
         }
         setDropdownVisible(null);
+    };
+
+
+
+    // Handle image change and update the formData state with the selected images
+    const handleImageChange = (event) => {
+        const files = event.target.files;
+        
+        // Convert FileList to an array to work with it easily
+        const imageArray = Array.from(files);
+        
+        // Update formData with selected images
+        setFormData({ ...formData, images: imageArray });
+    };
+  
+    const handleSaveChanges = async (id) => {
+
+        console.log(formData);
+        try {
+            await updateListing(id, formData , token);
+            showNotification('success', 'Listing updated successfully!');
+            await getHostProfile(user.id, token);
+        } catch (error) {
+            console.error('Error updating listing:', error);
+            showNotification('error', error.message);
+        } finally {
+            setShowModal(false);
+        }
     };
 
 
@@ -102,7 +130,10 @@ const HostListingPage = () => {
         const fetchHostProfile = async () => {
             if (user && token) {
                 const userId = user.id;
-                if (userId && user.isHomeOwner) {
+                console.log('User :' , user);
+                console.log('User ID:', userId  , 'Is Home Owner:', user.isHomeOwner);
+                console.log('Token:', token); 
+                if (userId) {
                     try {
                         await getHostProfile(userId, token);
                     } catch (error) {
@@ -174,132 +205,239 @@ const HostListingPage = () => {
             )}
 
             
-    {/* Update Modal */}
-{showModal ? (
-  <>
-    <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none ">
-      <div className="relative w-auto my-10 mx-auto max-w-7xl pt-10 "> 
-        {/* Content */}
-        <div className="border-0 rounded-lg shadow-lg relative bg-white flex flex-col w-full outline-none focus:outline-none my-10">
-          {/* Header */}
-          <div className="flex items-start justify-between pt-12 pb-8 px-8 border-b border-solid border-blueGray-200 rounded-t">
-            <h3 className="text-3xl font-semibold">{listing?.title}</h3>
-            <button
-              className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
-              onClick={() => setShowModal(false)}
-            >
-              <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">×</span>
-            </button>
-          </div>
-          {/* Body */}
-          <div className="relative p-12 flex-auto"> {/* Added more padding */}
-            {/* Title */}
-            <input
-              type="text"
-              placeholder="Enter your property title (e.g., Cozy Urban Retreat)"
-              name="title"
-              className="mt-4 w-full border border-gray-300 rounded p-4 focus:outline-none focus:ring-2 focus:ring-black transition"
-            />
-            {/* Description */}
-            <textarea
-              placeholder="Describe your property: Experience the perfect blend of comfort and luxury..."
-              name="description"
-              className="mt-4 border border-gray-400 w-full rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black transition"
-              rows={10} 
-            />
-            {/* Images */}
-            <input
-              type="file"
-              name="images"
-              accept="image/*"
-              multiple
-              className="mt-4 w-full border border-gray-300 rounded p-4 focus:outline-none focus:ring-2 focus:ring-black transition"
-            />
-            {/* Number of beds, baths, etc. */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-              {/* Input fields for Beds, Bedrooms, Bathrooms, Max Guests */}
-              <div className="flex flex-col">
-                <label htmlFor="beds" className="text-lg font-medium text-gray-700 mb-2">Number of Beds</label>
-                <input type="number" name="beds" placeholder="0" className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200" min="0" />
-              </div>
-              {/* Other similar input fields... */}
-            </div>
-            {/* Location */}
-            <label htmlFor="location_id" className="text-lg font-medium text-gray-700 mt-8">
-              Location
-            </label>
-            <select
-              id="location_id"
-              name="location_id"
-              className="w-full border border-gray-300 rounded p-4 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
-            >
-              <option value="">Select Location</option>
-              {locations.map((location, index) => (
-                <option key={index} value={location.id}>
-                  {`${location.country} - ${location.region} - ${location.city}`}
-                </option>
-              ))}
-            </select>
-            {/* Start and End Date */}
-            <div className="mt-8">
-              <label htmlFor="start_date" className="block text-lg font-semibold text-gray-700 mb-3">
-                Start Date
-              </label>
-              <input
-                type="date"
-                id="start_date"
-                name="start_date"
-                className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition duration-300 ease-in-out hover:border-blue-400"
-              />
-            </div>
-            <div className="mt-8">
-              <label htmlFor="end_date" className="block text-lg font-semibold text-gray-700 mb-3">
-                End Date
-              </label>
-              <input
-                type="date"
-                id="end_date"
-                name="end_date"
-                className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition duration-300 ease-in-out hover:border-blue-400"
-              />
-            </div>
-            {/* Home Rules */}
-            <label htmlFor="homeRules" className="text-lg font-medium text-gray-700 mt-8">
-              Home Rules Description
-            </label>
-            <textarea
-              id="rules"
-              name="rules"
-              placeholder="Add a brief description of the rules you want your guests to follow."
-              className="w-full border border-gray-300 rounded p-4 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
-              rows={6} 
-            />
-          </div>
-          {/* Footer */}
-          <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-            <button
-              className="text-red-500 background-transparent font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-              type="button"
-              onClick={() => setShowModal(false)}
-            >
-              Close
-            </button>
-            <button
-              className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-              type="button"
-              onClick={() => setShowModal(false)}
-            >
-              Save Changes
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="opacity-50 fixed inset-0 z-40 bg-black"></div>
-  </>
-) : null}
+                      {/* Update Modal */}
+                      {showModal ? (
+                        <>
+                            <div className="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none transition-opacity duration-300 ease-in-out opacity-100 ">
+                            <div className="relative w-full mx-auto max-w-7xl pt-10 transition-transform transform scale-100 md:scale-95">
+                                
+                                {/* Modal Content */}
+                                <div className="border-0 rounded-lg shadow-lg relative bg-white flex flex-col w-full outline-none focus:outline-none my-10">
 
-                        
+                                {/* Modal Header with Close Button */}
+                                <div className="flex justify-between items-center pt-6 pb-4 px-8 border-b border-solid border-blueGray-200 rounded-t">
+                                    <h3 className="text-3xl font-semibold">{formData?.title}</h3>
+                                    <button
+                                    className="text-2xl font-semibold text-black bg-transparent border-0 outline-none focus:outline-none"
+                                    onClick={() => setShowModal(false)}
+                                    >
+                                    <span className="text-black opacity-75">×</span>
+                                    </button>
+                                </div>
+                                
+                                {/* Modal Body */}
+                                <div className="relative p-12 flex-auto">
+
+                                    {/* Loading Indicator */}
+                                    {listingLoading || locationLoading ? (
+                                    <div className="flex justify-center items-center min-h-screen">
+                                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+                                    </div>
+                                    ) : (
+                                    <>
+                                        {/* Title */}
+                                        <label className="block text-gray-700 text-sm font-bold m-2">Property Title</label>
+                                        <input
+                                        type="text"
+                                        value={formData?.title}
+                                        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                                        placeholder="Enter your property title (e.g., Cozy Urban Retreat)"
+                                        name="title"
+                                        className="mt-4 w-full border border-gray-300 rounded p-4 focus:outline-none focus:ring-2 focus:ring-black transition"
+                                        required
+                                        />
+
+                                        {/* Description */}
+                                        <label className="block text-gray-700 text-sm font-bold m-2">Property Description</label>
+                                        <textarea
+                                        placeholder="Describe your property..."
+                                        value={formData?.description}
+                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        name="description"
+                                        className="mt-4 border border-gray-400 w-full rounded-md px-4 py-3 focus:outline-none focus:ring-2 focus:ring-black transition"
+                                        rows={10}
+                                        required
+                                        />
+
+                                        {/* Image Upload and Preview */}
+                                        <label className="block text-gray-700 text-sm font-bold m-2">Property Images</label>
+                                        <input
+                                        type="file"
+                                        name="images"
+                                        accept="image/*"
+                                        multiple
+                                        className="mt-4 w-full border border-gray-300 rounded p-4 focus:outline-none focus:ring-2 focus:ring-black transition"
+                                        onChange={handleImageChange}
+                                        />
+                                        
+                                        {/* Image Previews */}
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                                        {formData.images && formData.images.length > 0 ? (
+                                            <>
+                                            <div className="col-span-1 md:col-span-1 mb-4">
+                                                <img
+                                                src={`${backEndUrl}/${formData.images[0].image_url}`}
+                                                alt="Preview 1"
+                                                className="w-full h-auto rounded-lg shadow-lg"
+                                                style={{ height: '300px', objectFit: 'cover' }}
+                                                />
+                                            </div>
+                                            {formData.images.slice(1).map((image, index) => (
+                                                <div key={index} className="col-span-1 mb-4">
+                                                <img
+                                                    src={`${backEndUrl}/${image.image_url}`}
+                                                    alt={`Preview ${index + 2}`}
+                                                    className="w-full h-auto rounded-md shadow-md"
+                                                    style={{ height: '150px', objectFit: 'cover' }}
+                                                />
+                                                </div>
+                                            ))}
+                                            </>
+                                        ) : (
+                                            <div className="col-span-3 text-center text-gray-500">No images uploaded</div>
+                                        )}
+                                        </div>
+
+                                        {/* Number of Beds, Baths, etc. */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+                                        {/* Input fields for Beds, Bedrooms, Bathrooms, Max Guests */}
+                                        <div className="flex flex-col ">
+                                            <label className="block text-gray-700 text-sm font-bold m-2">Number of Beds</label>
+                                            <input
+                                            type="number"
+                                            name="beds"
+                                            placeholder="0"
+                                            value={formData?.beds}
+                                            onChange={(e) => setFormData({ ...formData, beds: e.target.value })}
+                                            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                                            min="0"
+                                            />  
+                                        </div>
+                                      <div className="flex flex-col ">
+                                      <label className="block text-gray-700 text-sm font-bold m-2">Number of bedrooms</label>
+                                            <input
+                                            type="number"
+                                            name="bedrooms"
+                                            placeholder="0"
+                                            value={formData?.bedrooms}
+                                            onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
+                                            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                                            min="0"
+                                            />
+                                      </div>
+
+                                      <div className="flex flex-col ">
+                                      <label className="block text-gray-700 text-sm font-bold m-2">Number of Bathrooms</label>
+                                            <input
+                                            type="number"
+                                            name="bathrooms"
+                                            placeholder="0"
+                                            value={formData?.bathrooms}
+                                            onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
+                                            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                                            min="0"
+                                            />
+                                      </div>
+
+
+                                      <div className="flex flex-col ">
+                                      <label className="block text-gray-700 text-sm font-bold m-2">Number of Guest</label>
+                                            <input
+                                            type="number"
+                                            name="max_guest"
+                                            placeholder="0"
+                                            value={formData?.max_guest}
+                                            onChange={(e) => setFormData({ ...formData, max_guest: e.target.value })}
+                                            className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
+                                            min="0"
+                                            />
+                                      </div>
+                                        
+                                </div>
+
+                                        {/* Location */}
+                                        <label className="block text-gray-700 text-sm font-bold m-2">Location</label>
+                                        <select
+                                        value={formData?.location_id}
+                                        onChange={(e) => setFormData({ ...formData, location_id: e.target.value })}
+                                        id="location_id"
+                                        name="location_id"
+                                        className="w-full border border-gray-300 rounded p-4 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
+                                        >
+                                        <option value="">Select Location</option>
+                                        {locations.map((location, index) => (
+                                            <option key={index} value={location.id}>
+                                            {`${location.country} - ${location.region} - ${location.city}`}
+                                            </option>
+                                        ))}
+                                        </select>
+
+                                        {/* Start and End Date */}
+                                        <div className="mt-8">
+                                        <label className="block text-gray-700 text-sm font-bold m-2">Start Date</label>
+                                        <input
+                                            value={formData?.start_date}
+                                            onChange={(e) => setFormData({ ...formData, start_date: e.target.value })}
+                                            type="date"
+                                            id="start_date"
+                                            name="start_date"
+                                            className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition duration-300 ease-in-out hover:border-blue-400"
+                                        />
+                                        </div>
+
+                                        {/* End Date */}
+                                        <div className="mt-8">
+                                        <label className="block text-gray-700 text-sm font-bold m-2">End Date</label>
+                                        <input
+                                            value={formData?.end_date}
+                                            onChange={(e) => setFormData({ ...formData, end_date: e.target.value })}
+                                            type="date"
+                                            id="end_date"
+                                            name="end_date"
+                                            className="w-full border border-gray-300 rounded-lg p-3 text-gray-700 shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-400 transition duration-300 ease-in-out hover:border-blue-400"
+                                        />
+                                        </div>
+
+                                        {/* Home Rules */}
+                                        <label className="block text-gray-700 text-sm font-bold m-2">Home Rules and Regulations</label>
+                                        <textarea
+                                        value={formData?.rules}
+                                        onChange={(e) => setFormData({ ...formData, rules: e.target.value })}
+                                        id="rules"
+                                        name="rules"
+                                        placeholder="Add a brief description of the rules you want your guests to follow."
+                                        className="w-full border border-gray-300 rounded p-4 mt-2 focus:outline-none focus:ring-2 focus:ring-black transition"
+                                        rows={6}
+                                        />
+                                    </>
+                                    )}
+
+                                </div>
+
+                                {/* Footer */}
+                                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                                    <button
+                                    className="text-red-500 font-bold uppercase px-6 py-3 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                    type="button"
+                                    onClick={() => setShowModal(false)}
+                                    >
+                                    Close
+                                    </button>
+                                    <button
+                                    className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                    type="button"
+                                    onClick={() => handleSaveChanges(listing?.id)}
+                                    >
+                                    Save Changes
+                                    </button>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div className="opacity-50 fixed inset-0 bg-black z-40"></div>
+                        </>
+                        ) : null}
+
 
 
             <div className="px-6 py-6">

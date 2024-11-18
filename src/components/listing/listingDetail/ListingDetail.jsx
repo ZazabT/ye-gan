@@ -19,11 +19,10 @@ const ListingDetail = () => {
   const backEndUrl = 'http://localhost:8000';
   const location = `${listing?.location?.city}, ${listing?.location?.region} ${listing?.location?.country}`;
   const name = `${listing?.host?.user?.firstName} ${listing?.host?.user?.lastName}`;
-  // const profilePicture = listing?.host?.profilePicture;
-  // const email = listing?.host?.user?.email;
+  const profilePicture = listing?.host?.profilePicture;
+  const email = listing?.host?.user?.email;
   const navigate = useNavigate();
-
-
+  console.log(listing);
 
   const { pathname } = useLocation();
 

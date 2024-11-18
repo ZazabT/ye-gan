@@ -40,10 +40,6 @@ const HostProfile = () => {
                 navigate('/login');
                 return;
             }
-            if (!user.isHomeOwner) {
-                navigate('/');
-                return;
-            }
             try {
                 await getTodaysCheckins(hostProfile.id, token);
                 await getHostProfile(user.id, token);

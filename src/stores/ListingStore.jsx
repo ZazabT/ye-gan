@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 import { create } from "zustand";
 
 const listingStore = create((set) => ({
@@ -10,6 +11,8 @@ const listingStore = create((set) => ({
     error: null,
     success: null,
     loading: false,
+    backendUrl: 'http://localhost:8000',
+
     formData: {
         categories: [],
         title: '',
@@ -85,7 +88,56 @@ const listingStore = create((set) => ({
     },
 
     // Update listing
-    
+    updateListing: async (id, formData , token) => {
+          // start loading
+        set({ loading: true, error: null, success: null }); // reset error and success
+
+        // try to update listing with id
+        try{
+            // Log parameters before the API call
+            console.log('Preparing to send put request with data Listing id:', {
+                id,
+                formData,
+                token
+            });
+            const response = await axios.put(`http://localhost:8000/api/listing/${id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            // Log the API response
+            console.log('API response:', response);
+
+            // check if the API call was successful
+            if (response.data.status === 200) {
+                set({ success: response.data.message });
+                return true;
+            } else {
+                throw new Error('Failed to update listing.');
+            }
+
+        }catch (error) {
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                set({ error: error.response.data.error }); 
+                throw new Error(error.response.data.error); 
+            } else if (error.request) {
+                console.error('Error request:', error.request);
+                set({ error: 'No response received from the server.' }); 
+                throw new Error('No response received from the server.');
+            }
+            else {
+                console.error('Error message:', error.message);
+                set({ error: 'An error occurred while updating the listing.' }); 
+                throw new Error('An error occurred while updating the listing.');
+        }
+        }finally {
+            // stop loading
+            set({ loading: false });
+        }
+
+    },
 
 
     // Delete listing
@@ -151,12 +203,52 @@ const listingStore = create((set) => ({
     },
 
     // Get a specific listing
-    getListing: async (id) => {
+    getListing: async (id ) => {
+
         set({ loading: true, error: null }); // Reset error
         try {
+            
+            // Log parameters before the API call
+            console.log('Preparing to send get request with data Listing id:', {
+                id,
+            });
+
             const response = await axios.get(`http://localhost:8000/api/listing/${id}`);
             if (response.data.status === 200) {
+                // Set the listing data
                 set({ listing: response.data.listing });
+
+                // Log the API response
+                console.log('API response:', response);
+
+            // Define a function to format the date
+            const  formatDate = (date) => {
+                    const d = new Date(date);
+                    return d.toISOString().split('T')[0]; 
+                };
+
+            // Use the store's formatDate method
+            const startDate = formatDate(response.data.listing.start_date);
+            const endDate = formatDate(response.data.listing.end_date);
+                // Populate the formData state with the listing data
+                set({
+                    formData: {
+                        categories: response.data.listing.categories || [],
+                        title: response.data.listing.title || '',
+                        description: response.data.listing.description || '',
+                        images: response.data.listing.item_images|| [],
+                        beds: response.data.listing.beds || '',
+                        max_guest: response.data.listing.max_guest || '',
+                        bedrooms: response.data.listing.bedrooms || '',
+                        bathrooms: response.data.listing.bathrooms || '',
+                        location_id: response.data.listing.location_id || '',
+                        rules: response.data.listing.rules || '',
+                        price_per_night: response.data.listing.price_per_night || '',
+                        start_date: startDate || '',
+                        end_date: endDate || '',
+
+                    },
+                });
             }
         } catch (error) {
             set({ error: error.response?.data?.error || 'Failed to fetch listing.' });
@@ -164,6 +256,7 @@ const listingStore = create((set) => ({
             set({ loading: false });
         }
     },
+    
 
     // get all listing for spasific Host
     getMyListing: async (id) => {
