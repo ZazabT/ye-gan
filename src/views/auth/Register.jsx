@@ -152,7 +152,7 @@ const Register = () => {
                     <span className="loader border-purple-500 border-2 border-t-2 w-5 h-5 rounded-full animate-spin"></span>
                     <span></span>
                   </div>
-                ) : (s
+                ) : (
                   "Register"
                 )}
               </button>
