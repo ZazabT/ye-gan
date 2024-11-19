@@ -52,7 +52,7 @@ const Register = () => {
             <h1 className="text-white text-4xl font-bold mb-3">Welcome</h1>
             <p className="text-white text-lg text-center">
               Discover the best experiences and start your journey with us today.{' '}
-              <a href="#" className="text-yellow-300 font-semibold underline">
+              <a href="/learn-more" className="text-yellow-300 font-semibold underline">
                 Learn more
               </a>
             </p>

@@ -16,6 +16,7 @@ import GuestBookingPage from './views/profile/components/GuestProfilePages/Guest
 import MessageRoom from './views/messages/MessageRoom';
 import MessageHostRoom from './views/messages/MessageHostRoom';
 import GuestBookingDetailsPage from './views/profile/components/GuestProfilePages/GuestProfileDetailPages/GuestBookingDetailsPage'
+import LearnMore from './LeasrnMore'
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
        <Route path='/guest/messages/:id' element= {<MessageRoom/>} />
        <Route path='/host/messages/:id' element= {<MessageHostRoom/>} />
        <Route path='/guest-profile-bookings' element = {<GuestBookingPage/>}/>
+       <Route path='/learn-more' element= {<LearnMore/>} />
     </Routes>
   )
 }
