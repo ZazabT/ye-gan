@@ -17,9 +17,9 @@ const Login = () => {
     }
 
     try {
-      await login(email, password);
+     const succsus= await login(email, password);
 
-      if (!error) {
+      if (succsus) {
         navigate("/");
       }
     } catch (err) {
@@ -35,6 +35,11 @@ const Login = () => {
         <div className="flex flex-col lg:flex-row w-10/12 lg:w-8/12 bg-white rounded-xl mx-auto shadow-xl overflow-hidden">
           {/* Left Side - Image */}
           <div className="w-full lg:w-1/2 py-16 px-12">
+          {error && (
+                <p className="text-red-500 text-sm mt-4 bg-red-100 p-2 my-4  text-center">
+                  {error}
+                </p>
+              )}
             <h2 className="text-3xl font-bold mb-4 text-gray-800">Login</h2>
             <p className="mb-6 text-gray-600">
               Sign in to your account to access exclusive features.
@@ -92,11 +97,6 @@ const Login = () => {
                   "Login"
                 )}
               </button>
-              {error && (
-                <p className="text-red-500 text-sm mt-4 bg-red-100 p-2 rounded-md text-center">
-                  {error}
-                </p>
-              )}
             </form>
             <div className="mt-4 text-center">
               <a href="/register" className="text-blue-600 hover:underline">

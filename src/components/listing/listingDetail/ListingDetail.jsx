@@ -74,7 +74,7 @@ const ListingDetail = () => {
         {/* Main Image and Thumbnail Grid */}
         <div className="flex gap-2">
           {/* Main Image */}
-          <div className={`relative ${imageHeight} w-2/3 overflow-hidden`}> 
+          <div className={`relative ${imageHeight} w-2/4 overflow-hidden`}> 
             {listing.item_images.slice(0, 1).map((image, index) => (
               <img
                 key={index}
@@ -94,7 +94,7 @@ const ListingDetail = () => {
 
 
           {/* Thumbnail Images */}
-          <div className={`grid grid-cols-2 gap-2 ${imageHeight}`}>
+          <div className={`grid grid-cols-2 gap-2 ${imageHeight}  w-2/4`}>
             {listing.item_images.slice(1, 5).map((image, index) => (
               <div key={index} className="p-1">
                 <img
@@ -105,6 +105,7 @@ const ListingDetail = () => {
               </div>
             ))}
           </div>
+          
         </div>
       </div>
        

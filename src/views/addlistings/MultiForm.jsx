@@ -237,7 +237,7 @@ function MultiForm() {
                                     const isSelected = formData.categories.includes(category.id);
                                     return (
                                         <div
-                                            key={category.id} // Use category.id instead of index for better key management
+                                            key={category.id} 
                                             onClick={() => {
                                                 const newCategories = isSelected 
                                                     ? formData.categories.filter(catId => catId !== category.id) 

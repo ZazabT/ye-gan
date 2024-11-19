@@ -18,10 +18,10 @@ const userAuthStore = create((set) => ({
                 localStorage.setItem('token', response.data.access_token);
                 localStorage.setItem('user', JSON.stringify(response.data.user)); // Save user data in localStorage
                 set({ user: response.data.user, token: response.data.access_token, isAuthenticated: true });
-                console.log('User logged in successfully. user' , response.data.user);
+                return true;
             }
         } catch (error) {
-            set({ error: error.response.data.message });
+            set({ error: error.response.data.error });
         } finally {
             set({ loading: false });
         }
@@ -30,7 +30,7 @@ const userAuthStore = create((set) => ({
     // Register
     register: async (firstName, lastName, email, password, password_confirmation, age) => {
         set({ loading: true });
-
+    
         try {
             const response = await axios.post('http://localhost:8000/api/register', {
                 firstName,
@@ -40,19 +40,22 @@ const userAuthStore = create((set) => ({
                 password_confirmation,
                 age,
             });
-
+    
             if (response.data.status === 201) {
                 localStorage.setItem('token', response.data.access_token);
-                localStorage.setItem('user', JSON.stringify(response.data.user)); // Save user data in localStorage
+                localStorage.setItem('user', JSON.stringify(response.data.user));
                 set({ user: response.data.user, token: response.data.access_token, isAuthenticated: true });
+                return true; 
             }
-
+    
         } catch (error) {
-            set({ error: error.response.data.message });
+            set({ error: error.response.data.error});
+            return false; // Registration failed
         } finally {
             set({ loading: false });
         }
     },
+    
 
     // Logout
     logout: async () => {
@@ -74,7 +77,7 @@ const userAuthStore = create((set) => ({
                 set({ token: null, user: null, isAuthenticated: false });
             }
         } catch (error) {
-            set({ error: error.response.data.message });
+            set({ error: error.response.data.error });
         } finally {
             set({ loading: false });
         }
@@ -98,7 +101,7 @@ const userAuthStore = create((set) => ({
                 });
                 
             } catch (error) {
-                set({ error: error.response.data.message });
+                set({ error: error.response.data.error });
                 localStorage.removeItem('token');
                 localStorage.removeItem('user'); // Clear user data if token is invalid
                 set({

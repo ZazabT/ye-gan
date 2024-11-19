@@ -56,6 +56,8 @@ const listingStore = create((set) => ({
     addListing: async (formData) => {
         set({ loading: true, error: null, success: null }); // Reset error and success
         try {
+             // Log the data before making the API request
+        console.log('Preparing to send PUT request with data:', formData);
             const response = await axios.post('http://localhost:8000/api/listings/create', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -88,56 +90,89 @@ const listingStore = create((set) => ({
     },
 
     // Update listing
-    updateListing: async (id, formData , token) => {
-          // start loading
-        set({ loading: true, error: null, success: null }); // reset error and success
+   // Update listing
+updateListing: async (id, formData, token) => {
+    set({ loading: true, error: null, success: null }); // Start loading
 
-        // try to update listing with id
-        try{
-            // Log parameters before the API call
-            console.log('Preparing to send put request with data Listing id:', {
-                id,
-                formData,
-                token
-            });
-            const response = await axios.put(`http://localhost:8000/api/listing/${id}`, formData, {
+    // Destructure formData for easy access
+    const {
+        categories,
+        title,
+        description,
+        images,
+        beds,
+        max_guest,
+        bedrooms,
+        bathrooms,
+        location_id,
+        rules,
+        price_per_night,
+        start_date,
+        end_date,
+    } = formData;
+
+    try {
+        // Prepare the JSON object to send in the PUT request
+        const updatedData = {
+            categories,
+            title,
+            description,
+            images,
+            beds,
+            max_guest,
+            bedrooms,
+            bathrooms,
+            location_id,
+            rules,
+            price_per_night,
+            start_date,
+            end_date,
+        };
+
+        // Log the data before making the API request
+        console.log('Preparing to send PUT request with data:', updatedData);
+
+        // Send the PUT request
+        const response = await axios.put(
+            `http://localhost:8000/api/listing/update/${id}`,
+            updatedData,
+            {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            // Log the API response
-            console.log('API response:', response);
-
-            // check if the API call was successful
-            if (response.data.status === 200) {
-                set({ success: response.data.message });
-                return true;
-            } else {
-                throw new Error('Failed to update listing.');
+                    'Content-Type': 'multipart/form-data', 
+                    'Authorization': `Bearer ${token}`,
+                },
             }
+        );
 
-        }catch (error) {
-            if (error.response) {
-                console.error('Error response:', error.response.data);
-                set({ error: error.response.data.error }); 
-                throw new Error(error.response.data.error); 
-            } else if (error.request) {
-                console.error('Error request:', error.request);
-                set({ error: 'No response received from the server.' }); 
-                throw new Error('No response received from the server.');
-            }
-            else {
-                console.error('Error message:', error.message);
-                set({ error: 'An error occurred while updating the listing.' }); 
-                throw new Error('An error occurred while updating the listing.');
-        }
-        }finally {
-            // stop loading
-            set({ loading: false });
-        }
+        // Log the API response
+        console.log('API response:', response);
 
-    },
+        // Check if the API call was successful
+        if (response.data.status === 200) {
+            set({ success: response.data.message });
+            return true;
+        } else {
+            throw new Error('Failed to update listing.');
+        }
+    } catch (error) {
+        if (error.response) {
+            console.error('Error response:', error.response.data);
+            set({ error: error.response.data.error });
+            throw new Error(error.response.data.error);
+        } else if (error.request) {
+            console.error('Error request:', error.request);
+            set({ error: 'No response received from the server.' });
+            throw new Error('No response received from the server.');
+        } else {
+            console.error('Error message:', error.message);
+            set({ error: 'An error occurred while updating the listing.' });
+            throw new Error('An error occurred while updating the listing.');
+        }
+    } finally {
+        set({ loading: false }); // Stop loading
+    }
+},
+
 
 
     // Delete listing
@@ -151,7 +186,7 @@ const listingStore = create((set) => ({
             console.log('Preparing to send delete request with data Listing id:', {
                 id,
             });
-            const response = await axios.delete(`http://localhost:8000/api/listing/${id}`,{
+            const response = await axios.delete(`http://localhost:8000/api/listing/delete/${id}`,{
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -205,7 +240,7 @@ const listingStore = create((set) => ({
     // Get a specific listing
     getListing: async (id ) => {
 
-        set({ loading: true, error: null }); // Reset error
+        set({ loading: true, error: null }); 
         try {
             
             // Log parameters before the API call
@@ -213,7 +248,7 @@ const listingStore = create((set) => ({
                 id,
             });
 
-            const response = await axios.get(`http://localhost:8000/api/listing/${id}`);
+            const response = await axios.get(`http://localhost:8000/api/listing/getList/${id}`);
             if (response.data.status === 200) {
                 // Set the listing data
                 set({ listing: response.data.listing });

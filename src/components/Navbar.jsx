@@ -144,10 +144,10 @@ const Navbar = () => {
                 {!isAuthenticated && (
                   <>
                     <li className="px-4 py-2 hover:bg-purple-100 cursor-pointer" onClick={handleLogin}>
-                      LogIn
+                      Login
                     </li>
                     <li className="px-4 py-2 hover:bg-purple-100 cursor-pointer" onClick={handleSignin}>
-                      SignUp
+                      Signup
                     </li>
                   </>
                 )}

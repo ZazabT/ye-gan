@@ -38,18 +38,19 @@ const Catagory = () => {
   return (
     <div className="flex items-center justify-between p-4 gap-2 shadow-md rounded-lg max-h-[100px] overflow-hidden ">
       {/* Categories Part */}
-      <div className="relative flex-grow overflow-hidden   ">
+      <div className="relative flex-grow overflow-hidden px-10">
         <div className="flex items-center mb-2">
           <button
             aria-label="Slide Left"
-            className="opacity-75 hover:opacity-100 transition-opacity duration-300 p-2 bg-gray-200 rounded-full shadow hover:shadow-lg"
+            className="opacity-75 hover:opacity-100 transition-opacity duration-300 p-2 bg-gray-200 rounded-full shadow hover:shadow-lg flex justify-center items-center"
             onClick={slideLeft}
           >
             <MdChevronLeft size={30} />
           </button>
+
           <div
             id="slider"
-            className="flex w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide mx-2 p-2"
+            className="flex w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide"
           >
             {catagories?.map((catagory) => (
               <div key={catagory.id} className="inline-block p-2">
@@ -57,9 +58,10 @@ const Catagory = () => {
               </div>
             ))}
           </div>
+
           <button
             aria-label="Slide Right"
-            className="opacity-75 hover:opacity-100 transition-opacity duration-300 p-2 bg-gray-200 rounded-full shadow hover:shadow-lg"
+            className="opacity-75 hover:opacity-100 transition-opacity duration-300 p-2 bg-gray-200 rounded-full shadow hover:shadow-lg flex justify-center items-center"
             onClick={slideRight}
           >
             <MdChevronRight size={30} />

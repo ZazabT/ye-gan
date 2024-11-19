@@ -26,22 +26,23 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const { firstName, lastName, email, password, password_confirmation, age } = formData;
-
-    await register(firstName, lastName, email, password, password_confirmation, age);
-
-    if (!error) {
+  
+    const success = await register(firstName, lastName, email, password, password_confirmation, age);
+  
+    if (success) {
       navigate('/');
     }
   };
+  
 
   return (
     <div
       className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-50 to-purple-50 px-4 sm:px-6 lg:px-8"
     >
-      <div className="container mx-auto">
-        <div className="flex flex-col lg:flex-row w-10/12 lg:w-8/12 bg-white rounded-xl mx-auto shadow-xl overflow-hidden">
+      <div className="container mx-auto max-h-screen">
+        <div className="flex flex-col lg:flex-row w-10/12 lg:w-8/12 bg-white rounded-xl mx-auto shadow-xl overflow-hidden max-h-screen">
           {/* Left Side - Logo */}
           <div
             className="w-full lg:w-1/2 flex flex-col items-center justify-center p-12 bg-no-repeat bg-cover bg-center"
@@ -57,10 +58,20 @@ const Register = () => {
               </a>
             </p>
           </div>
+       
 
           {/* Right Side - Registration Form */}
+          
           <div className="w-full lg:w-1/2 py-16 px-12">
+
+             {/* Error */}
+          {error && (
+                <p className="text-red-500 text-sm mt-4 bg-red-100 p-2  text-center">
+                  {error}
+                </p>
+              )}
             <h2 className="text-3xl font-bold mb-4 text-gray-800">Register</h2>
+            
             <p className="mb-6 text-gray-600">
               Create your account. It’s free and only takes a minute.
             </p>
@@ -156,11 +167,7 @@ const Register = () => {
                   "Register"
                 )}
               </button>
-              {error && (
-                <p className="text-red-500 text-sm mt-4 bg-red-100 p-2 rounded-md">
-                  {error}
-                </p>
-              )}
+             
             </form>
             <div className="mt-4 text-center">
               <a href="/login" className="text-blue-600 hover:underline">
