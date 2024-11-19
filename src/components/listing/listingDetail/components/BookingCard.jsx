@@ -68,7 +68,7 @@ const BookingCard = ({ listing }) => {
 
     // Disable all reserved dates
     return [...allDisabledDates, ...reservedDates];
-  }, [listing, startDateParsed, endDateParsed]);
+  }, [listing, startDateParsed, endDateParsed ]);
 
   const handleGuestIncrement = () => {
     if (guestCount < listing?.max_guest) {
@@ -120,7 +120,7 @@ const BookingCard = ({ listing }) => {
     try {
       await reserve(listing?.id, formattedCheckinDate, formattedCheckoutDate, totalBeforeTaxes , guestCount);
       setNotification({ visible: true, type: 'success', message: `Successfully reserved ${listing?.title} wait till "${listing?.host?.username}" accepts your request`  });
-      setTimeout(() => navigate('/'), 5000);
+      // setTimeout(() => navigate('/'), 5000);
       //clear state
       setGuestCount(1);
       setDateRange([{

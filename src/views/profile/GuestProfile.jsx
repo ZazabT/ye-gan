@@ -15,7 +15,7 @@ const GuestProfile = () => {
     const [activeTab, setActiveTab] = useState(0);
 
     const navLinks = [
-      { path: '/guest-profile', label: 'My Profile' },
+      { path: '/guest-profile', label: 'Yane' },
       { path: '/guest-profile-bookings', label: 'Bookings' },
       { path: `/guest/messages/${guestProfile?.id}`, label: 'Messages' },
       { path: '/guest/Profile', label: 'Profile' }

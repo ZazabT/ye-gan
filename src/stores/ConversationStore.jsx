@@ -1,11 +1,14 @@
 import axios from "axios";
+import { gu } from "date-fns/locale";
 import { create } from "zustand";
 
 
 
-const conversationStore = create((set , get) => ({
+const conversationStore = create((set) => ({
     users: [],
+    host: null,
     messages: [],
+    guest: null,
     error: null,
     loading: false,
 
@@ -77,7 +80,7 @@ const conversationStore = create((set , get) => ({
             })
             console.log("API response:", response);
             if (response.data.status === 200) {
-                set({ messages: response.data.messages });
+                set({ messages: response.data.messages  ,guest : response.data.guest , host : response.data.host});
                 console.log("Messages:", response.data.messages);
                 // console.log('Messages:', get().messages);
                 return true;

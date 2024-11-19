@@ -3,11 +3,10 @@ import { useParams, useNavigate } from 'react-router-dom';
 import messageStore from '../../stores/MessageStore';
 import conversationStore from '../../stores/ConversationStore';
 import userAuthStore from '../../stores/UserAuthStore';
-import HostNavBar from '../profile/components/HostNavBar';
-import wallapaper from '../../assets/wallapaper.jpeg';
 import hostProfileStore from '../../stores/HostProfile';
-import { Input, Button } from "@material-tailwind/react";
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+
 
 
 const MessageRoom = () => {
@@ -17,7 +16,7 @@ const MessageRoom = () => {
     const { token, user } = userAuthStore();
     const { getHostProfile, hostProfile, loading: hostProfileLoading, error: hostProfileError } = hostProfileStore();
     const { sendMessage } = messageStore();
-    const { users, usersConversationWith, getMessageForConversation, loading: conversationLoading, messages } = conversationStore();
+    const { users, usersConversationWith, getMessageForConversation, loading: conversationLoading, messages ,guest } = conversationStore();
     const backEndUrl = 'http://localhost:8000';
     const numberOfContactWith = users?.length;
 
@@ -28,13 +27,23 @@ const MessageRoom = () => {
     // Ref for scrolling to the last message
     const messagesEndRef = useRef(null);
 
-    // Nav links
-    const navLinks = [
-        { path: '/guest-profile', label: 'My Profile' },
-        { path: '/guest-profile-bookings', label: 'Bookings' },
-        { path: hostProfile ? `/guest/messages/${hostProfile.id}` : '', label: 'Messages' },
-        { path: '/guest/reviews', label: 'Reviews' }
-    ].filter(link => link.path);
+
+
+    // Group users by booking_id
+// const groupedByBooking = users.reduce((acc, conversationUser) => {
+//     const bookingId = conversationUser?.conversation?.booking_id;
+
+//     if (bookingId) {
+//         if (!acc[bookingId]) {
+//             acc[bookingId] = {
+//                 title: conversationUser?.conversation?.listing?.title,
+//                 users: [],
+//             };
+//         }
+//         acc[bookingId].users.push(conversationUser);
+//     }
+//     return acc;
+// }, {});
 
     // Fetch user profile and conversations
     useEffect(() => {
@@ -177,76 +186,129 @@ useEffect(() => {
                 </div>
 
                 {/* Messages Section */}
-                <div className="w-full flex flex-col h-full overflow-hidden ">
-                {/* style={{ backgroundImage: `url(${wallapaper})`, backgroundSize: 'cover', backgroundPosition: 'center' }} */}
-                    {selectedConversationId && (
-                       <div className="flex flex-col h-full bg-white p-4 shadow-lg rounded-lg overflow-y-auto">
-  
-                            {/* Display Messages */}
-                            <div className="flex flex-col flex-grow overflow-y-auto">
-                                {messages && messages.length > 0 ? (
-                                    messages.map((message, index) => (
-                                        <div
-                                            key={index}
-                                            className={`flex flex-row ${message.sender_id === user.id ? 'flex-row-reverse' : ''} mx-4 my-2`}
-                                        >
-                                            <div className="flex flex-col">
-                                                {/* Sender's Name */}
-                                                <div className="text-xs text-gray-500">
-                                                    {message.sender_id === user.id ? 'You' : message.sender_name}
-                                                </div>
-                                                {/* Message */}
-                                                <div className={`max-w-lg break-words px-3.5 py-2 rounded-3xl  justify-start items-center ${message.sender_id === user.id ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-gray-200 rounded-tl-none'}`}>
-                                                    {message.message}
-                                                </div>
-
-                                                  {/*Time*/}
-                                                  <div className="justify-end items-center inline-flex mb-2.5 text-xs">   
-                                                  {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                                 </div>
-        
-         
-                                            </div>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <p className="text-gray-500 text-center">No messages yet</p>
-                                )}
-                                <div ref={messagesEndRef} />
+<div className="w-full flex flex-col h-full overflow-hidden">
+    {selectedConversationId && (
+        <div className="flex flex-col h-full bg-white p-4 shadow-lg rounded-lg">
+            {/* Guest Profile */}
+            <div className="flex items-center justify-between p-5 bg-gradient-to-r from-blue-600 via-indigo-500 to-purple-600 border-b border-gray-300 shadow-xl rounded-lg transition-all duration-300 ease-in-out">
+                <div className="flex items-center space-x-4">
+                    {/* Profile Picture or Initials */}
+                    {
+                        guest?.profilePicture ? (
+                            <img
+                                src={`${backEndUrl}/${guest?.profilePicture}`}
+                                alt="Avatar"
+                                className="w-16 h-16 rounded-full border-4 border-white shadow-xl transition-transform transform hover:scale-110 hover:shadow-2xl"
+                            />
+                        ) : (
+                            <div className="w-16 h-16 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-xl">
+                                <span className="text-white text-2xl font-semibold">
+                                    {guest?.user?.firstName?.charAt(0)}{guest?.user?.lastName?.charAt(0)}
+                                </span>
                             </div>
-                            <div className="relative flex flex-col h-14 w-full p-4">
-                            {/* Send Message Input */}
-                            <div className="flex w-full items-center space-x-2">
-                                {/* Input Field */}
-                                <Input
-                                    className="flex-grow border-2 border-indigo-500 rounded-lg px-4 py-2 text-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 active:scale-95"
-                                    placeholder="Type your message..."
-                                    value={messageText}
-                                    onChange={(e) => setMessageText(e.target.value)}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter' && !sending) {
-                                            handleSendMessage();
-                                        }
-                                    }}
-                                />
-                                
-                                {/* Send Button */}
-                                <Button
-                                    onClick={handleSendMessage}
-                                    className="bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-2 px-4 text-sm flex items-center space-x-2 transition-all duration-300 transform active:scale-105"
-                                    disabled={sending || !messageText.trim()}
+                        )
+                    }
+                    
+                    {/* Guest Name */}
+                    <div className="text-2xl font-semibold text-white">
+                        {messages?.guest?.username 
+                        ? messages?.guest?.username 
+                        : `${guest?.user?.firstName} ${guest?.user?.lastName}`}
+                    </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                    {/* Video Call Icon */}
+                    <button aria-label="Video Call" className="text-white hover:text-yellow-300 transition-all duration-200 transform hover:scale-110">
+                        <i className="fas fa-video text-xl"></i>
+                    </button>
+
+                    {/* Settings Icon */}
+                    <button aria-label="Settings" className="text-white hover:text-yellow-300 transition-all duration-200 transform hover:scale-110">
+                        <BsThreeDotsVertical className="text-xl" />
+                    </button>
+                </div>
+            </div>
+
+            {/* Display Messages */}
+            <div className="flex flex-col flex-grow overflow-y-auto mt-4">
+                {messages && messages.length > 0 ? (
+                    messages.map((message, index) => (
+                        <div
+                            key={index}
+                            className={`flex ${message.sender_id === user.id ? 'flex-row-reverse' : ''} mx-4`}
+                        >
+                            <div className="flex flex-col max-w-xs">
+                                {/* Sender's Name */}
+                                <div className="text-xs text-gray-500 mb-1">
+                                    {message.sender_id === user.id ? 'You' : message.sender_name}
+                                </div>
+
+                                {/* Message Bubble */}
+                                <div
+                                    className={`max-w-lg break-words px-4 py-2 rounded-3xl ${message.sender_id === user.id
+                                        ? 'bg-indigo-600 text-white rounded-tr-none ml-auto'
+                                        : 'bg-gray-200 text-gray-800 rounded-tl-none mr-auto'}`}
                                 >
-                                    {/* Icon and Text */}
-                                    <PaperAirplaneIcon className="h-5 w-5" />
-                                    <span>Send</span>
-                                </Button>
+                                    {message.message}
+                                </div>
 
+                                {/* Time */}
+                                <div className="justify-end items-center inline-flex mb-2.5 text-xs text-gray-500">
+                                    {new Date(message.created_at).toLocaleTimeString([], {
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    })}
+                                </div>
                             </div>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-gray-500 text-center">No messages yet</p>
+                )}
+                <div ref={messagesEndRef} />
+            </div>
+
+            {/* Send Message Input */}
+            <div className="relative flex flex-col h-16 w-full p-4 mt-4">
+                <div className="flex w-full items-center space-x-3">
+                    {/* Input Field */}
+                    <input
+                        type="text"
+                        className="flex-grow border-2 rounded-lg px-4 py-2 text-base text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 active:scale-95"
+                        placeholder="Type your message..."
+                        value={messageText}
+                        onChange={(e) => setMessageText(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !sending) {
+                                handleSendMessage();
+                            }
+                        }}
+                    />
+
+                    {/* Send Button */}
+                    <button
+                        type="button"
+                        onClick={handleSendMessage}
+                        className={`bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-2 px-4 text-sm flex items-center space-x-2 transition-all duration-300 transform ${sending || !messageText.trim() ? 'opacity-50 cursor-not-allowed' : 'active:scale-105'}`}
+                        disabled={sending || !messageText.trim()}
+                    >
+                        {/* Icon and Text */}
+                        {sending ? (
+                            <div className="animate-spin h-5 w-5 border-t-2 border-white rounded-full"></div>
+                        ) : (
+                            <PaperAirplaneIcon className="w-6 h-6" />
+                        )}
+
+                        <span>Send</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    )}
 </div>
 
-                        </div>
-                    )}
-                </div>
+
             </div>
         </div>
         </>
